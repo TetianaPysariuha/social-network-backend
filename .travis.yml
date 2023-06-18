@@ -1,0 +1,12 @@
+# https://docs.travis-ci.com/user/languages/java/
+language: java
+jdk: oraclejdk9
+
+# Improve Build Speed https://dzone.com/articles/travis-ci-tutorial-java-projects
+cache:
+  directories:
+    - $HOME/.m2
+
+# Notifications https://docs.travis-ci.com/user/notifications/
+notifications:
+  email: false
