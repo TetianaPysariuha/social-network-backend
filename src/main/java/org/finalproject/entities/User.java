@@ -43,12 +43,12 @@ public class User extends BaseEntity {
     @Column(name = "profile_background_picture")
     private String profileBackgroundPicture;
 
-    @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "user")
+    @OneToMany (cascade = {CascadeType.MERGE },fetch = FetchType.EAGER ,mappedBy = "user")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
     List <Friend> users;
 
-    @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "friend")
+    @OneToMany (cascade = {CascadeType.MERGE},fetch = FetchType.EAGER ,mappedBy = "friend")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
     List <Friend> friends;
@@ -62,7 +62,7 @@ public class User extends BaseEntity {
 
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @ManyToMany(mappedBy = "participants",cascade = {CascadeType.REMOVE},fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "participants",cascade = {CascadeType.MERGE,CascadeType.REMOVE},fetch = FetchType.EAGER)
     @JsonIgnore
     private List <Chat> chats;
 
