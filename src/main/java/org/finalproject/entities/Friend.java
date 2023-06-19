@@ -1,10 +1,7 @@
-package org.finalproject.domain.hr;
+package org.finalproject.entities;
 
-import org.finalproject.domain.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import org.finalproject.domain.hr.User;
 import lombok.*;
 
 @AllArgsConstructor

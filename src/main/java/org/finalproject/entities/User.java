@@ -1,11 +1,10 @@
-package org.finalproject.domain.hr;
+package org.finalproject.entities;
 
-import org.finalproject.domain.BaseEntity;
+import org.finalproject.entities.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-import org.finalproject.domain.hr.Friend;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 

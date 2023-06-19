@@ -1,6 +1,5 @@
-package org.finalproject.domain;
+package org.finalproject.entities;
 
-import org.finalproject.domain.hr.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

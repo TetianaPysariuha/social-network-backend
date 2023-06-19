@@ -1,10 +1,10 @@
-package org.finalproject.domain.hr;
+package org.finalproject.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
-import org.finalproject.domain.BaseEntity;
+import org.finalproject.entities.BaseEntity;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
