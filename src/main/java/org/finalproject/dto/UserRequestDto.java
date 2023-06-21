@@ -1,7 +1,14 @@
 package org.finalproject.dto;
 
-import java.util.Date;
+import lombok.*;
 
+import java.util.Date;
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@ToString
 public class UserRequestDto {
     private String fullName;
 

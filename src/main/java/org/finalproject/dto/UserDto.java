@@ -1,9 +1,15 @@
 package org.finalproject.dto;
 
 import jakarta.persistence.Column;
+import lombok.*;
 
 import java.util.Date;
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@ToString
 public class UserDto {
 
     private String fullName;
