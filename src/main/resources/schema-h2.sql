@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS public.users  CASCADE ;
 CREATE TABLE public.users (
-                              entity_id INT AUTO_INCREMENT PRIMARY KEY,
+                             id INT AUTO_INCREMENT PRIMARY KEY,
                               full_name VARCHAR(250) NOT NULL,
                               email  VARCHAR (250) NOT NULL,
                               password VARCHAR (250) NOT NULL,
@@ -21,8 +21,8 @@ CREATE TABLE public.users (
 );
 DROP TABLE IF EXISTS public.posts CASCADE ;
 CREATE TABLE public.posts(
-                             entity_id INT AUTO_INCREMENT PRIMARY KEY ,
-                             user_id INTEGER references users(entity_id),
+                             id INT AUTO_INCREMENT PRIMARY KEY ,
+                             user_id INTEGER references users(id),
                              content  VARCHAR(280) NOT NULL,
                               post_type VARCHAR NOT NULL ,
                               parent_id INT ,
@@ -34,7 +34,7 @@ CREATE TABLE public.posts(
 );
 DROP TABLE IF EXISTS public.chats CASCADE ;
 CREATE TABLE public.chats(
-                             entity_id INT AUTO_INCREMENT PRIMARY KEY ,
+                             id INT AUTO_INCREMENT PRIMARY KEY ,
                              created_date TIMESTAMP NOT NULL ,
                             updated_date TIMESTAMP NOT NULL,
                              created_by VARCHAR,
@@ -43,9 +43,9 @@ CREATE TABLE public.chats(
 );
 DROP TABLE IF EXISTS public.messages CASCADE ;
 CREATE TABLE public.messages (
-                                 entity_id INT AUTO_INCREMENT PRIMARY KEY,
-                                 user_id INTEGER references users(entity_id) ,
-                                 chat_id INTEGER references chats(entity_id),
+                                 id INT AUTO_INCREMENT PRIMARY KEY,
+                                 user_id INTEGER references users(id) ,
+                                 chat_id INTEGER references chats(id),
                                  content VARCHAR (250) NOT NULL,
                                  created_date TIMESTAMP NOT NULL ,
                                  updated_date TIMESTAMP NOT NULL,
@@ -56,9 +56,9 @@ CREATE TABLE public.messages (
 
 DROP TABLE IF EXISTS public.friends CASCADE ;
 CREATE TABLE public.friends (
-                                 entity_id INT AUTO_INCREMENT PRIMARY KEY,
-                                 user_id INT REFERENCES users(entity_id) ,
-                                 friend_id INT REFERENCES users(entity_id),
+                                 id INT AUTO_INCREMENT PRIMARY KEY,
+                                 user_id INT REFERENCES users(id) ,
+                                 friend_id INT REFERENCES users(id),
                                  status VARCHAR (250) NOT NULL,
 
                                  created_date TIMESTAMP NOT NULL ,
@@ -73,17 +73,17 @@ CREATE TABLE public.users_friends (
                                  id INT AUTO_INCREMENT PRIMARY KEY,
                                  user_id INT NOT NULL,
                                  user_friend_id INT NOT NULL ,
-                                 foreign key (user_id) references users(entity_id),
-                                 foreign key (user_friend_id) references friends (entity_id)
+                                 foreign key (user_id) references users(id),
+                                 foreign key (user_friend_id) references friends (id)
 
 
 );
 
 DROP TABLE IF EXISTS public.likes CASCADE ;
 CREATE TABLE public.likes (
-                                entity_id INT AUTO_INCREMENT PRIMARY KEY,
-                                post_id  INTEGER REFERENCES posts (entity_id),
-                                user_id  INTEGER REFERENCES users (entity_id),
+                                id INT AUTO_INCREMENT PRIMARY KEY,
+                                post_id  INTEGER REFERENCES posts (id),
+                                user_id  INTEGER REFERENCES users (id),
                                 created_date TIMESTAMP NOT NULL ,
                                 updated_date TIMESTAMP NOT NULL,
                                     created_by VARCHAR,
@@ -96,15 +96,15 @@ CREATE TABLE public.users_chats (
                                      id INT AUTO_INCREMENT PRIMARY KEY,
                                       user_id INT NOT NULL,
                                       chat_id INT NOT NULL ,
-                                      foreign key (user_id) references users(entity_id),
-                                      foreign key (chat_id) references chats(entity_id)
+                                      foreign key (user_id) references users(id),
+                                      foreign key (chat_id) references chats(id)
 
 );
 DROP TABLE IF EXISTS public.chat_images CASCADE ;
 CREATE TABLE public.chat_images(
-                             entity_id INT AUTO_INCREMENT PRIMARY KEY ,
+                             id INT AUTO_INCREMENT PRIMARY KEY ,
                              image_url VARCHAR NOT NULL ,
-                             chat_id  INTEGER REFERENCES chats (entity_id),
+                             chat_id  INTEGER REFERENCES chats (id),
                              created_date TIMESTAMP NOT NULL ,
                              updated_date TIMESTAMP NOT NULL,
                              created_by VARCHAR,
@@ -113,9 +113,9 @@ CREATE TABLE public.chat_images(
 );
 DROP TABLE IF EXISTS public.post_images CASCADE ;
 CREATE TABLE public.post_images(
-                                   entity_id INT AUTO_INCREMENT PRIMARY KEY ,
+                                   id INT AUTO_INCREMENT PRIMARY KEY ,
                                    image_url VARCHAR NOT NULL ,
-                                   post_id  INTEGER REFERENCES posts (entity_id),
+                                   post_id  INTEGER REFERENCES posts (id),
                                        created_date TIMESTAMP NOT NULL ,
                                    updated_date TIMESTAMP NOT NULL,
                                    created_by VARCHAR,
@@ -124,9 +124,9 @@ CREATE TABLE public.post_images(
 );
 DROP TABLE IF EXISTS public.reposts CASCADE ;
 CREATE TABLE public.reposts(
-                                   entity_id INT AUTO_INCREMENT PRIMARY KEY ,
-                                   user_id  INTEGER REFERENCES users (entity_id),
-                                   post_id  INTEGER REFERENCES posts (entity_id),
+                                   id INT AUTO_INCREMENT PRIMARY KEY ,
+                                   user_id  INTEGER REFERENCES users (id),
+                                   post_id  INTEGER REFERENCES posts (id),
                                        created_date TIMESTAMP NOT NULL ,
                                    updated_date TIMESTAMP NOT NULL,
                                    created_by VARCHAR,

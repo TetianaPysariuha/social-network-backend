@@ -20,7 +20,7 @@ public abstract class BaseEntity extends Auditable<User> implements Serializable
     @Id
 
     @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "entity_id", nullable = false)
+    @Column(name = "id", nullable = false)
     private Long id;
 
 
