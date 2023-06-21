@@ -14,7 +14,6 @@ public class SocialNetworkApplication implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         System.out.println("http://localhost:9000/swagger-ui/index.html \n");
-
         System.out.println("http://localhost:9000/h2-console");
     }
 }
