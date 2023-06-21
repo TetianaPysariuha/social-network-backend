@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <title>Spring Security Example </title>
+</head>
+<body>
+<div th:if="${param.error}">
+    Invalid username and password.
+</div>
+<div th:if="${param.logout}">
+    You have been logged out.
+</div>
+dashboard
+<p>
+    <a href="/logout">Logout</a>
+    <a href="/">Application</a>
+    <a href="/swagger-ui/index.html ">Swagger</a>
+
+</p>
+</body>
+</html>

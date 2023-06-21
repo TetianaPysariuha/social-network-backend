@@ -54,7 +54,7 @@ public class User extends BaseEntity {
     List <Friend> friends;
     @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "user")
     @JsonIgnore
-    private List<Post> posts  = new ArrayList<>();
+    private List<Post> posts ;
     @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "sender")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
@@ -65,7 +65,10 @@ public class User extends BaseEntity {
     @ManyToMany(mappedBy = "participants",cascade = {CascadeType.MERGE,CascadeType.REMOVE},fetch = FetchType.EAGER)
     @JsonIgnore
     private List <Chat> chats;
-
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "user",cascade = {CascadeType.MERGE,CascadeType.REMOVE},fetch = FetchType.EAGER)
+    @JsonIgnore
+    private List <Like> likes;
 
     @Override
     public String toString() {

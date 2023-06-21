@@ -1,6 +1,46 @@
 package org.finalproject.entities;
 
 import jakarta.persistence.*;
+import lombok.*;
+
+
+import java.io.Serializable;
+
+import static jakarta.persistence.GenerationType.IDENTITY;
+
+
+@MappedSuperclass
+@Setter(AccessLevel.PUBLIC)
+@Getter(AccessLevel.PUBLIC)
+@EqualsAndHashCode(callSuper = true)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public abstract class BaseEntity extends Auditable<User> implements Serializable {
+    @Id
+
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "entity_id", nullable = false)
+    private Long id;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,13 +68,13 @@ public abstract  class BaseEntity<T> {
 
     @CreatedDate
     @Temporal(TIMESTAMP)
-    @Column(name = "creation_date")
-    protected Date creationDate;
+    @Column(name = "created_date")
+    protected Date createdDate;
 
     @LastModifiedDate
     @Temporal(TIMESTAMP)
-    @Column(name = "last_modified_date")
-    protected Date lastModifiedDate;
+    @Column(name = "updated_date")
+    protected Date lupdatedDate;
 
     @CreatedBy
     @OneToOne(fetch = FetchType.EAGER)
@@ -49,4 +89,4 @@ public abstract  class BaseEntity<T> {
 
 
 
-}
+}*/
