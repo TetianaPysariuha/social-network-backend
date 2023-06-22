@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserRestController {
-    private final DefaultUserService userService;
+    private final GeneralService <User> userService;
 
     private final UserDtoMapper dtoMapper;
 

@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("/friends")
 public class FriendRestController {
-    private final DefaultFriendService friendService;
+    private final GeneralService <Friend> friendService;
 
     private final DefaultUserService userService;
 
