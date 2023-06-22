@@ -9,39 +9,10 @@ INSERT INTO public.users ( id,full_name,email,password,city,country,gender,work_
 
 
 
-INSERT INTO public.posts (id,user_id,content,post_type,parent_id,created_date,updated_date) VALUES
-                                                                                                              (100,102,'Hy Today is a good day Im going to visit very interesting place','post',null,PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
-                                                                                                              (101,100,'My Scala course is finally released on the Manning learning platform. I''ve invested quite a lot of time and it was challenging due to the constantly challenging conditions in Ukraine (power outages, missile attacks)','post',null,PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
-                                                                                                              (102,101, 'Understood - yours was a point well made. I’m only exploring the discussion. Some of my procedural coding has had way too many indents, I fully admit. FP can be both beautiful and functional!','post',null,PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
-                                                                                                              (103,100,'However, in real codebases, you are dealing with longer nested code blocks which are not that readable anymore, even for proficient imperative programmers. Additionally, as Tomasz Lipinski noted, they can have some hidden unexpected parts.My objective here was to make a point .','post',null,PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
-                                                                                                              (104,102,'When I started my programming journey I dreamed of a widescreen display  The indentation in my code was killing me.Later in my career, I learned that a code needs to read like a book  No unnecessary words, snappy, and to the point!Thats what list comprehensions are for.','post',null,PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
-                                                                                                              (105,101,'I am immensely grateful to the organizers for recognizing my potential and inviting me to the renowned PyCon 2023 conference, which took place in the picturesque city of Florence, Italy.  The conference served as an invaluable platform for industry experts, thought leaders.','post',null,PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
-                                                                                                              (106,100,'ddffgkrksmxme','comment',100,PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'));
 
 
 
 
-INSERT INTO public.chats (id,created_date,updated_date) VALUES
-
-                                                                          (207,PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
-                                                                          (208,PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
-                                                                          (209,PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
-                                                                          (210,PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
-                                                                          (211,PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
-                                                                          (212,PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
-                                                                          (213,PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'));
-
-
-
-INSERT INTO public.messages (id,user_id,chat_id,content,created_date,updated_date) VALUES
-
-                                                                                                     (200,102,207,'Hy',PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
-                                                                                                     (201,101,207,'Hello1',PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
-                                                                                                     (202,101,208,'Hy',PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
-                                                                                                     (203,102,208,'Hello2',PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
-                                                                                                     (204,100,209,'Hy',PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
-                                                                                                     (205,101,209,'Hy',PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
-                                                                                                     (206,101,207,'Hello',PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'));
 INSERT INTO public.friends(id,user_id,friend_id,status,created_date,updated_date) VALUES
 
                                                                                                     (214,100,101,'fulfilled',PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
@@ -55,14 +26,7 @@ INSERT INTO public.friends(id,user_id,friend_id,status,created_date,updated_date
 
 
 
-INSERT INTO public.users_friends (id,user_id,user_friend_id) VALUES
 
-                                                                 (81,100,215),
-                                                                 (82,100,216),
-                                                                 (83,101,214),
-                                                                 (84,101,216),
-                                                                 (85,102,214),
-                                                                 (86,102,215);
 
 
 
