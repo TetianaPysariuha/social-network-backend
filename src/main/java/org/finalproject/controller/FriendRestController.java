@@ -1,29 +1,19 @@
 package org.finalproject.controller;
 
 
-
-
-
 import lombok.RequiredArgsConstructor;
 import org.finalproject.dto.FriendDto;
-
 import org.finalproject.dto.FriendDtoMapper;
 import org.finalproject.dto.FriendRequestDto;
-
-import org.finalproject.dto.UserDto;
 import org.finalproject.entities.Friend;
 import org.finalproject.entities.User;
-import org.finalproject.service.DefaultFriendService;
-import org.finalproject.service.DefaultUserService;
 import org.finalproject.service.GeneralService;
-import org.finalproject.service.ServiceInterface;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,8 +22,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/friends")
 public class FriendRestController {
     private final GeneralService <Friend> friendService;
-
-    private final DefaultUserService userService;
 
     private final FriendDtoMapper dtoMapper;
 
