@@ -65,10 +65,16 @@ public class User extends BaseEntity {
     @ManyToMany(mappedBy = "participants",cascade = {CascadeType.MERGE,CascadeType.REMOVE},fetch = FetchType.EAGER)
     @JsonIgnore
     private List <Chat> chats;
+
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "user",cascade = {CascadeType.MERGE,CascadeType.REMOVE},fetch = FetchType.EAGER)
     @JsonIgnore
     private List <Like> likes;
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "user",cascade = {CascadeType.MERGE,CascadeType.REMOVE},fetch = FetchType.EAGER)
+    @JsonIgnore
+    private List <Repost> reposts;
 
     @Override
     public String toString() {
