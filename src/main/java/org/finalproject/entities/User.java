@@ -61,9 +61,12 @@ public class User extends BaseEntity {
     private List<Message> messages;
 
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @ManyToMany(mappedBy = "participants",cascade = {CascadeType.MERGE,CascadeType.REMOVE},fetch = FetchType.EAGER)
+    @ManyToMany(cascade = { CascadeType.MERGE },fetch =FetchType.EAGER )
     @JsonIgnore
+    @JoinTable(
+            name = "users_chats",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "chat_id") })
     private List <Chat> chats;
 
     @LazyCollection(LazyCollectionOption.FALSE)
