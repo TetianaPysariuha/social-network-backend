@@ -23,8 +23,8 @@ addons:
   sonarcloud:
     organization: "socialnetworkbackend"
     token:
-      secure: PGSQcEPknJRGKQDCUHgZVOhWSNzidz8OervIINHqiOvnzpOFHHujIuCPtqcRUAXZXxDI1EU83XY8mPp8OSo3pICu0DZNZkyhaRCg01AzqMtYGHQ7B0kUKkv4y2zdmWhxIAfflVdo8miucvoRjB+1k7TthHXJdnrAov3ijtMwNHU= # encrypted value of your token
+      secure: "PGSQcEPknJRGKQDCUHgZVOhWSNzidz8OervIINHqiOvnzpOFHHujIuCPtqcRUAXZXxDI1EU83XY8mPp8OSo3pICu0DZNZkyhaRCg01AzqMtYGHQ7B0kUKkv4y2zdmWhxIAfflVdo8miucvoRjB+1k7TthHXJdnrAov3ijtMwNHU=" # encrypted value of your token
 
 script:
   # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=TetianaPysariuha_social-network-backend
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=org.finalproject:social-network-backend
