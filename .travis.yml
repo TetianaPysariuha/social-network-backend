@@ -2,6 +2,11 @@
 language: java
 jdk: oraclejdk17
 
+branches:
+  only:
+    - main
+    - dev
+
 # Improve Build Speed https://dzone.com/articles/travis-ci-tutorial-java-projects
 cache:
   directories:
