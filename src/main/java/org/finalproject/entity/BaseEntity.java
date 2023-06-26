@@ -16,13 +16,11 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class BaseEntity extends Auditable<String> implements Serializable {
+public abstract class BaseEntity extends Auditable<User> implements Serializable {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-
-
 
 }
 

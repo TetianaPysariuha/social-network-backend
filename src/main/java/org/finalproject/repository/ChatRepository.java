@@ -1,16 +1,16 @@
 package org.finalproject.repository;
 
 import org.finalproject.entity.Chat;
-import org.finalproject.entity.Message;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface ChatRepository extends RepositoryInterface {
+public interface ChatRepository extends RepositoryInterface<Chat>, JpaSpecificationExecutor<Chat> {
 
-    @Query("Select m FROM Message m WHERE m.content LIKE %:content%")
-    List<Message> findByContent (@Param("content") String content);
+    //need to be in UserRepo?
+//    @Query("Select id FROM Users m WHERE fullName LIKE %:partOfName% ")
+//    List<Long> findUserIdByPartOfName(String partOfName);
 
 
 }
