@@ -29,8 +29,8 @@ public class AuthService {
     public JwtResponse login(@NonNull JwtRequest authRequest) {
         final User user = userService.getByEmail(authRequest.getEmail())
                 .orElseThrow(() -> new AuthException("User not found"));
-        if (passwordEncoder.matches(authRequest.getPassword(), user.getPassword())){
-       // if (user.getEncryptedPassword().equals(authRequest.getPassword())) {
+        if (passwordEncoder.matches(authRequest.getPassword(), user.getPassword())) {
+            // if (user.getEncryptedPassword().equals(authRequest.getPassword())) {
             final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
             refreshStorage.put(user.getFullName(), refreshToken);
