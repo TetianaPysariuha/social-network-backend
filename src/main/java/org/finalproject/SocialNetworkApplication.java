@@ -20,4 +20,15 @@ public class SocialNetworkApplication implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         System.out.println("http://localhost:9000/h2-console");
     }
+    @Bean
+    public OpenAPI springShopOpenAPI() {
+        return new OpenAPI()
+                .info(new Info().title("EIS API")
+                        .description("Employee Information System sample application")
+                        .version("v0.0.1")
+                        .license(new License().name("Apache 2.0").url("http://springdoc.org"))
+                        .description("SpringShop Wiki Documentation")
+                        .contact(new Contact().email("test@test.com").url("http://fullstackcode.dev")))
+                ;
+    }
 }
