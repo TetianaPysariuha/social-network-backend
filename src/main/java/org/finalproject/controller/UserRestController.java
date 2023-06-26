@@ -100,18 +100,18 @@ public class UserRestController {
         }
     }
     @DeleteMapping
-    public ResponseEntity<?> deleteEmployee(@RequestBody UserRequestDto company) {
+    public ResponseEntity<?> deleteUser(@RequestBody UserRequestDto user) {
         try {
-            userService.delete(dtoMapper.convertToEntity(company));
+            userService.delete(dtoMapper.convertToEntity(user));
             return ResponseEntity.ok().build();
         }catch (RuntimeException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
     @PutMapping
-    public ResponseEntity <?> update(@RequestBody UserRequestDto employee) {
+    public ResponseEntity <?> update(@RequestBody UserRequestDto user) {
         try {
-            userService.save(dtoMapper.convertToEntity(employee));
+            userService.save(dtoMapper.convertToEntity(user));
             return ResponseEntity.ok().build();
         } catch (RuntimeException e){
             return ResponseEntity.badRequest().body(e.getMessage());
