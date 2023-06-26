@@ -29,6 +29,8 @@ public class UserRestController {
     private final UserDtoMapper dtoMapper;
 
 
+
+
     @GetMapping
     public List<UserDto> getAll() {
         // return userService.findAll().stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
@@ -52,7 +54,7 @@ public class UserRestController {
         User user = userService.getOne(userId );
 
         if (user   == null){
-            return ResponseEntity.badRequest().body("Employer not found");
+            return ResponseEntity.badRequest().body("User not found");
         }
         return ResponseEntity.ok().body(dtoMapper.convertToDto(user) );
     }
@@ -61,9 +63,27 @@ public class UserRestController {
         User user = userService.getOne(userId );
 
         if (user   == null){
-            return ResponseEntity.badRequest().body("Employer not found");
+            return ResponseEntity.badRequest().body("User not found");
         }
         return ResponseEntity.ok().body(user.getFriends() );
+    }
+    @GetMapping("/{id}/chats")
+    public ResponseEntity<?>  getChats(@PathVariable("id")  Long  userId) {
+        User user = userService.getOne(userId );
+
+        if (user   == null){
+            return ResponseEntity.badRequest().body("User not found");
+        }
+        return ResponseEntity.ok().body(user.getChats() );
+    }
+    @GetMapping("/{id}/posts")
+    public ResponseEntity<?>  getPosts(@PathVariable("id")  Long  userId) {
+        User user = userService.getOne(userId );
+
+        if (user   == null){
+            return ResponseEntity.badRequest().body("User not found");
+        }
+        return ResponseEntity.ok().body(user.getPosts() );
     }
 
     @PostMapping
