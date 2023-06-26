@@ -23,8 +23,10 @@ public class Message extends BaseEntity {
     private String content;
     @Column(name = "chat_id")
     private Long chatId;
-    @Column(name = "user_id")
-    private Long userId;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User sender;
 
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "imgUrl")
     @LazyCollection(LazyCollectionOption.FALSE)
