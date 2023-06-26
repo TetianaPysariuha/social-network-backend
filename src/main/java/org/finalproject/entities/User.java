@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,14 +29,12 @@ public class User extends BaseEntity {
     private Date birthDate;
 
     private String country;
-
     private String  city;
     private String  gender;
     @Column(name = "work_place")
     private String workPlace;
     @Column(name = "profile_picture")
     private String profilePicture;
-
     private String about;
 
     @Column(name = "profile_background_picture")
