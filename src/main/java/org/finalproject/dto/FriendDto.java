@@ -6,6 +6,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
 import org.finalproject.entities.User;
+
 @Getter
 @Setter
 @NoArgsConstructor

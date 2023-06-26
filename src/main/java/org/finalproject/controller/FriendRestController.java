@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("/friends")
 public class FriendRestController {
-    private final GeneralService <Friend> friendService;
+    private final GeneralService<Friend> friendService;
 
     private final FriendDtoMapper dtoMapper;
 
@@ -33,64 +33,71 @@ public class FriendRestController {
         return friendService.findAll().stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
 
     }
+
     @GetMapping("/{page}/{size}")
     public ResponseEntity<?> findAll(@PathVariable Integer page, @PathVariable Integer size) {
         Sort sort =  Sort.by(new Sort.Order(Sort.Direction.ASC,"id"));
         Pageable pageable = PageRequest.of(page,size,sort);
-        Page friends =friendService.findAll(pageable);
-        List <Friend> friendList =  friends.toList();
-        List<FriendDto> friendDtoList =friendList.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
+        Page friends = friendService.findAll(pageable);
+        List<Friend> friendList =  friends.toList();
+        List<FriendDto> friendDtoList = friendList.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
         return ResponseEntity.ok(friendDtoList);
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<?>  getById(@PathVariable("id")  Long  userId) {
         Friend friend = friendService.getOne(userId );
 
-        if (friend   == null){
+        if (friend   == null) {
             return ResponseEntity.badRequest().body("Employer not found");
         }
         return ResponseEntity.ok().body(dtoMapper.convertToDto(friend) );
     }
+
     @GetMapping("/{userId}/friends")
     public ResponseEntity<?>  getFriends(@PathVariable("userId")  Long  userId) {
 
 
-        List <Friend> friends = friendService.findAll().stream().filter(el -> el.getUser().getId().equals(userId)).collect(Collectors.toList());
+        List<Friend> friends = friendService.findAll().stream().filter(el -> el.getUser().getId().equals(userId))
+                .collect(Collectors.toList());
 
-        List <User> usersFriends = friends.stream().map(el -> el.getFriend()).collect(Collectors.toList());
+        List<User> usersFriends = friends.stream().map(el -> el.getFriend()).collect(Collectors.toList());
 
         return ResponseEntity.ok().body(usersFriends);
 
     }
 
     @PostMapping
-    public void create(@RequestBody FriendRequestDto friend ){
+    public void create(@RequestBody FriendRequestDto friend ) {
         friendService.save(dtoMapper .convertToEntity(friend) );
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id")Long userId) {
         try {
             friendService.deleteById(userId);
             return ResponseEntity.ok().build();
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
     @DeleteMapping
     public ResponseEntity<?> deleteEmployee(@RequestBody FriendRequestDto friend) {
         try {
             friendService.delete(dtoMapper.convertToEntity(friend));
             return ResponseEntity.ok().build();
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
     @PutMapping
-    public ResponseEntity <?> update(@RequestBody FriendRequestDto friend) {
+    public ResponseEntity<?> update(@RequestBody FriendRequestDto friend) {
         try {
             friendService.save(dtoMapper.convertToEntity(friend));
             return ResponseEntity.ok().build();
-        } catch (RuntimeException e){
+        } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 

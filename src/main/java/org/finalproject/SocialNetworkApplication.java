@@ -23,13 +23,18 @@ public class SocialNetworkApplication implements ApplicationRunner {
     public static void main(String[] args) {
         SpringApplication.run(SocialNetworkApplication.class, args);
     }
+
      @Autowired
+
     AuditorAwareImpl auditorAware;
+
     @Override
     public void run(ApplicationArguments args) throws Exception {
         System.out.println("http://localhost:9000/swagger-ui/index.html \n");
+
         System.out.println("http://localhost:9000/h2-console");
     }
+
    @Bean
     public ModelMapper modelMapper() {
         ModelMapper mapper = new ModelMapper();

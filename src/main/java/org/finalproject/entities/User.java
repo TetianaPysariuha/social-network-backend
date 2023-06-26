@@ -21,7 +21,7 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "users")
 public class User extends BaseEntity {
-    @Column(name ="full_name")
+    @Column(name = "full_name")
     private String fullName;
 
     private String email;
@@ -35,7 +35,7 @@ public class User extends BaseEntity {
     private String  gender;
     @Column(name = "work_place")
     private String workPlace;
-    @Column(name="profile_picture")
+    @Column(name = "profile_picture")
     private String profilePicture;
 
     private String about;
@@ -46,12 +46,12 @@ public class User extends BaseEntity {
     @OneToMany (cascade = {CascadeType.MERGE },fetch = FetchType.EAGER ,mappedBy = "user")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
-    List <Friend> users;
+    List<Friend> users;
 
     @OneToMany (cascade = {CascadeType.MERGE},fetch = FetchType.EAGER ,mappedBy = "friend")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
-    List <Friend> friends;
+    List<Friend> friends;
     @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "user")
     @JsonIgnore
     private List<Post> posts ;
@@ -61,23 +61,23 @@ public class User extends BaseEntity {
     private List<Message> messages;
 
 
-    @ManyToMany(cascade = { CascadeType.MERGE },fetch =FetchType.EAGER )
+    @ManyToMany(cascade = { CascadeType.MERGE },fetch = FetchType.EAGER )
     @JsonIgnore
     @JoinTable(
             name = "users_chats",
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "chat_id") })
-    private List <Chat> chats;
+    private List<Chat> chats;
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "user",cascade = {CascadeType.MERGE,CascadeType.REMOVE},fetch = FetchType.EAGER)
     @JsonIgnore
-    private List <Like> likes;
+    private List<Like> likes;
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "user",cascade = {CascadeType.MERGE,CascadeType.REMOVE},fetch = FetchType.EAGER)
     @JsonIgnore
-    private List <Repost> reposts;
+    private List<Repost> reposts;
 
     @Override
     public String toString() {

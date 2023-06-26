@@ -9,10 +9,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
 @Service
 public class AuditorAwareImpl implements AuditorAware<String> {
 
-    public Optional< String > getCurrentAuditor() {
+    public Optional<String> getCurrentAuditor() {
         // until there is no authentification
         // return Optional.of("Alex Smith")
 
