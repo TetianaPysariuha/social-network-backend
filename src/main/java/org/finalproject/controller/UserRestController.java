@@ -29,14 +29,12 @@ public class UserRestController {
     private final UserDtoMapper dtoMapper;
 
 
-
-
     @GetMapping
     public List<UserDto> getAll() {
-        // return userService.findAll().stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
+
     List<User> userList =    userService.findAll();
        List<UserDto> userDtoList = userList.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
-        // return userList;
+
         return userDtoList;
     }
 

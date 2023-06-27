@@ -27,7 +27,6 @@ public class FriendRestController {
 
 
 
-
     @GetMapping
     public List<FriendDto> getAll() {
         return friendService.findAll().stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
