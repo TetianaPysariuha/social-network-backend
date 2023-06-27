@@ -1,7 +1,5 @@
 package org.finalproject.config;
 
-
-
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
