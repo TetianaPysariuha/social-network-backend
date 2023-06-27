@@ -1,13 +1,12 @@
-package org.finalproject.entities;
+package org.finalproject.entity;
 
-import org.finalproject.entities.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import java.util.ArrayList;
+
 import java.util.Date;
 import java.util.List;
 

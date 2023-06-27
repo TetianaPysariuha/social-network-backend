@@ -1,6 +1,6 @@
 package org.finalproject.dto;
 
-import org.finalproject.entities.Friend;
+import org.finalproject.entity.Friend;
 import org.finalproject.facade.GeneralFacade;
 import org.springframework.stereotype.Service;
 

@@ -7,8 +7,7 @@ import org.finalproject.dto.UserDtoMapper;
 import org.finalproject.dto.UserRequestDto;
 
 
-import org.finalproject.entities.User;
-import org.finalproject.service.DefaultUserService;
+import org.finalproject.entity.User;
 import org.finalproject.service.GeneralService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

@@ -1,6 +1,6 @@
 package org.finalproject.dto;
 
-import org.finalproject.entities.User;
+import org.finalproject.entity.User;
 import org.finalproject.facade.GeneralFacade;
 import org.springframework.stereotype.Service;
 

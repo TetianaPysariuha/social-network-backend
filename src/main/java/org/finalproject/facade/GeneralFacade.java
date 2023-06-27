@@ -1,9 +1,7 @@
 package org.finalproject.facade;
 
-import org.finalproject.entities.BaseEntity;
+import org.finalproject.entity.BaseEntity;
 import org.finalproject.service.GeneralService;
-import org.finalproject.service.ServiceInterface;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;

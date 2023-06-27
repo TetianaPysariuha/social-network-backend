@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.finalproject.entities.User;
+import org.finalproject.entity.User;
 
 @Getter
 @Setter

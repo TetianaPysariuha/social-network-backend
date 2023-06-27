@@ -2,15 +2,12 @@ package org.finalproject.service;
 
 
 import lombok.RequiredArgsConstructor;
-import org.finalproject.entities.User;
+import org.finalproject.entity.User;
 import org.finalproject.repository.UserJpaRepository;
 
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
-
-
-import java.util.List;
 
 @Service
 @Transactional

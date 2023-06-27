@@ -3,8 +3,7 @@ package org.finalproject.service;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.finalproject.entities.BaseEntity;
+import org.finalproject.entity.BaseEntity;
 import org.finalproject.exception.DataNotFoundException;
 import org.finalproject.repository.RepositoryInterface;
 import org.springframework.beans.factory.annotation.Autowired;

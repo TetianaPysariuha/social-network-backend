@@ -2,8 +2,6 @@ package org.finalproject.config;
 
 
 
-import org.finalproject.entities.User;
-import org.finalproject.service.DefaultUserService;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
