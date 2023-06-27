@@ -65,15 +65,21 @@ public class User extends BaseEntity {
             inverseJoinColumns = { @JoinColumn(name = "chat_id") })
     private List<Chat> chats;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "user",cascade = {CascadeType.MERGE,CascadeType.REMOVE},fetch = FetchType.EAGER)
+    @ManyToMany(cascade = { CascadeType.MERGE },fetch = FetchType.EAGER )
     @JsonIgnore
-    private List<Like> likes;
+    @JoinTable(
+            name = "users_liked_posts",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "post_id") })
+    private List<Post> likedPosts;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "user",cascade = {CascadeType.MERGE,CascadeType.REMOVE},fetch = FetchType.EAGER)
+    @ManyToMany(cascade = { CascadeType.MERGE },fetch = FetchType.EAGER )
     @JsonIgnore
-    private List<Repost> reposts;
+    @JoinTable(
+            name = "users_reposts",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "post_id") })
+    private List<Post> reposts;
 
     @Override
     public String toString() {
