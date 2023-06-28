@@ -73,13 +73,6 @@ public class User extends BaseEntity {
             inverseJoinColumns = { @JoinColumn(name = "post_id") })
     private List<Post> likedPosts;
 
-    @ManyToMany(cascade = { CascadeType.MERGE },fetch = FetchType.EAGER )
-    @JsonIgnore
-    @JoinTable(
-            name = "users_reposts",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "post_id") })
-    private List<Post> reposts;
 
     @Override
     public String toString() {
