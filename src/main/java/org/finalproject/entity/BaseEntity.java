@@ -24,7 +24,6 @@ public abstract class BaseEntity extends Auditable<User> implements Serializable
     private Long id;
 
 
-
 }
 
 
