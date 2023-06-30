@@ -60,7 +60,7 @@ public class FriendRestController {
         List<Friend> friends = friendService.findAll().stream().filter(el -> el.getUser().getId().equals(userId))
                 .collect(Collectors.toList());
 
-        List<User> usersFriends = friends.stream().map(el -> el.getFriend()).collect(Collectors.toList());
+        List<FriendDto> usersFriends = friends.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
 
         return ResponseEntity.ok().body(usersFriends);
 
