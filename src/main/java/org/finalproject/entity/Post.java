@@ -15,9 +15,9 @@ public class Post extends BaseEntity{
     @JoinColumn(name = "user_id")
     private User user;
     @Column(name = "post_type")
-    private PostTypes postType;
+    private String postType;
     private String content;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "parent_id")
     private Post parentId;
 

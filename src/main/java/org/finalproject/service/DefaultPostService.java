@@ -9,6 +9,6 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class DefaultPostService extends GeneralService<Post>{
+public class DefaultPostService extends GeneralService<Post> {
     private final PostJpaRepository userRepository;
 }

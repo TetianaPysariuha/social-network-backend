@@ -1,7 +1,9 @@
 package org.finalproject.dto;
 
 import lombok.*;
+import org.finalproject.entity.Post;
 import org.finalproject.entity.PostTypes;
+import org.finalproject.entity.User;
 
 @Getter
 @Setter
@@ -10,8 +12,8 @@ import org.finalproject.entity.PostTypes;
 @EqualsAndHashCode
 @ToString
 public class PostDto {
-
-    private PostTypes postType;
+    private User user;
+    private String postType;
     private String content;
-
+    private Post parentId;
 }

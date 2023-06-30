@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Data
 @Component
 public abstract class GeneralFacade<E extends BaseEntity, I, O> {
-
+    @Autowired
     private ModelMapper mm  ;
 
     private

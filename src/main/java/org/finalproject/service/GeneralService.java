@@ -30,11 +30,13 @@ public abstract class GeneralService<E extends BaseEntity> implements ServiceInt
 
     @Override
     public List<E> findAll() {
+        System.out.println(repo.findAll());
         return repo.findAll();
     }
 
     @Override
     public Page<E> findAll(Pageable pageable) {
+        System.out.println(repo.findAll(pageable));
         return repo.findAll(pageable);
     }
 

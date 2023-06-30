@@ -16,6 +16,11 @@ spring:
     active: dev #dev
 ---
 spring:
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data-h2.sql
+      schema-locations: classpath:schema-h2.sql
   datasource:
     url: jdbc:h2:mem:testdb
     username: sa
