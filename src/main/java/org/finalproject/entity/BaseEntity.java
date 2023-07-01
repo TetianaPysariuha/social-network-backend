@@ -18,7 +18,6 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @AllArgsConstructor
 public abstract class BaseEntity extends Auditable<User> implements Serializable {
     @Id
-
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
