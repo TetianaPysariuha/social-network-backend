@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface MessageRepository extends RepositoryInterface<Message>, JpaSpecificationExecutor<Message>{
+public interface MessageRepository extends RepositoryInterface<Message>, JpaSpecificationExecutor<Message> {
 
 //    @Query("Select m FROM Message m WHERE m.content LIKE %:content%")
 //    List<Message> findByContent (@Param("content") String content);
