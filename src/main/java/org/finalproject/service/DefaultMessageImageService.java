@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class DefaultMessageImageService extends GeneralService<MessageImage>{
+public class DefaultMessageImageService extends GeneralService<MessageImage> {
 
     private MessageImageRepository messageImageRepository;
 }
