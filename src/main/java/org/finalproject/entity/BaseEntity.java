@@ -22,7 +22,9 @@ public abstract class BaseEntity extends Auditable<User> implements Serializable
     @Column(name = "id", nullable = false)
     private Long id;
 
+
 }
+
 
 
 
