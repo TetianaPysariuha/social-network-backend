@@ -58,19 +58,19 @@ public class ChatRestController {
         chatService.save(chat);
     }
 
-//    @GetMapping("/{content}")
-//    public ResponseEntity<?> findByContent(@PathVariable String content) {
-//
-//        List<Chat> chatList = defaultChatService.findByContent(content);
-//        List<ChatDto> chatDtoList = chatList.stream()
-//                .map(chatDtoMapper::convertToDto)
-//                .collect(Collectors.toList());
-//        if (chatList.isEmpty()) {
-//            return ResponseEntity.badRequest().body("Chat not found");
-//        } else {
-//            return ResponseEntity.ok(chatDtoList);
-//        }
-//    }
+    /*@GetMapping("/{content}")
+    public ResponseEntity<?> findByContent(@PathVariable String content) {
+
+        List<Chat> chatList = defaultChatService.findByContent(content);
+        List<ChatDto> chatDtoList = chatList.stream()
+                .map(chatDtoMapper::convertToDto)
+                .collect(Collectors.toList());
+        if (chatList.isEmpty()) {
+            return ResponseEntity.badRequest().body("Chat not found");
+        } else {
+            return ResponseEntity.ok(chatDtoList);
+        }
+    }*/
 
     @GetMapping("/id")
     public ResponseEntity<?> getById(@PathVariable("id") Long userId) {
