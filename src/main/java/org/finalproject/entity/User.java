@@ -8,7 +8,9 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -65,19 +67,19 @@ public class User extends BaseEntity {
     private List<Chat> chats;
 
     @ManyToMany(cascade = { CascadeType.MERGE },fetch = FetchType.EAGER )
-    @JsonIgnore
+  //  @JsonIgnore
     @JoinTable(
             name = "users_liked_posts",
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "post_id") })
-    private List<Post> likedPosts;
+    private Set<Post> likedPosts=new HashSet<>();
     @ManyToMany(cascade = { CascadeType.MERGE },fetch = FetchType.EAGER )
     @JsonIgnore
     @JoinTable(
             name = "users_reposts",
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "post_id") })
-    private List<Post> reposts;
+    private Set<Post> reposts;
 
 
     @Override

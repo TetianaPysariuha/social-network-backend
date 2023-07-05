@@ -71,7 +71,7 @@ CREATE TABLE public.message_images (
                                        updated_date TIMESTAMP NOT NULL,
                                        created_by VARCHAR,
                                        updated_by VARCHAR,
-                                       img_url VARCHAR(255),
+                                       img_url VARCHAR,
                                        message_id INT,
                                        FOREIGN KEY (message_id) REFERENCES messages(id)
 );

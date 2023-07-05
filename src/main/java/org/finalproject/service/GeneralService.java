@@ -1,11 +1,14 @@
-package org.finalproject.service;
+ package org.finalproject.service;
+
 
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+
 import org.finalproject.entity.BaseEntity;
 import org.finalproject.exception.DataNotFoundException;
 import org.finalproject.repository.RepositoryInterface;
+import org.finalproject.service.ServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +24,7 @@ import java.util.Optional;
 @Transactional
 
 public abstract   class GeneralService<E extends BaseEntity> implements ServiceInterface<E> {
-@Autowired
+    @Autowired
     RepositoryInterface<E> repo;
 
     @Override

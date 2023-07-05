@@ -1,9 +1,11 @@
 package org.finalproject.facade;
 
-import org.finalproject.entity.BaseEntity;
-import org.finalproject.service.GeneralService;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import org.finalproject.entity.BaseEntity;
+import org.finalproject.service.GeneralService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,8 +19,8 @@ import java.util.stream.Collectors;
 @Data
 @Component
 public abstract class GeneralFacade<E extends BaseEntity, I, O> {
-
-private ModelMapper mm  ;
+    @Autowired
+    private ModelMapper mm  ;
 
     private
     GeneralService<E> service;
