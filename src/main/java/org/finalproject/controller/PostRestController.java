@@ -55,8 +55,8 @@ public class PostRestController {
     }
 
     @PostMapping
-    public void create(Long userId, String postType, String content) {
-        postService.save(new Post(new User(), postType, content, null));
+    public void create(@RequestBody PostRequestDto post) {
+        postService.save(dtoMapper.convertToEntity(post));
     }
 
     @DeleteMapping("/{id}")
