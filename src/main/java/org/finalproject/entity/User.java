@@ -67,7 +67,7 @@ public class User extends BaseEntity {
     private List<Chat> chats;
 
     @ManyToMany(cascade = { CascadeType.MERGE },fetch = FetchType.EAGER )
-  //  @JsonIgnore
+    @JsonIgnore
     @JoinTable(
             name = "users_liked_posts",
             joinColumns = { @JoinColumn(name = "user_id") },
@@ -79,7 +79,7 @@ public class User extends BaseEntity {
             name = "users_reposts",
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "post_id") })
-    private Set<Post> reposts;
+    private Set<Post> reposts=new HashSet<>();
 
 
     @Override

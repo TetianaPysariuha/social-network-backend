@@ -29,12 +29,12 @@ public class UserRestController {
 
 
     @GetMapping
-    public List<User> getAll() {
+    public List<UserDto> getAll() {
 
        List<User> userList =    userService.findAll();
-     //  List<UserDto> userDtoList = userList.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
+       List<UserDto> userDtoList = userList.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
 
-        return userList;
+        return userDtoList;
     }
 
     @GetMapping("/{page}/{size}")

@@ -21,11 +21,14 @@ public class Message extends BaseEntity {
 
     @Column(name = "content")
     private String content;
-    @Column(name = "chat_id")
-    private Long chatId;
+    @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @JoinColumn(name = "chat_id")
+    @JsonIgnore
+    private Chat chatId;
 
     @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User sender;
 
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "messageId")

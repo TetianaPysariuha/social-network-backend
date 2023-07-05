@@ -76,5 +76,12 @@ VALUES
   (1, 'https://example.com/image1.jpg', '2023-06-25 10:00:00', '2023-06-25 10:00:00'),
   (2, 'https://example.com/image2.jpg', '2023-06-25 10:05:00', '2023-06-25 10:05:00');
 
+INSERT INTO public.users_chats (id,user_id,chat_id) VALUES
 
+                                                        (91,100,1),
+                                                        (92,100,2),
+                                                        (93,101,3),
+                                                        (94,101,4),
+                                                        (95,102,1),
+                                                        (96,102,2);
 

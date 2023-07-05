@@ -1,5 +1,6 @@
 package org.finalproject.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,15 +16,17 @@ import java.util.List;
 @Table(name = "chats")
 public class Chat extends BaseEntity {
 
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
-    @JoinColumn(name = "message_id")
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE},mappedBy = "chatId")
+    @JsonIgnore
+ //   @JoinColumn(name = "message_id")
     private List<Message> messages;
-
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
-    @JoinColumn(name = "messageImage_id")
-    private List<MessageImage> messageImages;
+//Связь  не замкнута
+  //  @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+  //  @JoinColumn(name = "messageImage_id")
+  //  private List<MessageImage> messageImages;
 
     @ManyToMany(mappedBy = "chats", fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<User> users;
 
     public Chat(List<User> user) {

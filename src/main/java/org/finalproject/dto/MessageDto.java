@@ -1,6 +1,8 @@
 package org.finalproject.dto;
 
 import lombok.*;
+import org.finalproject.entity.Chat;
+import org.finalproject.entity.User;
 
 @Getter
 @Setter
@@ -12,6 +14,6 @@ public class MessageDto {
 
     private Long id;
     private String content;
-    private Long chatId;
-    private Long userId;
+    private Chat chatId;
+    private User userId;
 }

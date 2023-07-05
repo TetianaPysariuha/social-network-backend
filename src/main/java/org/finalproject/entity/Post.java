@@ -26,14 +26,14 @@ public class Post extends BaseEntity{
     @JoinColumn(name = "parent_id")
     private Post parentId;
     @ManyToMany(fetch = FetchType.EAGER,mappedBy = "likedPosts")
-    @JsonIgnore
+
 
     private Set<User> likes=new HashSet<>() ;
     @ManyToMany(fetch = FetchType.EAGER,mappedBy = "reposts")
     @JsonIgnore
 
-    private Set<User> reposts;
- @OneToMany
+    private Set<User> reposts=new HashSet<>();
+    @OneToMany
     @JoinColumn(name = "post_id")
     private List<PostImage> postImages ;
 
