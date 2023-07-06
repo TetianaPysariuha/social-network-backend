@@ -91,8 +91,8 @@ public class UserRestController {
     }
 
     @PostMapping
-    public void create(@RequestBody UserRequestDto employee ) {
-        userService.save(dtoMapper.convertToEntity(employee) );
+    public void create(@RequestBody UserRequestDto user ) {
+        userService.save(dtoMapper.convertToEntity(user) );
     }
 
     @DeleteMapping("/{id}")
