@@ -33,4 +33,10 @@ public class Message extends BaseEntity {
     @JsonIgnore
     private List<MessageImage> images;
 
+    @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @JoinColumn(name = "chat_id")
+    @JsonIgnore
+    private Chat chat;
+
+
 }
