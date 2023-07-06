@@ -98,7 +98,8 @@ public class UserRestController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id")Long userId) {
         try {
-            userService.deleteById(userId);
+
+            userService.delete(userService.findEntityById(userId));
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

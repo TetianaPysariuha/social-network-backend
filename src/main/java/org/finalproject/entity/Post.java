@@ -1,6 +1,7 @@
 package org.finalproject.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.LazyCollection;
@@ -17,6 +18,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "posts")
 public class Post extends BaseEntity{
     @ManyToOne
@@ -25,20 +27,14 @@ public class Post extends BaseEntity{
     @Column(name = "post_type")
     private String postType;
     private String content;
-    //@ManyToOne(cascade = CascadeType.PERSIST)
-  //  @JoinColumn(name = "parent_id")
-    @Column(name = "parent_id")
-    private Long parentId;
-
-    @OneToMany(cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER )
-    @LazyCollection(LazyCollectionOption.FALSE)
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "parent_id")
     @JsonIgnore
-    @JoinTable(
-            name = "posts",
-            joinColumns = { @JoinColumn(name = "parent_id") },
-            inverseJoinColumns = { @JoinColumn(name = "id") })
+    private Post parentId;
+
+  @OneToMany(cascade = {CascadeType.MERGE },fetch = FetchType.EAGER,mappedBy = "parentId")
     private List <Post> comments = new ArrayList<>();
-    @ManyToMany(fetch = FetchType.EAGER,mappedBy = "likedPosts")
+    @ManyToMany(cascade = {CascadeType.MERGE },fetch = FetchType.EAGER,mappedBy = "likedPosts")
     private List<User> likes;
 
     @ManyToMany(fetch = FetchType.EAGER,mappedBy = "reposts")
