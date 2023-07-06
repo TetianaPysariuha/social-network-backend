@@ -18,6 +18,7 @@ import java.util.Set;
 public class Post extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
     @Column(name = "post_type")
     private String postType;
@@ -40,7 +41,5 @@ public class Post extends BaseEntity{
     @OneToMany
     @JoinColumn(name = "post_id")
     private List<PostImage> postImages ;
-
-
 
 }

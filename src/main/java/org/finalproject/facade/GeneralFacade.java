@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.finalproject.entity.BaseEntity;
 import org.finalproject.service.GeneralService;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,12 +13,13 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+
 @NoArgsConstructor
 @Data
 @Component
 public abstract class GeneralFacade<E extends BaseEntity, I, O> {
-    @Autowired
-    private ModelMapper mm  ;
+private ModelMapper mm  ;
 
     private
     GeneralService<E> service;
@@ -69,5 +71,4 @@ public abstract class GeneralFacade<E extends BaseEntity, I, O> {
     public O findById(Long id) {
         return convertToDto(service.findEntityById(id));
     }
-
 }

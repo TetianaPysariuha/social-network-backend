@@ -22,6 +22,7 @@ public class Auditable<U> {
     @Column(name = "created_by")
     private U createdBy;
 
+
     @CreatedDate
     @Column(name = "created_date")
     private Date createdDate;
@@ -29,6 +30,7 @@ public class Auditable<U> {
     @LastModifiedBy
     @Column(name = "updated_by")
     private U updatedBy;
+
 
     @LastModifiedDate
     @Column(name = "updated_date")

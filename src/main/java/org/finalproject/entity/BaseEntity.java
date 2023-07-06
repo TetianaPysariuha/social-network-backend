@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.io.Serializable;
 
+
 @MappedSuperclass
 @Setter(AccessLevel.PUBLIC)
 @Getter(AccessLevel.PUBLIC)
@@ -15,10 +16,8 @@ import java.io.Serializable;
 public abstract class BaseEntity extends Auditable<String> implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(name = "id", nullable = false)
     private Long id;
 
-
-
 }
-

@@ -4,10 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.finalproject.entity.BaseEntity;
 import org.finalproject.exeprion.DataNotFoundException;
+
 import org.finalproject.repository.RepositoryInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -30,13 +32,11 @@ public abstract class GeneralService<E extends BaseEntity> implements ServiceInt
 
     @Override
     public List<E> findAll() {
-        System.out.println(repo.findAll());
         return repo.findAll();
     }
 
     @Override
     public Page<E> findAll(Pageable pageable) {
-        System.out.println(repo.findAll(pageable));
         return repo.findAll(pageable);
     }
 
@@ -70,6 +70,5 @@ public abstract class GeneralService<E extends BaseEntity> implements ServiceInt
     public List<E> findAllById(Iterable<Long> listOfIds) {
         return repo.findAllById(listOfIds);
     }
-
 
 }

@@ -1,5 +1,8 @@
 server:
   port: 9000
+java:
+  runtime:
+    version: 17
 spring:
   h2:
     console:
@@ -41,7 +44,8 @@ spring:
       mode: never
       schema-locations: classpath:hr_schema_postgres.sql
   datasource:
-    url: jdbc:postgresql://localhost:5432/
+    url: jdbc:${DATABASE_URL:postgresql://localhost:5432/}
+    #url: jdbc:postgresql://localhost:5432/
     username: postgres
     password: postgres
   jpa:
