@@ -13,6 +13,8 @@ import java.util.Date;
 @ToString
 public class UserDto {
 
+    private Long id;
+
     private String fullName;
 
     private String email;

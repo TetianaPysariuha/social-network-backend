@@ -17,6 +17,6 @@ public class ChatDto {
 
     private Long id;
     private List<Message> messages;
-  // private List<MessageImage> messageImages;
+    private List<MessageImage> messageImages;
     private List<User> users;
 }
