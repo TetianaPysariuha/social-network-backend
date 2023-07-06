@@ -20,10 +20,10 @@ public class Chat extends BaseEntity {
     @JsonIgnore
  //   @JoinColumn(name = "message_id")
     private List<Message> messages;
-//Связь  не замкнута
-  //  @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
-  //  @JoinColumn(name = "messageImage_id")
-  //  private List<MessageImage> messageImages;
+
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE},mappedBy = "chat")
+   // @JoinColumn(name = "messageImage_id")
+    private List<MessageImage> messageImages;
 
     @ManyToMany(mappedBy = "chats", fetch = FetchType.EAGER)
     @JsonIgnore

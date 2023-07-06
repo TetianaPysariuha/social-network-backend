@@ -20,5 +20,9 @@ public class MessageImage extends BaseEntity {
     @JoinColumn(name = "message_id")
     @JsonIgnore
     private Message messageId;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "chat_id")
+    @JsonIgnore
+    private Chat chat;
 
 }

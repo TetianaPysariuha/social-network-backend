@@ -74,6 +74,8 @@ CREATE TABLE public.message_images (
                                        updated_by VARCHAR,
                                        img_url VARCHAR,
                                        message_id INT,
+                                       chat_id INT,
+                                       FOREIGN KEY (chat_id) REFERENCES chats(id),
                                        FOREIGN KEY (message_id) REFERENCES messages(id)
 );
 
