@@ -15,5 +15,5 @@ public class MessageDto {
     private Long id;
     private String content;
     private Chat chatId;
-    private User userId;
+    private User sender;
 }

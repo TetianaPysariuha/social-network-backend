@@ -47,8 +47,8 @@ VALUES
     (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Emma', 'Emma', 'image4.jpg', 4),
     (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'David', 'David', 'image5.jpg', 5);
 
-
-
+/*
+*/
 
 
 
@@ -56,20 +56,23 @@ VALUES
 INSERT INTO public.posts (user_id, post_type, content, parent_id, created_date, updated_date)
 VALUES
   (1, 'post', 'Привет, мир!', NULL, '2023-06-25 10:00:00', '2023-06-25 10:00:00'),
-  (2, 'comment', 'Это отличный пост!', NULL, '2023-06-25 10:05:00', '2023-06-25 10:05:00'),
+  (2, 'comment', 'Это отличный пост!', 3, '2023-06-25 10:05:00', '2023-06-25 10:05:00'),
   (3, 'post', 'Здесь ничего интересного...', NULL, '2023-06-25 10:10:00', '2023-06-25 10:10:00');
 
 INSERT INTO public.users_liked_posts (post_id, user_id)
 VALUES
-  (1, 3),
-  (1, 2),
-  (2, 2),
-  (3, 1);
+    (1,2),
+    (1,3),
+    (2,3),
+    (2,1),
+    (3,2),
+    (3,1);
 
 INSERT INTO public.users_reposted_posts (post_id, user_id)
 VALUES
-  (2, 2),
-  (3, 1);
+  (2, 3),
+  (3, 1),
+  (1, 2);
 
 INSERT INTO public.post_images (post_id, img_url, created_date, updated_date)
 VALUES
@@ -83,5 +86,7 @@ INSERT INTO public.users_chats (user_id,chat_id) VALUES
                                                         (2,3),
                                                         (2,4),
                                                         (3,1),
+                                                        (1,3),
+                                                        (3,4),
                                                         (3,2);
 
