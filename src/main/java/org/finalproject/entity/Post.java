@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -18,7 +19,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "posts")
 public class Post extends BaseEntity{
     @ManyToOne
@@ -32,17 +33,25 @@ public class Post extends BaseEntity{
     @JsonIgnore
     private Post parentId;
 
+    @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "post")
+    @LazyCollection(LazyCollectionOption.FALSE)
+
+    private List<Like> likes;
+
+    @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "post")
+    @LazyCollection(LazyCollectionOption.FALSE)
+
+    private List<Repost> reposts;
   @OneToMany(cascade = {CascadeType.MERGE },fetch = FetchType.EAGER,mappedBy = "parentId")
+  @JsonIgnore
     private List <Post> comments = new ArrayList<>();
-    @ManyToMany(cascade = {CascadeType.MERGE },fetch = FetchType.EAGER,mappedBy = "likedPosts")
-    private List<User> likes;
 
-    @ManyToMany(fetch = FetchType.EAGER,mappedBy = "reposts")
-    @JsonIgnore
 
-    private Set<User> reposts =new HashSet<>();
+
     @OneToMany
     @JoinColumn(name = "post_id")
+
+    @JsonIgnore
     private List<PostImage> postImages ;
 
 

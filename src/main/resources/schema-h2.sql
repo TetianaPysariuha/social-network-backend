@@ -93,19 +93,6 @@ CREATE TABLE public.posts (
                                updated_by VARCHAR
 );
 
-DROP TABLE IF EXISTS public.users_liked_posts CASCADE;
-CREATE TABLE public.users_liked_posts (
-                       id INT AUTO_INCREMENT PRIMARY KEY,
-                       post_id INTEGER REFERENCES posts(id),
-                       user_id INTEGER REFERENCES users(id)
-);
-
-DROP TABLE IF EXISTS public.users_reposted_posts CASCADE;
-CREATE TABLE public.users_reposted_posts (
-                       id INT AUTO_INCREMENT PRIMARY KEY,
-                       post_id INTEGER REFERENCES posts(id),
-                       user_id INTEGER REFERENCES users(id)
-);
 
 DROP TABLE IF EXISTS public.post_images CASCADE ;
 CREATE TABLE public.post_images (
@@ -118,4 +105,25 @@ CREATE TABLE public.post_images (
                                updated_by VARCHAR
 );
 
+DROP TABLE IF EXISTS public.likes CASCADE;
+CREATE TABLE public.likes (
+                                          id INT AUTO_INCREMENT PRIMARY KEY,
+                                          user_id INT references users (id),
+                                          post_id INT references posts(id),
+                                          created_date TIMESTAMP NOT NULL,
+                                          updated_date TIMESTAMP NOT NULL,
+                                          created_by VARCHAR,
+                                          updated_by VARCHAR
 
+);
+DROP TABLE IF EXISTS public.reposts CASCADE;
+CREATE TABLE public.reposts (
+                              id INT AUTO_INCREMENT PRIMARY KEY,
+                              user_id INT references users (id),
+                              post_id INT references posts(id),
+                              created_date TIMESTAMP NOT NULL,
+                              updated_date TIMESTAMP NOT NULL,
+                              created_by VARCHAR,
+                              updated_by VARCHAR
+
+);
