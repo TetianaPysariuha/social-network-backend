@@ -1,35 +1,45 @@
 package org.finalproject.service.jwt;
 
 
+
+
 import io.jsonwebtoken.Claims;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.*;
 import org.finalproject.entities.User;
 import org.finalproject.exception.AuthException;
 import org.finalproject.jwt.JwtAuthentication;
 import org.finalproject.jwt.JwtRequest;
 import org.finalproject.jwt.JwtResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Getter
+@Setter
+@AllArgsConstructor
 public class AuthService {
+    @Autowired
+    private  UserService userService;
+    private  Map<String, String> refreshStorage = new HashMap<>();
 
-    private final UserService userService;
-    private final Map<String, String> refreshStorage = new HashMap<>();
-    private final JwtProvider jwtProvider;
-
-    private final PasswordEncoder passwordEncoder;
+    private  Map<String, HttpServletResponse> responseStorage = new HashMap<>();
+    @Autowired
+    private  JwtProvider jwtProvider;
+    @Autowired
+    private  PasswordEncoder passwordEncoder;
 
     public JwtResponse login(@NonNull JwtRequest authRequest) {
         final User user = userService.getByEmail(authRequest.getEmail())
                 .orElseThrow(() -> new AuthException("User not found"));
-        if (passwordEncoder.matches(authRequest.getPassword(), user.getPassword())) {
+        if (passwordEncoder.matches(authRequest.getPassword(), user.getPassword())){
             // if (user.getEncryptedPassword().equals(authRequest.getPassword())) {
             final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
@@ -38,6 +48,14 @@ public class AuthService {
         } else {
             throw new AuthException("Password is incorrect");
         }
+    }
+    public JwtResponse loginAuth2(@NonNull String email) {
+
+        final String accessToken = jwtProvider.generateOauthAccessToken(email);
+        final String refreshToken = jwtProvider.generateOauthRefreshToken(email);
+        refreshStorage.put(email, refreshToken);
+        return new JwtResponse(accessToken, refreshToken);
+
     }
 
     public JwtResponse getAccessToken(@NonNull String refreshToken) {
