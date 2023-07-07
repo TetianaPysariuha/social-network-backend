@@ -13,7 +13,7 @@ import lombok.*;
 @Setter
 @Entity
 @Table(name = "user_images")
-public class UserImage {
+public class UserImage extends BaseEntity {
 
     @Column(name = "img_url")
     private String imgUrl;
