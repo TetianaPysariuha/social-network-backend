@@ -3,7 +3,7 @@ package org.finalproject.repository;
 
 
 
-import org.finalproject.entities.BaseEntity;
+import org.finalproject.entity.BaseEntity;
 import org.finalproject.exception.DataNotFoundException;
 import org.springframework.data.jpa.repository.JpaRepository;
 

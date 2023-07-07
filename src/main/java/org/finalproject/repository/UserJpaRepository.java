@@ -3,7 +3,7 @@ package org.finalproject.repository;
 
 
 import lombok.NonNull;
-import org.finalproject.entities.User;
+import org.finalproject.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

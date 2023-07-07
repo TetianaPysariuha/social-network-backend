@@ -2,7 +2,7 @@ package org.finalproject.service.jwt;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.finalproject.entities.User;
+import org.finalproject.entity.User;
 import org.finalproject.repository.UserJpaRepository;
 import org.springframework.stereotype.Service;
 

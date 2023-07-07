@@ -10,7 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
-import org.finalproject.entities.User;
+import org.finalproject.entity.User;
 import org.finalproject.filter.JwtFilter;
 import org.finalproject.jwt.JwtAuthentication;
 import org.finalproject.service.GeneralService;

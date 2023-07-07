@@ -1,4 +1,4 @@
-package org.finalproject.entities;
+package org.finalproject.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

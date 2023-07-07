@@ -1,4 +1,4 @@
-package com.example.bootdata.domain;
+package org.finalproject.entity;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
-import org.finalproject.entities.User;
+import org.finalproject.entity.User;
 import org.finalproject.jwt.JwtResponse;
 import org.finalproject.repository.UserJpaRepository;
 import org.finalproject.service.jwt.AuthService;
