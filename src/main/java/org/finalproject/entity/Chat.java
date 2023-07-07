@@ -18,8 +18,7 @@ public class Chat extends BaseEntity {
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.EAGER, mappedBy = "chat")
     private List<Message> messages;
 
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
-    @JoinColumn(name = "messageImage_id")
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "chat")
     private List<MessageImage> messageImages;
 
     @ManyToMany(mappedBy = "chats", fetch = FetchType.EAGER)
