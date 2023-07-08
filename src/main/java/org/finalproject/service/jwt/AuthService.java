@@ -33,7 +33,7 @@ public class AuthService {
             // if (user.getEncryptedPassword().equals(authRequest.getPassword())) {
             final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
-            refreshStorage.put(user.getFullName(), refreshToken);
+            refreshStorage.put(user.getEmail(), refreshToken);
             return new JwtResponse(accessToken, refreshToken);
         } else {
             throw new AuthException("Password is incorrect");
