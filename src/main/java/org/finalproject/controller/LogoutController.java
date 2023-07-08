@@ -18,7 +18,7 @@ public class LogoutController {
 
     @GetMapping("logout")
     public void logout() {
-        SecurityContextHolder.getContext().setAuthentication(null);
+      //  SecurityContextHolder.getContext().setAuthentication(null);
 
     }
 }

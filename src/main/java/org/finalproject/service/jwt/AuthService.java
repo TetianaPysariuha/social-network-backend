@@ -39,21 +39,20 @@ public class AuthService {
         final User user = userService.getByEmail(authRequest.getEmail())
                 .orElseThrow(() -> new AuthException("User not found"));
         if (passwordEncoder.matches(authRequest.getPassword(), user.getPassword())){
-            // if (user.getEncryptedPassword().equals(authRequest.getPassword())) {
+
             final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
-            refreshStorage.put(user.getEmail(), refreshToken);
+            refreshStorage.put(authRequest.getEmail(), refreshToken);
             return new JwtResponse(accessToken, refreshToken);
         } else {
             throw new AuthException("Password is incorrect");
         }
     }
-    public JwtResponse loginAuth2(@NonNull String email) {
+    public void loginAuth2(String email,String refreshToken) {
 
-        final String accessToken = jwtProvider.generateOauthAccessToken(email);
-        final String refreshToken = jwtProvider.generateOauthRefreshToken(email);
+
         refreshStorage.put(email, refreshToken);
-        return new JwtResponse(accessToken, refreshToken);
+
 
     }
 
@@ -61,7 +60,12 @@ public class AuthService {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             final String email = claims.getSubject();
+
+            System.out.println(email);
             final String saveRefreshToken = refreshStorage.get(email);
+
+            System.out.println(saveRefreshToken);
+            System.out.println(saveRefreshToken.equals(refreshToken));
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
                 final User user = userService.getByEmail(email)
                         .orElseThrow(() -> new AuthException("User not found"));

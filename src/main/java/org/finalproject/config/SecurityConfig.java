@@ -12,12 +12,10 @@ import lombok.RequiredArgsConstructor;
 
 import org.finalproject.entity.User;
 import org.finalproject.filter.JwtFilter;
-import org.finalproject.jwt.JwtAuthentication;
 import org.finalproject.service.GeneralService;
 import org.finalproject.service.jwt.AuthService;
 import org.finalproject.service.jwt.CustomOAuth2UserService;
 import org.finalproject.service.jwt.JwtProvider;
-import org.finalproject.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,10 +26,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
-
-import org.springframework.security.core.context.SecurityContextHolder;
-
-
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -47,13 +41,12 @@ import java.util.Optional;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
+
 public class SecurityConfig {
     private final JwtFilter jwtFilter;
 
     private final AuthService authService;
     private final GeneralService<User> userService;
-
 
     private final JwtProvider jwtProvider;
     @Autowired
@@ -69,8 +62,6 @@ public class SecurityConfig {
         corsConfiguration.setMaxAge(1000L);
         return corsConfiguration;
     }
-
-
 
 
     @Bean
@@ -106,21 +97,7 @@ public class SecurityConfig {
 
 
                         String token = jwtProvider.generateOauthAccessToken(email);
-                        String refreshToken = jwtProvider.generateOauthRefreshToken(email);
-                        final Claims claims = jwtProvider.getAccessClaims(token);
 
-                        Map<String, String> newRefreshStorage = authService.getRefreshStorage();
-                        newRefreshStorage.put("token",token);
-                        newRefreshStorage.put("refresh",refreshToken);
-                        authService.setRefreshStorage(newRefreshStorage);
-
-                        final JwtAuthentication jwtInfoToken = JwtUtils.generate(claims);
-                        jwtInfoToken.setAuthenticated(true);
-
-                        SecurityContextHolder.getContext().setAuthentication(jwtInfoToken);
-
-                        response.sendRedirect("http//:localhost:3000");
-                        //userService.processOAuthPostLogin(oauthUser.getEmail());
                         User authUser = new User();
                         authUser.setEmail(email);
                         authUser.setFullName(fullName);
@@ -128,7 +105,17 @@ public class SecurityConfig {
                         if(existingUser.isEmpty()){
                             userService.save(authUser);}
 
+
+                        Map<String, String> newRefreshStorage = authService.getRefreshStorage();
+                        newRefreshStorage.put("token",token);
+
+                        authService.setRefreshStorage(newRefreshStorage);
+
+
+                        response.sendRedirect("http//:localhost:3000");
+
                     }
+
                 })
 
                 .and()
@@ -138,19 +125,16 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/api/auth/login", "/api/auth/token","/swagger-ui/**","api/oauth2/authorization/google","/users/**","/friends/**").permitAll()
+                                .requestMatchers("/api/auth/login", "/api/auth/token", "/api/auth/refresh","/swagger-ui/**","api/oauth2/authorization/google","/users/**","/friends/**").permitAll()
                                 .anyRequest().authenticated()
 
                                 .and()
                                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
 
-
                 )
 
                 .build();
-
-
 
     }
     @Bean
