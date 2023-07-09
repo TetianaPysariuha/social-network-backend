@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,8 +101,13 @@ public class UserRestController {
     }
     @PostMapping("/{id}/image")
     public void uploadImage(@PathVariable Long id,@RequestBody MultipartFile multipartFile ) {
-     String imgUrl =   fileUpload.uploadUserFile(multipartFile);
-     User user = userService.getOne(id);
+        String imgUrl = null;
+        try {
+            imgUrl = fileUpload.uploadUserFile(multipartFile,id);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        User user = userService.getOne(id);
      List < UserImage> userImages = user.getUserImages();
      UserImage newImage = new UserImage();
      newImage.setImageUrl(imgUrl);
@@ -110,15 +116,25 @@ public class UserRestController {
         userService.save(user );
     }
     @PostMapping("/{id}/avatar")
-    public void uploadImage(@PathVariable Long id,@RequestBody MultipartFile multipartFile ) {
-        String imgUrl =   fileUpload.uploadUserFile(multipartFile);
+    public void uploadAvatar(@PathVariable Long id,@RequestBody MultipartFile multipartFile ) {
+        String imgUrl = null;
+        try {
+            imgUrl = fileUpload.uploadUserFile(multipartFile,id);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         User user = userService.getOne(id);
        user.setProfilePicture(imgUrl);
         userService.save(user );
     }
     @PostMapping("/{id}/header")
-    public void uploadImage(@PathVariable Long id,@RequestBody MultipartFile multipartFile ) {
-        String imgUrl =   fileUpload.uploadUserFile(multipartFile);
+    public void uploadHeader(@PathVariable Long id,@RequestBody MultipartFile multipartFile ) {
+        String imgUrl = null;
+        try {
+            imgUrl = fileUpload.uploadUserFile(multipartFile,id);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         User user = userService.getOne(id);
         user.setProfileBackgroundPicture(imgUrl);
         userService.save(user );
