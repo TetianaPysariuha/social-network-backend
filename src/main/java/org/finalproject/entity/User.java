@@ -78,7 +78,10 @@ public class User extends BaseEntity {
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "post_id") })
     private List<Post> reposts;
-
+    @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "user")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonIgnore
+    private List<UserImage> userImages;
 
     @Override
     public String toString() {
