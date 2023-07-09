@@ -12,6 +12,7 @@ import java.util.Date;
 @EqualsAndHashCode
 @ToString
 public class UserDto {
+    private Long id;
 
     private String fullName;
 
