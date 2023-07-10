@@ -1,7 +1,7 @@
 package org.finalproject.dto;
 
 import lombok.*;
-import org.finalproject.entity.Chat;
+import org.springframework.security.core.userdetails.User;
 
 @Getter
 @Setter
@@ -9,11 +9,9 @@ import org.finalproject.entity.Chat;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
-public class MessageImageDto {
+public class UserImageDto {
 
-    private Long id;
     private String imgUrl;
-    private Long messageId;
-    private Chat chat;
+    private Long userId;
 
 }

@@ -28,9 +28,15 @@ public class Message extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User sender;
 
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "imgUrl")
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "messageId")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
     private List<MessageImage> images;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @JoinColumn(name = "chat_id")
+    @JsonIgnore
+    private Chat chat;
+
 
 }
