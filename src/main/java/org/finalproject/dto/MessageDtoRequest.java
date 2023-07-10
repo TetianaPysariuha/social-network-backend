@@ -3,6 +3,8 @@ package org.finalproject.dto;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.finalproject.entity.Chat;
+import org.finalproject.entity.User;
 
 @Getter
 @Setter
@@ -19,5 +21,7 @@ public class MessageDtoRequest {
     @NotNull
     private Long chatId;
     @NotNull
-    private Long userId;
+    private User sender;
+    @NotNull
+    private Chat chat;
 }
