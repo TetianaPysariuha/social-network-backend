@@ -30,6 +30,15 @@ VALUES
     (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Emma', 'Emma'),
     (CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'David', 'David');
 
+DROP TABLE IF EXISTS public.users_chats CASCADE ;
+CREATE TABLE public.users_chats (
+                                    id INT AUTO_INCREMENT PRIMARY KEY,
+                                    user_id INT NOT NULL,
+                                    chat_id INT NOT NULL ,
+                                    foreign key (user_id) references users(id),
+                                    foreign key (chat_id) references chats(id)
+
+);
 INSERT INTO messages (content, created_date, updated_date, created_by, updated_by, chat_id, user_id)
 VALUES
     ('Hello', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'John', 'John', 1, 1),
@@ -58,25 +67,35 @@ VALUES
 INSERT INTO public.posts (user_id, post_type, content, parent_id, created_date, updated_date)
 VALUES
     (NULL, 'post', 'Привет, мир!', NULL, '2023-06-25 10:00:00', '2023-06-25 10:00:00'),
-    (NULL, 'comment', 'Это отличный пост!', NULL, '2023-06-25 10:05:00', '2023-06-25 10:05:00'),
+    (NULL, 'comment', 'Это отличный пост!', 1, '2023-06-25 10:05:00', '2023-06-25 10:05:00'),
     (NULL, 'post', 'Здесь ничего интересного...', NULL, '2023-06-25 10:10:00', '2023-06-25 10:10:00');
 
 INSERT INTO public.users_liked_posts (post_id, user_id)
 VALUES
-    (1, null),
-    (1, null),
-    (2, null),
-    (3, null);
-
+    (1,2),
+    (1,3),
+    (2,3),
+    (2,1),
+    (3,2),
+    (3,1);
 INSERT INTO public.users_reposted_posts (post_id, user_id)
 VALUES
-    (2, null),
-    (3, null);
-
+    (2, 3),
+    (3, 1),
+    (1, 2);
 INSERT INTO public.post_images (post_id, img_url, created_date, updated_date)
 VALUES
     (1, 'https://example.com/image1.jpg', '2023-06-25 10:00:00', '2023-06-25 10:00:00'),
     (2, 'https://example.com/image2.jpg', '2023-06-25 10:05:00', '2023-06-25 10:05:00');
+INSERT INTO public.users_chats (user_id,chat_id) VALUES
 
+                                                     (1,1),
+                                                     (1,2),
+                                                     (2,3),
+                                                     (2,4),
+                                                     (3,1),
+                                                     (1,3),
+                                                     (3,4),
+                                                     (3,2);
 
 
