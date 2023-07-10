@@ -13,7 +13,7 @@ logging:
 ---
 spring:
   profiles:
-    active: dev #dev
+    active: prod #dev
 ---
 spring:
   sql:
