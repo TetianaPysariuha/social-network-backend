@@ -99,6 +99,7 @@ public class UserRestController {
     public void create(@RequestBody UserRequestDto user ) {
         userService.save(dtoMapper.convertToEntity(user) );
     }
+
     @PostMapping("/{id}/image")
     public void uploadImage(@PathVariable Long id,@RequestBody MultipartFile multipartFile ) {
         String imgUrl = null;
@@ -108,13 +109,14 @@ public class UserRestController {
             throw new RuntimeException(e);
         }
         User user = userService.getOne(id);
-     List < UserImage> userImages = user.getUserImages();
+     List<UserImage> userImages = user.getUserImages();
      UserImage newImage = new UserImage();
      newImage.setImageUrl(imgUrl);
      userImages.add(newImage);
      user.setUserImages(userImages);
         userService.save(user );
     }
+
     @PostMapping("/{id}/avatar")
     public void uploadAvatar(@PathVariable Long id,@RequestBody MultipartFile multipartFile ) {
         String imgUrl = null;
@@ -127,6 +129,7 @@ public class UserRestController {
        user.setProfilePicture(imgUrl);
         userService.save(user );
     }
+
     @PostMapping("/{id}/header")
     public void uploadHeader(@PathVariable Long id,@RequestBody MultipartFile multipartFile ) {
         String imgUrl = null;
@@ -139,6 +142,7 @@ public class UserRestController {
         user.setProfileBackgroundPicture(imgUrl);
         userService.save(user );
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id")Long userId) {
         try {

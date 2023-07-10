@@ -31,5 +31,5 @@ public class PostDto {
     private Date createdDate;
     private String updatedBy;
     private Date updatedDate;
-    List <Post> comments;
+    List<Post> comments;
 }
