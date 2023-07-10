@@ -1,6 +1,5 @@
 package org.finalproject.entity;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
@@ -42,12 +41,12 @@ public class User extends BaseEntity {
     @Column(name = "profile_background_picture")
     private String profileBackgroundPicture;
 
-    @OneToMany (cascade = {CascadeType.MERGE },fetch = FetchType.EAGER ,mappedBy = "user")
+    @OneToMany (cascade = {CascadeType.MERGE },fetch = FetchType.EAGER ,mappedBy = "friend")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
     List<Friend> users;
 
-    @OneToMany (cascade = {CascadeType.MERGE},fetch = FetchType.EAGER ,mappedBy = "friend")
+    @OneToMany (cascade = {CascadeType.MERGE},fetch = FetchType.EAGER ,mappedBy = "user")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
     List<Friend> friends;
@@ -77,10 +76,10 @@ public class User extends BaseEntity {
     @ManyToMany(cascade = { CascadeType.MERGE },fetch = FetchType.EAGER )
     @JsonIgnore
     @JoinTable(
-            name = "users_reposts",
+            name = "users_reposted_posts",
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "post_id") })
-    private Set<Post> reposts = new HashSet();
+    private Set<Post> reposts = new HashSet<>();
     @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "user")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore

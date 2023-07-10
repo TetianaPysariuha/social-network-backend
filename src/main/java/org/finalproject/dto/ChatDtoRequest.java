@@ -2,6 +2,9 @@ package org.finalproject.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.finalproject.entity.Message;
+import org.finalproject.entity.MessageImage;
+import org.finalproject.entity.User;
 
 import java.util.List;
 
@@ -15,8 +18,8 @@ public class ChatDtoRequest {
 
     @NotNull
     private Long id;
-    private List<MessageDto> messages;
-    private List<MessageImageDto> messageImages;
+    private List<Message> messages;
+    private List<MessageImage> messageImages;
     @NotNull
-    private List<UserDto> users;
+    private List<User> users;
 }

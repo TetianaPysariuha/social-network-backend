@@ -1,22 +1,27 @@
 package org.finalproject.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import lombok.*;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-@ToString
 @Getter
 @Setter
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "user_images")
+
 public class UserImage extends BaseEntity {
 
     @Column(name = "img_url")
-    private String imgUrl;
+    private String imageUrl;
     @Column(name = "user_id")
+
     private Long userId;
+    @ManyToOne(cascade = {CascadeType.MERGE } ,fetch = FetchType.EAGER )
+    @JoinColumn(name = "image_user_id")
+    User user;
+
 }

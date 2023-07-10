@@ -2,6 +2,7 @@ package org.finalproject.dto;
 
 import lombok.*;
 
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -12,4 +13,5 @@ public class UserImageDto {
 
     private String imgUrl;
     private Long userId;
+
 }

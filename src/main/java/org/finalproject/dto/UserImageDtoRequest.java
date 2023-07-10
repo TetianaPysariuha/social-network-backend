@@ -7,4 +7,6 @@ public class UserImageDtoRequest {
     private String imgUrl;
     @NotNull
     private Long userId;
+
+
 }

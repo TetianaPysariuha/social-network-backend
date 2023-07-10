@@ -1,7 +1,6 @@
-
 DROP TABLE IF EXISTS public.users  CASCADE ;
 CREATE TABLE public.users (
-                             id INT AUTO_INCREMENT PRIMARY KEY,
+                              id INT AUTO_INCREMENT PRIMARY KEY,
                               full_name VARCHAR(250) NOT NULL,
                               email  VARCHAR (250) NOT NULL,
                               password VARCHAR (250) NOT NULL,
@@ -21,26 +20,26 @@ CREATE TABLE public.users (
 
 DROP TABLE IF EXISTS public.friends CASCADE ;
 CREATE TABLE public.friends (
-                                 id INT AUTO_INCREMENT PRIMARY KEY,
-                                 user_id INT REFERENCES users(id) ,
-                                 friend_id INT REFERENCES users(id),
-                                 status VARCHAR (250) NOT NULL,
+                                id INT AUTO_INCREMENT PRIMARY KEY,
+                                user_id INT REFERENCES users(id) ,
+                                friend_id INT REFERENCES users(id),
+                                status VARCHAR (250) NOT NULL,
 
-                                 created_date TIMESTAMP NOT NULL ,
-                                 updated_date TIMESTAMP NOT NULL,
-                                 created_by VARCHAR,
-                                 updated_by VARCHAR
+                                created_date TIMESTAMP NOT NULL ,
+                                updated_date TIMESTAMP NOT NULL,
+                                created_by VARCHAR,
+                                updated_by VARCHAR
 
 );
 
 
 DROP TABLE IF EXISTS public.users_chats CASCADE ;
 CREATE TABLE public.users_chats (
-                                      id INT AUTO_INCREMENT PRIMARY KEY,
-                                      user_id INT NOT NULL,
-                                      chat_id INT NOT NULL ,
-                                      foreign key (user_id) references users(id),
-                                      foreign key (chat_id) references chats(id)
+                                    id INT AUTO_INCREMENT PRIMARY KEY,
+                                    user_id INT NOT NULL,
+                                    chat_id INT NOT NULL ,
+                                    foreign key (user_id) references users(id),
+                                    foreign key (chat_id) references chats(id)
 
 );
 DROP TABLE IF EXISTS public.chats  CASCADE ;
@@ -60,10 +59,10 @@ CREATE TABLE public.messages (
                                  created_by VARCHAR,
                                  updated_by VARCHAR,
                                  chat_id INT,
-                                 user_id INT ,
-                                 FOREIGN KEY (chat_id) REFERENCES chats(id),
+                                 chat_entity_id INT,
+                                 user_id INT,
+                                 FOREIGN KEY (chat_id) REFERENCES chats(id) ,
                                  FOREIGN KEY (user_id) REFERENCES users(id)
-
 );
 DROP TABLE IF EXISTS public.message_images  CASCADE ;
 CREATE TABLE public.message_images (
@@ -72,50 +71,61 @@ CREATE TABLE public.message_images (
                                        updated_date TIMESTAMP NOT NULL,
                                        created_by VARCHAR,
                                        updated_by VARCHAR,
-                                       img_url VARCHAR,
-                                       message_id INT,
+                                       img_url VARCHAR(255),
                                        chat_id INT,
+                                       message_id INT,
                                        FOREIGN KEY (chat_id) REFERENCES chats(id),
                                        FOREIGN KEY (message_id) REFERENCES messages(id)
+);
+DROP TABLE IF EXISTS public.user_images  CASCADE ;
+CREATE TABLE public.user_images (
+                                    id INT PRIMARY KEY AUTO_INCREMENT,
+                                    created_date TIMESTAMP NOT NULL,
+                                    updated_date TIMESTAMP NOT NULL,
+                                    created_by VARCHAR,
+                                    updated_by VARCHAR,
+                                    img_url VARCHAR(255),
+                                    user_id INT,
+                                    image_user_id INT,
+                                    FOREIGN KEY (image_user_id) REFERENCES users(id)
 );
 
 DROP TABLE IF EXISTS public.posts CASCADE ;
 CREATE TABLE public.posts (
-                             id INT AUTO_INCREMENT PRIMARY KEY,
-                               user_id INT REFERENCES users(id),
-
-
-                               content VARCHAR(355),
-                               post_type VARCHAR(255) NOT NULL,
-                               parent_id INT,
-                               created_date TIMESTAMP NOT NULL,
-                               updated_date TIMESTAMP NOT NULL,
-                               created_by VARCHAR,
-                               updated_by VARCHAR
+                              id INT AUTO_INCREMENT PRIMARY KEY,
+                              user_id INT REFERENCES users(id),
+                              post_type VARCHAR(255) NOT NULL,
+                              content VARCHAR(255),
+                              parent_id INT REFERENCES posts(id),
+                              created_date TIMESTAMP NOT NULL,
+                              updated_date TIMESTAMP NOT NULL,
+                              created_by VARCHAR,
+                              updated_by VARCHAR
 );
 
 DROP TABLE IF EXISTS public.users_liked_posts CASCADE;
 CREATE TABLE public.users_liked_posts (
-                       id INT AUTO_INCREMENT PRIMARY KEY,
-                       post_id INTEGER REFERENCES posts(id),
-                       user_id INTEGER REFERENCES users(id)
+                                          id INT AUTO_INCREMENT PRIMARY KEY,
+                                          post_id INTEGER REFERENCES posts(id),
+                                          user_id INTEGER REFERENCES users(id)
 );
 
 DROP TABLE IF EXISTS public.users_reposted_posts CASCADE;
 CREATE TABLE public.users_reposted_posts (
-                       id INT AUTO_INCREMENT PRIMARY KEY,
-                       post_id INTEGER REFERENCES posts(id),
-                       user_id INTEGER REFERENCES users(id)
+                                             id INT AUTO_INCREMENT PRIMARY KEY,
+                                             post_id INTEGER REFERENCES posts(id),
+                                             user_id INTEGER REFERENCES users(id)
 );
 
 DROP TABLE IF EXISTS public.post_images CASCADE ;
 CREATE TABLE public.post_images (
-                             id INT AUTO_INCREMENT PRIMARY KEY,
-                               post_id INT REFERENCES posts(id),
-                               img_url VARCHAR(255),
-                               created_date TIMESTAMP NOT NULL,
-                               updated_date TIMESTAMP NOT NULL,
-                               created_by VARCHAR,
-                               updated_by VARCHAR
+                                    id INT AUTO_INCREMENT PRIMARY KEY,
+                                    post_id INT REFERENCES posts(id),
+                                    img_url VARCHAR(255),
+                                    created_date TIMESTAMP NOT NULL,
+                                    updated_date TIMESTAMP NOT NULL,
+                                    created_by VARCHAR,
+                                    updated_by VARCHAR
 );
+
 
