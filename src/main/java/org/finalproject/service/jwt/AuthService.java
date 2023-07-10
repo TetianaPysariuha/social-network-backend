@@ -11,6 +11,8 @@ import org.finalproject.exception.AuthException;
 import org.finalproject.jwt.JwtAuthentication;
 import org.finalproject.jwt.JwtRequest;
 import org.finalproject.jwt.JwtResponse;
+import org.finalproject.jwt.RegisterRequest;
+import org.finalproject.service.GeneralService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,6 +33,8 @@ public class AuthService {
 
     private  Map<String, HttpServletResponse> responseStorage = new HashMap<>();
     @Autowired
+    private GeneralService <User> serviceUser;
+    @Autowired
     private  JwtProvider jwtProvider;
     @Autowired
     private  PasswordEncoder passwordEncoder;
@@ -47,6 +51,13 @@ public class AuthService {
         } else {
             throw new AuthException("Password is incorrect");
         }
+    }
+    public void register(@NonNull RegisterRequest authRequest) {
+          User newUser = new User();
+          newUser.setEmail(authRequest.getEmail());
+          newUser.setPassword(authRequest.getPassword());
+          newUser.setFullName(authRequest.getFullName());
+          serviceUser.save(newUser);
     }
     public void loginAuth2(String email,String refreshToken) {
 

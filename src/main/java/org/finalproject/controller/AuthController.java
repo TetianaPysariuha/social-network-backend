@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.finalproject.jwt.JwtRequest;
 import org.finalproject.jwt.JwtResponse;
 import org.finalproject.jwt.RefreshJwtRequest;
+import org.finalproject.jwt.RegisterRequest;
 import org.finalproject.service.jwt.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,11 @@ public class AuthController {
         final JwtResponse token = authService.login(authRequest);
         return ResponseEntity.ok(token);
     }
-
+    @PostMapping("registration")
+    public ResponseEntity<JwtResponse> register(@RequestBody RegisterRequest authRequest) {
+       authService.register(authRequest);
+        return ResponseEntity.ok().build();
+    }
     @PostMapping("token")
     public ResponseEntity<JwtResponse> getNewAccessToken(@RequestBody RefreshJwtRequest request) {
         final JwtResponse token = authService.getAccessToken(request.getRefreshToken());
