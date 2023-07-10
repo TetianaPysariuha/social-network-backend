@@ -9,6 +9,9 @@ import org.finalproject.exception.AuthException;
 import org.finalproject.jwt.JwtAuthentication;
 import org.finalproject.jwt.JwtRequest;
 import org.finalproject.jwt.JwtResponse;
+import org.finalproject.jwt.RegisterRequest;
+import org.finalproject.service.GeneralService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,7 +26,8 @@ public class AuthService {
     private final UserService userService;
     private final Map<String, String> refreshStorage = new HashMap<>();
     private final JwtProvider jwtProvider;
-
+    @Autowired
+    private GeneralService<User> serviceUser;
     private final PasswordEncoder passwordEncoder;
 
     public JwtResponse login(@NonNull JwtRequest authRequest) {
@@ -39,7 +43,13 @@ public class AuthService {
             throw new AuthException("Password is incorrect");
         }
     }
-
+    public void register(@NonNull RegisterRequest authRequest) {
+        User newUser = new User();
+        newUser.setEmail(authRequest.getEmail());
+        newUser.setPassword(authRequest.getPassword());
+        newUser.setFullName(authRequest.getFullName());
+        serviceUser.save(newUser);
+    }
     public JwtResponse getAccessToken(@NonNull String refreshToken) {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
