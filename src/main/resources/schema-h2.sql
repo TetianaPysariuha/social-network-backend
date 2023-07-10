@@ -74,3 +74,15 @@ CREATE TABLE public.message_images (
                                        message_id INT,
                                        FOREIGN KEY (message_id) REFERENCES messages(id)
 );
+DROP TABLE IF EXISTS public.user_images  CASCADE ;
+CREATE TABLE public.user_images (
+                                       id INT PRIMARY KEY AUTO_INCREMENT,
+                                       created_date TIMESTAMP NOT NULL,
+                                       updated_date TIMESTAMP NOT NULL,
+                                       created_by VARCHAR,
+                                       updated_by VARCHAR,
+                                       img_url VARCHAR(255),
+                                       user_id INT,
+                                       image_user_id INT,
+                                       FOREIGN KEY (image_user_id) REFERENCES users(id)
+);
