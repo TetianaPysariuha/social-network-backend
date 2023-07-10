@@ -16,10 +16,12 @@ public class MessageImage extends BaseEntity {
 
     @Column(name = "img_url")
     private String imgUrl;
+
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "message_id")
     @JsonIgnore
     private Message messageId;
+
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "chat_id")
     @JsonIgnore

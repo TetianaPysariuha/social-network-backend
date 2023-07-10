@@ -16,13 +16,12 @@ import java.util.List;
 @Table(name = "chats")
 public class Chat extends BaseEntity {
 
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE},mappedBy = "chatId")
-    @JsonIgnore
- //   @JoinColumn(name = "message_id")
+
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.EAGER, mappedBy = "chat")
     private List<Message> messages;
 
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE},mappedBy = "chat")
-   // @JoinColumn(name = "messageImage_id")
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "chat")
+
     private List<MessageImage> messageImages;
 
     @ManyToMany(mappedBy = "chats", fetch = FetchType.EAGER)

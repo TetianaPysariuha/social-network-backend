@@ -1,8 +1,5 @@
 server:
   port: 9000
-java:
-  runtime:
-    version: 17
 spring:
   h2:
     console:
@@ -62,3 +59,6 @@ spring:
       on-profile: prod
 welcome:
   message: welcome
+  cloudName: ${cloudName}
+  apiKey: ${apiKey}
+  apiSecret: ${apiSecret}

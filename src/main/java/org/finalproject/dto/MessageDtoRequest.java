@@ -22,4 +22,8 @@ public class MessageDtoRequest {
     private Chat chatId;
     @NotNull
     private User sender;
+
+    @NotNull
+    private Chat chat;
+
 }

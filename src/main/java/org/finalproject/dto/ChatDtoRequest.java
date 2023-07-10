@@ -15,10 +15,8 @@ public class ChatDtoRequest {
 
     @NotNull
     private Long id;
-
     private List<MessageDto> messages;
     private List<MessageImageDto> messageImages;
-
     @NotNull
     private List<UserDto> users;
 }
