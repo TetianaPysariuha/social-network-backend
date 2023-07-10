@@ -17,8 +17,11 @@ public class UserImage extends BaseEntity {
 
     @Column(name = "img_url")
     private String imageUrl;
+    @Column(name = "user_id")
+
+    private Long userId;
     @ManyToOne(cascade = {CascadeType.MERGE } ,fetch = FetchType.EAGER )
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "image_user_id")
      User user;
 
 }
