@@ -13,7 +13,7 @@ logging:
 ---
 spring:
   profiles:
-    active: prod #dev
+    active: dev #dev
 ---
 spring:
   sql:
@@ -29,7 +29,7 @@ spring:
   jpa:
     defer-datasource-initialization: true
     properties:
-      generate_ststistics: true
+      generate_statistics: true
     generate-ddl: true
   config:
     activate:
