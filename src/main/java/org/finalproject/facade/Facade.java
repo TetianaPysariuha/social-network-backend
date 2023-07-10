@@ -11,3 +11,4 @@ public interface Facade<E,DTOResponse, DTORequest> {
     E toEntity(DTORequest dtoRequest);
 
 }
+

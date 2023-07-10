@@ -91,14 +91,15 @@ public class UserRestController {
     }
 
     @PostMapping
-    public void create(@RequestBody UserRequestDto employee ) {
-        userService.save(dtoMapper.convertToEntity(employee) );
+    public void create(@RequestBody UserRequestDto user ) {
+        userService.save(dtoMapper.convertToEntity(user) );
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id")Long userId) {
         try {
-            userService.deleteById(userId);
+
+            userService.delete(userService.findEntityById(userId));
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

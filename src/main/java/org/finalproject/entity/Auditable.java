@@ -11,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+
 import java.util.Date;
 
 @Getter
@@ -20,8 +21,8 @@ import java.util.Date;
 public class Auditable<U> {
     @CreatedBy
     @Column(name = "created_by")
-    private U createdBy;
 
+    private String createdBy;
 
     @CreatedDate
     @Column(name = "created_date")
@@ -29,8 +30,8 @@ public class Auditable<U> {
 
     @LastModifiedBy
     @Column(name = "updated_by")
-    private U updatedBy;
 
+    private String updatedBy;
 
     @LastModifiedDate
     @Column(name = "updated_date")

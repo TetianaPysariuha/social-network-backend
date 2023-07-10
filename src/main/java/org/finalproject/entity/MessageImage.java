@@ -1,8 +1,7 @@
 package org.finalproject.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.*;
 
 @NoArgsConstructor
@@ -17,7 +16,13 @@ public class MessageImage extends BaseEntity {
 
     @Column(name = "img_url")
     private String imgUrl;
-    @Column(name = "message_id")
-    private Long messageId;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "message_id")
+    @JsonIgnore
+    private Message messageId;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "chat_id")
+    @JsonIgnore
+    private Chat chat;
 
 }

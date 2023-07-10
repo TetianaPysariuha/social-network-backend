@@ -9,7 +9,9 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -40,7 +42,8 @@ public class User extends BaseEntity {
     @Column(name = "profile_background_picture")
     private String profileBackgroundPicture;
 
-    @OneToMany (cascade = {CascadeType.MERGE },fetch = FetchType.EAGER ,mappedBy = "user")
+    @OneToMany (cascade = {CascadeType.MERGE
+    },fetch = FetchType.EAGER ,mappedBy = "user")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
     List<Friend> users;
@@ -49,7 +52,7 @@ public class User extends BaseEntity {
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
     List<Friend> friends;
-    @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "user")
+    @OneToMany (cascade = {CascadeType.MERGE },fetch = FetchType.EAGER ,mappedBy = "user")
     @JsonIgnore
     private List<Post> posts ;
     @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "sender")
@@ -65,20 +68,21 @@ public class User extends BaseEntity {
             inverseJoinColumns = { @JoinColumn(name = "chat_id") })
     private List<Chat> chats;
 
-    @ManyToMany(cascade = { CascadeType.MERGE },fetch = FetchType.EAGER )
+    @ManyToMany(cascade = { CascadeType.MERGE},fetch = FetchType.EAGER )
     @JsonIgnore
     @JoinTable(
             name = "users_liked_posts",
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "post_id") })
     private List<Post> likedPosts;
+
     @ManyToMany(cascade = { CascadeType.MERGE },fetch = FetchType.EAGER )
     @JsonIgnore
     @JoinTable(
-            name = "users_reposts",
+            name = "users_reposted_posts",
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "post_id") })
-    private List<Post> reposts;
+    private Set<Post> reposts =new HashSet<>();
 
 
     @Override
@@ -98,3 +102,4 @@ public class User extends BaseEntity {
                 '}';
     }
 }
+

@@ -1,7 +1,9 @@
 package org.finalproject.facade;
 
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import org.finalproject.entity.BaseEntity;
 import org.finalproject.service.GeneralService;
 
@@ -14,12 +16,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-
 @NoArgsConstructor
 @Data
 @Component
 public abstract class GeneralFacade<E extends BaseEntity, I, O> {
-private ModelMapper mm  ;
+
+    @Autowired
+    private ModelMapper mm  ;
 
     private
     GeneralService<E> service;
@@ -71,4 +74,6 @@ private ModelMapper mm  ;
     public O findById(Long id) {
         return convertToDto(service.findEntityById(id));
     }
+
+
 }

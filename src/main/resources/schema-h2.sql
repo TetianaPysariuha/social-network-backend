@@ -60,9 +60,10 @@ CREATE TABLE public.messages (
                                  created_by VARCHAR,
                                  updated_by VARCHAR,
                                  chat_id INT,
-                                 user_id INT,
-                                 FOREIGN KEY (chat_id) REFERENCES chats(id) ,
+                                 user_id INT ,
+                                 FOREIGN KEY (chat_id) REFERENCES chats(id),
                                  FOREIGN KEY (user_id) REFERENCES users(id)
+
 );
 DROP TABLE IF EXISTS public.message_images  CASCADE ;
 CREATE TABLE public.message_images (
@@ -71,8 +72,10 @@ CREATE TABLE public.message_images (
                                        updated_date TIMESTAMP NOT NULL,
                                        created_by VARCHAR,
                                        updated_by VARCHAR,
-                                       img_url VARCHAR(255),
+                                       img_url VARCHAR,
                                        message_id INT,
+                                       chat_id INT,
+                                       FOREIGN KEY (chat_id) REFERENCES chats(id),
                                        FOREIGN KEY (message_id) REFERENCES messages(id)
 );
 
@@ -80,9 +83,11 @@ DROP TABLE IF EXISTS public.posts CASCADE ;
 CREATE TABLE public.posts (
                              id INT AUTO_INCREMENT PRIMARY KEY,
                                user_id INT REFERENCES users(id),
+
+
+                               content VARCHAR(355),
                                post_type VARCHAR(255) NOT NULL,
-                               content VARCHAR(255),
-                               parent_id INT REFERENCES posts(id),
+                               parent_id INT,
                                created_date TIMESTAMP NOT NULL,
                                updated_date TIMESTAMP NOT NULL,
                                created_by VARCHAR,
