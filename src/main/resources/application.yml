@@ -41,7 +41,7 @@ spring:
       mode: never
       schema-locations: classpath:hr_schema_postgres.sql
   datasource:
-    url: jdbc:${DATABASE_URL:postgresql://localhost:5432/}
+    url: ${DATABASE_URL}
     #url: jdbc:postgresql://localhost:5432/
     username: postgres
     password: postgres
