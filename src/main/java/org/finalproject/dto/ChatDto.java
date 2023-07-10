@@ -1,6 +1,9 @@
 package org.finalproject.dto;
 
 import lombok.*;
+import org.finalproject.entity.Message;
+import org.finalproject.entity.MessageImage;
+import org.finalproject.entity.User;
 
 import java.util.List;
 
@@ -13,7 +16,7 @@ import java.util.List;
 public class ChatDto {
 
     private Long id;
-    private List<MessageDto> messages;
-    private List<MessageImageDto> messageImages;
-    private List<UserDto> users;
+    private List<Message> messages;
+    private List<MessageImage> messageImages;
+    private List<User> users;
 }

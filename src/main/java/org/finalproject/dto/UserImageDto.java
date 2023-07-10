@@ -1,7 +1,7 @@
 package org.finalproject.dto;
 
 import lombok.*;
-import org.springframework.security.core.userdetails.User;
+
 
 @Getter
 @Setter

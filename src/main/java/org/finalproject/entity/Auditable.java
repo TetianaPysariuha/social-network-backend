@@ -21,6 +21,7 @@ import java.util.Date;
 public class Auditable<U> {
     @CreatedBy
     @Column(name = "created_by")
+
     private String createdBy;
 
     @CreatedDate
@@ -29,6 +30,7 @@ public class Auditable<U> {
 
     @LastModifiedBy
     @Column(name = "updated_by")
+
     private String updatedBy;
 
     @LastModifiedDate

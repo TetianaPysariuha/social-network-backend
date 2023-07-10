@@ -21,7 +21,7 @@ public class Message extends BaseEntity {
 
     @Column(name = "content")
     private String content;
-    @Column(name = "chat_id")
+    @Column(name = "chat_entity_id")
     private Long chatId;
 
     @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)

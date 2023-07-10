@@ -22,6 +22,6 @@ public class UserImage extends BaseEntity {
     private Long userId;
     @ManyToOne(cascade = {CascadeType.MERGE } ,fetch = FetchType.EAGER )
     @JoinColumn(name = "image_user_id")
-     User user;
+    User user;
 
 }
