@@ -42,6 +42,7 @@ spring:
       #schema-locations: classpath:hr_schema_postgres.sql
   datasource:
     url: ${DATABASE_URL}
+    driver-class-name: org.postgresql.Driver
     #url: jdbc:postgresql://localhost:5432/
     #username: postgres
     #password: postgres
