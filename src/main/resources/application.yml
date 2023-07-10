@@ -54,3 +54,6 @@ spring:
       on-profile: prod
 welcome:
   message: welcome
+  cloudName: ${cloudName}
+  apiKey: ${apiKey}
+  apiSecret: ${apiSecret}
