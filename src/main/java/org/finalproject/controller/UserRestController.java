@@ -104,7 +104,7 @@ public class UserRestController {
 
     @PostMapping
     public void create(@RequestBody UserRequestDto userDto ) {
-        User user =dtoMapper.convertToEntity(userDto);
+        User user = dtoMapper.convertToEntity(userDto);
 
         userService.save(user);
     }
@@ -157,7 +157,7 @@ public class UserRestController {
     public ResponseEntity<?> deleteById(@PathVariable("id")Long userId) {
         try {
 
-          //  userService.delete(userService.findEntityById(userId));
+
             userService.deleteById(userId);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
