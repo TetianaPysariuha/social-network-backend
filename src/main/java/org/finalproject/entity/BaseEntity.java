@@ -1,5 +1,6 @@
 package org.finalproject.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,6 +16,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Getter(AccessLevel.PUBLIC)
 @EqualsAndHashCode(callSuper = true)
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class BaseEntity extends Auditable<String> implements Serializable {

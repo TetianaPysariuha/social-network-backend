@@ -20,7 +20,7 @@ public class UserImage extends BaseEntity {
     @Column(name = "user_id")
 
     private Long userId;
-    @ManyToOne(cascade = {CascadeType.MERGE } ,fetch = FetchType.EAGER )
+    @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE } ,fetch = FetchType.EAGER )
     @JoinColumn(name = "image_user_id")
     User user;
 

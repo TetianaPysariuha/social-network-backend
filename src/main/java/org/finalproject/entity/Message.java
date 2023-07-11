@@ -29,7 +29,7 @@ public class Message extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User sender;
 
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE},fetch = FetchType.EAGER,mappedBy = "messageId")
+    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REMOVE},fetch = FetchType.EAGER,mappedBy = "messageId")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
     private List<MessageImage> images = new ArrayList<>();

@@ -17,13 +17,13 @@ import java.util.List;
 @Table(name = "chats")
 public class Chat extends BaseEntity {
 
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.EAGER, mappedBy = "chat")
+    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.EAGER, mappedBy = "chat")
     private List<Message> messages = new ArrayList<>();
 
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE},fetch = FetchType.EAGER,mappedBy = "chat")
+    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REMOVE},fetch = FetchType.EAGER,mappedBy = "chat")
     private List<MessageImage> messageImages = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "chats", fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE},mappedBy = "chats", fetch = FetchType.EAGER)
     private List<User> users = new ArrayList<>();
 
     public Chat(List<User> user) {

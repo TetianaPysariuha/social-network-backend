@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -101,8 +103,10 @@ public class UserRestController {
     }
 
     @PostMapping
-    public void create(@RequestBody UserRequestDto user ) {
-        userService.save(dtoMapper.convertToEntity(user) );
+    public void create(@RequestBody UserRequestDto userDto ) {
+        User user =dtoMapper.convertToEntity(userDto);
+
+        userService.save(user);
     }
 
 
@@ -153,7 +157,8 @@ public class UserRestController {
     public ResponseEntity<?> deleteById(@PathVariable("id")Long userId) {
         try {
 
-            userService.delete(userService.findEntityById(userId));
+          //  userService.delete(userService.findEntityById(userId));
+            userService.deleteById(userId);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

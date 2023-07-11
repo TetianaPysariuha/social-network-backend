@@ -81,7 +81,7 @@ public class FriendRestController {
        addedFriend.setUser(user);
        addedFriend.setFriend(friend);
        addedFriend.setStatus("pending");
-        List<Friend> userFriends = user.getFriends();
+        List<Friend> userFriends = userService.getOne(id).getFriends();
         userFriends.add(addedFriend);
         user.setFriends(userFriends);
         friendService.save(addedFriend);

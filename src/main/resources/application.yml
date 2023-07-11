@@ -9,18 +9,18 @@ spring:
 logging:
   level:
     org:
-     hibernate: debug
+     #hibernate: debug
 ---
 spring:
   profiles:
-    active: dev #dev
+    active: prod #dev
 ---
 spring:
   sql:
     init:
       mode: always
       data-locations: classpath:data-h2.sql
-      schema-locations: classpath:schema-h2.sql
+    #  schema-locations: classpath:schema-h2.sql
   datasource:
     url: jdbc:h2:mem:testdb
     username: sa
@@ -33,21 +33,21 @@ spring:
     generate-ddl: true
   config:
     activate:
-      on-profile: prod
+      on-profile: dev
 ---
 spring:
   sql:
     init:
       mode: always
       schema-locations: classpath:hr_schema_postgres.sql
-
+     # data-locations: classpath:hr_data_postgres.sql
   datasource:
     url: jdbc:${DATABASE_URL:postgresql://localhost:5432/}
     #url: jdbc:postgresql://localhost:5432/
     username: postgres
     password: root
   jpa:
-    open-in-view: false
+   # open-in-view: true
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: none

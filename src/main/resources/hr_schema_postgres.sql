@@ -114,12 +114,16 @@ CREATE TABLE public.users_liked_posts (
                                           user_id INTEGER REFERENCES users(id)
 );
 
+
+
 DROP TABLE IF EXISTS public.users_reposted_posts CASCADE;
 CREATE TABLE public.users_reposted_posts (
                                              id SERIAL PRIMARY KEY,
                                              post_id INTEGER REFERENCES posts(id),
                                              user_id INTEGER REFERENCES users(id)
 );
+
+
 
 DROP TABLE IF EXISTS public.post_images CASCADE ;
 CREATE TABLE public.post_images (
