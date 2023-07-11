@@ -72,20 +72,22 @@ public class FriendRestController {
     public void create(@RequestBody FriendRequestDto friend ) {
         friendService.save(dtoMapper .convertToEntity(friend) );
     }
+
     @PostMapping("/{id}")
     public void addFriend(@RequestParam Long id,@RequestBody UserRequestDto newFriend ) {
        User user = userService.getOne(id);
        User friend = userService.getOne(newFriend.getId());
-       List <Friend> userFriends = user.getFriends();
        Friend addedFriend = new Friend();
        addedFriend.setUser(user);
        addedFriend.setFriend(friend);
        addedFriend.setStatus("pending");
-       userFriends.add(addedFriend);
-       user.setFriends(userFriends);
+        List<Friend> userFriends = user.getFriends();
+        userFriends.add(addedFriend);
+        user.setFriends(userFriends);
         friendService.save(addedFriend);
 
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id")Long userId) {
         try {
