@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.finalproject.dto.FriendDto;
 import org.finalproject.dto.FriendDtoMapper;
 import org.finalproject.dto.FriendRequestDto;
+import org.finalproject.dto.UserRequestDto;
 import org.finalproject.entity.Friend;
 import org.finalproject.entity.User;
 import org.finalproject.service.GeneralService;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 public class FriendRestController {
     private final GeneralService<Friend> friendService;
 
+    private final GeneralService<User> userService;
     private final FriendDtoMapper dtoMapper;
 
 
@@ -70,7 +72,20 @@ public class FriendRestController {
     public void create(@RequestBody FriendRequestDto friend ) {
         friendService.save(dtoMapper .convertToEntity(friend) );
     }
+    @PostMapping("/{id}")
+    public void addFriend(@RequestParam Long id,@RequestBody UserRequestDto newFriend ) {
+       User user = userService.getOne(id);
+       User friend = userService.getOne(newFriend.getId());
+       List <Friend> userFriends = user.getFriends();
+       Friend addedFriend = new Friend();
+       addedFriend.setUser(user);
+       addedFriend.setFriend(friend);
+       addedFriend.setStatus("pending");
+       userFriends.add(addedFriend);
+       user.setFriends(userFriends);
+        friendService.save(addedFriend);
 
+    }
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id")Long userId) {
         try {

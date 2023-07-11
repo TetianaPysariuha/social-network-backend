@@ -1,6 +1,7 @@
 package org.finalproject.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.finalproject.dto.PostRequestDto;
 import org.finalproject.dto.UserDto;
 
 import org.finalproject.dto.UserDtoMapper;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -103,6 +105,7 @@ public class UserRestController {
         userService.save(dtoMapper.convertToEntity(user) );
     }
 
+
     @PostMapping("/{id}/image")
     public void uploadImage(@PathVariable Long id,@RequestBody MultipartFile multipartFile ) {
         String imgUrl = null;
@@ -182,11 +185,11 @@ public class UserRestController {
     }
 
     @PutMapping("/{id}/likes")
-    public ResponseEntity<?> addLikes(@RequestParam Long id,@RequestBody UserRequestDto user) {
+    public ResponseEntity<?> addLikes(@RequestParam Long id, @RequestBody PostRequestDto post) {
         try {
-            Post postEntity = postService.getOne(id);
+            Post postEntity = postService.getOne(post.getId());
             List<User> likes = postEntity.getLikes();
-            User newLike = userService.getOne(user.getId());
+            User newLike = userService.getOne(id);
             likes.add(newLike);
             List<Post> likedPosts = newLike.getLikedPosts();
             likedPosts.add(postEntity);
@@ -200,5 +203,23 @@ public class UserRestController {
         }
 
     }
+    @PutMapping("/{id}/reposts")
+    public ResponseEntity<?> addRepost(@RequestParam Long id, @RequestBody PostRequestDto post) {
+        try {
+            Post postEntity = postService.getOne(post.getId());
+            Set<User> reposts = postEntity.getReposts();
+            User newRepost = userService.getOne(id);
+            reposts.add(newRepost);
+            Set<Post> repostedPosts = newRepost.getReposts();
+            repostedPosts.add(postEntity);
+            newRepost.setReposts(repostedPosts);
+            userService.save(newRepost);
+            postEntity.setReposts(reposts);
+            postService.save(postEntity);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
 
+    }
 }
