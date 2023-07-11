@@ -16,6 +16,7 @@ import java.util.Set;
 @EqualsAndHashCode
 @ToString
 public class PostRequestDto {
+    private Long id;
     private User user;
     private String postType;
     private String content;

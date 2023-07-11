@@ -5,6 +5,7 @@ import org.finalproject.dto.UserDto;
 
 import org.finalproject.dto.UserDtoMapper;
 import org.finalproject.dto.UserRequestDto;
+import org.finalproject.entity.Post;
 import org.finalproject.service.FileUpload;
 
 import org.finalproject.entity.User;
@@ -29,6 +30,8 @@ public class UserRestController {
     private final GeneralService<User> userService;
 
     private final UserDtoMapper dtoMapper;
+
+    private final GeneralService <Post> postService;
 
     private final FileUpload fileUpload;
 
@@ -167,13 +170,34 @@ public class UserRestController {
     @PutMapping
     public ResponseEntity<?> update(@RequestBody UserRequestDto user) {
         try {
-            userService.save(dtoMapper.convertToEntity(user));
+            User userEntity = dtoMapper.convertToEntity(user);
+            userEntity.setCreatedDate(userService.getOne(userEntity.getId()).getCreatedDate());
+            userEntity.setUpdatedDate(userService.getOne(userEntity.getId()).getUpdatedDate());
+            userService.save(userEntity);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 
     }
+    @PutMapping("/{id}/likes")
+    public ResponseEntity<?> addLikes(@RequestParam Long id,@RequestBody UserRequestDto user) {
+        try {
+            Post postEntity = postService.getOne(id);
+            List <User> likes = postEntity.getLikes();
+            User newLike = userService.getOne(user.getId());
+            likes.add(newLike);
+            List <Post> likedPosts = newLike.getLikedPosts();
+            likedPosts.add(postEntity);
+            newLike.setLikedPosts(likedPosts);
+            userService.save(newLike);
+            postEntity.setLikes(likes);
+            postService.save(postEntity);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
 
+    }
 
 }

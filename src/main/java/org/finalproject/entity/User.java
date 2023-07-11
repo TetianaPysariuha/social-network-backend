@@ -7,10 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -44,19 +41,19 @@ public class User extends BaseEntity {
     @OneToMany (cascade = {CascadeType.MERGE },fetch = FetchType.EAGER ,mappedBy = "friend")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
-    List<Friend> users;
+    List<Friend> users =new ArrayList<>();
 
     @OneToMany (cascade = {CascadeType.MERGE},fetch = FetchType.EAGER ,mappedBy = "user")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
-    List<Friend> friends;
+    List<Friend> friends=new ArrayList<>();
     @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "user")
     @JsonIgnore
-    private List<Post> posts ;
+    private List<Post> posts=new ArrayList<>() ;
     @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "sender")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
-    private List<Message> messages;
+    private List<Message> messages=new ArrayList<>();
 
     @ManyToMany(cascade = { CascadeType.MERGE },fetch = FetchType.EAGER )
     @JsonIgnore
@@ -64,15 +61,17 @@ public class User extends BaseEntity {
             name = "users_chats",
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "chat_id") })
-    private List<Chat> chats;
-
+    private List<Chat> chats = new ArrayList<>();
+    @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany(cascade = { CascadeType.MERGE },fetch = FetchType.EAGER )
     @JsonIgnore
     @JoinTable(
             name = "users_liked_posts",
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "post_id") })
-    private List<Post> likedPosts;
+    private List<Post> likedPosts=new ArrayList<>();
+
+    @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany(cascade = { CascadeType.MERGE },fetch = FetchType.EAGER )
     @JsonIgnore
     @JoinTable(
@@ -83,7 +82,7 @@ public class User extends BaseEntity {
     @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "user")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
-    private List<UserImage> userImages;
+    private List<UserImage> userImages=new ArrayList<>();
 
     @Override
     public String toString() {

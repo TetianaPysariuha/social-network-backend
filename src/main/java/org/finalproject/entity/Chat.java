@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -17,13 +18,13 @@ import java.util.List;
 public class Chat extends BaseEntity {
 
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.EAGER, mappedBy = "chat")
-    private List<Message> messages;
+    private List<Message> messages = new ArrayList<>();
 
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "chat")
-    private List<MessageImage> messageImages;
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE},fetch = FetchType.EAGER,mappedBy = "chat")
+    private List<MessageImage> messageImages =new ArrayList<>();
 
     @ManyToMany(mappedBy = "chats", fetch = FetchType.EAGER)
-    private List<User> users;
+    private List<User> users =new ArrayList<>();
 
     public Chat(List<User> user) {
 

@@ -23,30 +23,32 @@ import java.util.Set;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "posts")
 public class Post extends BaseEntity{
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
     @Column(name = "post_type")
     private String postType;
     private String content;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id")
     @JsonIgnore
     private Post parentId;
 
   @OneToMany(cascade = {CascadeType.MERGE },fetch = FetchType.EAGER,mappedBy = "parentId")
     private List<Post> comments = new ArrayList<>();
+    @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany(cascade = {CascadeType.MERGE },fetch = FetchType.EAGER,mappedBy = "likedPosts")
-    private List<User> likes;
-
+    private List<User> likes =new ArrayList<>();
+    @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany(fetch = FetchType.EAGER,mappedBy = "reposts")
     @JsonIgnore
 
     private Set<User> reposts = new HashSet<>();
-    @OneToMany
-    @JoinColumn(name = "post_id")
-    private List<PostImage> postImages ;
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(fetch=FetchType.EAGER,mappedBy = "postId")
+    private List<PostImage> postImages=new ArrayList<>() ;
 
 
 }

@@ -3,7 +3,7 @@ CREATE TABLE public.users (
                               id INT AUTO_INCREMENT PRIMARY KEY,
                               full_name VARCHAR(250) NOT NULL,
                               email  VARCHAR (250) NOT NULL,
-                              password VARCHAR (250) NOT NULL,
+                              password VARCHAR (250) ,
                               city VARCHAR (250) NOT NULL,
                               country VARCHAR (250) NOT NULL,
                               gender VARCHAR (250) NOT NULL,

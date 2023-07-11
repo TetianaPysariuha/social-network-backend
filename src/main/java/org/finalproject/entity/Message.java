@@ -7,6 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -28,10 +29,10 @@ public class Message extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User sender;
 
-    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "messageId")
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE},fetch = FetchType.EAGER,mappedBy = "messageId")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
-    private List<MessageImage> images;
+    private List<MessageImage> images =new ArrayList<>();
 
     @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinColumn(name = "chat_id")

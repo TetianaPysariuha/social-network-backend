@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.finalproject.dto.PostDto;
 import org.finalproject.dto.PostDtoMapper;
 import org.finalproject.dto.PostRequestDto;
+import org.finalproject.dto.UserRequestDto;
 import org.finalproject.entity.Post;
 import org.finalproject.entity.PostTypes;
 import org.finalproject.entity.User;
@@ -72,11 +73,15 @@ public class PostRestController {
     @PutMapping
     public ResponseEntity<?> update(@RequestBody PostRequestDto post) {
         try {
-            postService.save(dtoMapper.convertToEntity(post));
+            Post postEntity = dtoMapper.convertToEntity(post);
+            postEntity.setCreatedDate(postService.getOne(postEntity.getId()).getCreatedDate());
+            postEntity.setUpdatedDate(postService.getOne(postEntity.getId()).getUpdatedDate());
+            postService.save(postEntity);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 
     }
+
 }
