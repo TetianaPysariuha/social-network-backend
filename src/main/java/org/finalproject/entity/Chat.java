@@ -21,10 +21,10 @@ public class Chat extends BaseEntity {
     private List<Message> messages = new ArrayList<>();
 
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE},fetch = FetchType.EAGER,mappedBy = "chat")
-    private List<MessageImage> messageImages =new ArrayList<>();
+    private List<MessageImage> messageImages = new ArrayList<>();
 
     @ManyToMany(mappedBy = "chats", fetch = FetchType.EAGER)
-    private List<User> users =new ArrayList<>();
+    private List<User> users = new ArrayList<>();
 
     public Chat(List<User> user) {
 

@@ -41,19 +41,19 @@ public class User extends BaseEntity {
     @OneToMany (cascade = {CascadeType.MERGE },fetch = FetchType.EAGER ,mappedBy = "friend")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
-    List<Friend> users =new ArrayList<>();
+    List<Friend> users = new ArrayList<>();
 
     @OneToMany (cascade = {CascadeType.MERGE},fetch = FetchType.EAGER ,mappedBy = "user")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
-    List<Friend> friends=new ArrayList<>();
+    List<Friend> friends = new ArrayList<>();
     @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "user")
     @JsonIgnore
-    private List<Post> posts=new ArrayList<>() ;
+    private List<Post> posts = new ArrayList<>() ;
     @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "sender")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
-    private List<Message> messages=new ArrayList<>();
+    private List<Message> messages = new ArrayList<>();
 
     @ManyToMany(cascade = { CascadeType.MERGE },fetch = FetchType.EAGER )
     @JsonIgnore
@@ -69,7 +69,7 @@ public class User extends BaseEntity {
             name = "users_liked_posts",
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "post_id") })
-    private List<Post> likedPosts=new ArrayList<>();
+    private List<Post> likedPosts = new ArrayList<>();
 
     @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany(cascade = { CascadeType.MERGE },fetch = FetchType.EAGER )
@@ -82,7 +82,7 @@ public class User extends BaseEntity {
     @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "user")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
-    private List<UserImage> userImages=new ArrayList<>();
+    private List<UserImage> userImages = new ArrayList<>();
 
     @Override
     public String toString() {

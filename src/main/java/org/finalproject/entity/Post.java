@@ -23,7 +23,7 @@ import java.util.Set;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "posts")
 public class Post extends BaseEntity{
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
@@ -39,7 +39,7 @@ public class Post extends BaseEntity{
     private List<Post> comments = new ArrayList<>();
     @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany(cascade = {CascadeType.MERGE },fetch = FetchType.EAGER,mappedBy = "likedPosts")
-    private List<User> likes =new ArrayList<>();
+    private List<User> likes = new ArrayList<>();
     @LazyCollection(LazyCollectionOption.FALSE)
     @ManyToMany(fetch = FetchType.EAGER,mappedBy = "reposts")
     @JsonIgnore
@@ -47,8 +47,8 @@ public class Post extends BaseEntity{
     private Set<User> reposts = new HashSet<>();
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(fetch=FetchType.EAGER,mappedBy = "postId")
-    private List<PostImage> postImages=new ArrayList<>() ;
+    @OneToMany(fetch = FetchType.EAGER,mappedBy = "postId")
+    private List<PostImage> postImages = new ArrayList<>() ;
 
 
 }

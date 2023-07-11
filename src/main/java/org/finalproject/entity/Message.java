@@ -32,7 +32,7 @@ public class Message extends BaseEntity {
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE},fetch = FetchType.EAGER,mappedBy = "messageId")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
-    private List<MessageImage> images =new ArrayList<>();
+    private List<MessageImage> images = new ArrayList<>();
 
     @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinColumn(name = "chat_id")

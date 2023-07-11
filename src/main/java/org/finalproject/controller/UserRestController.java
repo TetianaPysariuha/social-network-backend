@@ -31,7 +31,7 @@ public class UserRestController {
 
     private final UserDtoMapper dtoMapper;
 
-    private final GeneralService <Post> postService;
+    private final GeneralService<Post> postService;
 
     private final FileUpload fileUpload;
 
@@ -180,14 +180,15 @@ public class UserRestController {
         }
 
     }
+
     @PutMapping("/{id}/likes")
     public ResponseEntity<?> addLikes(@RequestParam Long id,@RequestBody UserRequestDto user) {
         try {
             Post postEntity = postService.getOne(id);
-            List <User> likes = postEntity.getLikes();
+            List<User> likes = postEntity.getLikes();
             User newLike = userService.getOne(user.getId());
             likes.add(newLike);
-            List <Post> likedPosts = newLike.getLikedPosts();
+            List<Post> likedPosts = newLike.getLikedPosts();
             likedPosts.add(postEntity);
             newLike.setLikedPosts(likedPosts);
             userService.save(newLike);
