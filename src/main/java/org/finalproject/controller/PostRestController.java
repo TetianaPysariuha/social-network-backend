@@ -72,7 +72,10 @@ public class PostRestController {
     @PutMapping
     public ResponseEntity<?> update(@RequestBody PostRequestDto post) {
         try {
-            postService.save(dtoMapper.convertToEntity(post));
+            Post postEntity = dtoMapper.convertToEntity(post);
+            postEntity.setCreatedDate(postService.getOne(postEntity.getId()).getCreatedDate());
+            postEntity.setCreatedBy(postService.getOne(postEntity.getId()).getCreatedBy());
+            postService.save(postEntity);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

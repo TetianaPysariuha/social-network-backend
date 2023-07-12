@@ -1,10 +1,12 @@
 package org.finalproject.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.finalproject.dto.PostRequestDto;
 import org.finalproject.dto.UserDto;
 
 import org.finalproject.dto.UserDtoMapper;
 import org.finalproject.dto.UserRequestDto;
+import org.finalproject.entity.Post;
 import org.finalproject.service.FileUpload;
 
 import org.finalproject.entity.User;
@@ -20,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -27,6 +30,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/users")
 public class UserRestController {
     private final GeneralService<User> userService;
+
+    private final GeneralService<Post> postService;
 
     private final UserDtoMapper dtoMapper;
 
@@ -140,10 +145,10 @@ public class UserRestController {
         userService.save(user );
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable("id")Long userId) {
+    public ResponseEntity<?> deleteById(@PathVariable("id")Long id) {
         try {
 
-            userService.delete(userService.findEntityById(userId));
+            userService.deleteById(id);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -163,7 +168,35 @@ public class UserRestController {
     @PutMapping
     public ResponseEntity<?> update(@RequestBody UserRequestDto user) {
         try {
-            userService.save(dtoMapper.convertToEntity(user));
+            User userEntity = dtoMapper.convertToEntity(user);
+            userEntity.setCreatedDate(userService.getOne(userEntity.getId()).getCreatedDate());
+            userEntity.setCreatedBy(userService.getOne(userEntity.getId()).getCreatedBy());
+            userEntity.setPassword(userService.getOne(userEntity.getId()).getPassword());
+         /*   userEntity.setFriends(userService.getOne(userEntity.getId()).getFriends());
+            userEntity.setUsers(userService.getOne(userEntity.getId()).getUsers());
+            userEntity.setLikedPosts(userService.getOne(userEntity.getId()).getLikedPosts());
+            userEntity.setReposts(userService.getOne(userEntity.getId()).getReposts());
+            userEntity.setMessages(userService.getOne(userEntity.getId()).getMessages());*/
+            userService.save(userEntity);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+    }
+    @PutMapping("/{id}/likes")
+    public ResponseEntity<?> addLikes(@RequestParam Long id, @RequestBody PostRequestDto post) {
+        try {
+            Post postEntity = postService.getOne(post.getId());
+            List<User> likes = postEntity.getLikes();
+            User newLike = userService.getOne(id);
+            likes.add(newLike);
+            List<Post> likedPosts = newLike.getLikedPosts();
+            likedPosts.add(postEntity);
+            newLike.setLikedPosts(likedPosts);
+            userService.save(newLike);
+            postEntity.setLikes(likes);
+            postService.save(postEntity);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -171,5 +204,24 @@ public class UserRestController {
 
     }
 
+    @PutMapping("/{id}/reposts")
+    public ResponseEntity<?> addRepost(@RequestParam Long id, @RequestBody PostRequestDto post) {
+        try {
+            Post postEntity = postService.getOne(post.getId());
+            Set<User> reposts = postEntity.getReposts();
+            User newRepost = userService.getOne(id);
+            reposts.add(newRepost);
+            Set<Post> repostedPosts = newRepost.getReposts();
+            repostedPosts.add(postEntity);
+            newRepost.setReposts(repostedPosts);
+            userService.save(newRepost);
+            postEntity.setReposts(reposts);
+            postService.save(postEntity);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+    }
 
 }

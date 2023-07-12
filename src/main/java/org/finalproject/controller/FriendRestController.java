@@ -6,6 +6,7 @@ import org.finalproject.dto.FriendDto;
 import org.finalproject.dto.FriendDtoMapper;
 import org.finalproject.dto.FriendRequestDto;
 import org.finalproject.entity.Friend;
+import org.finalproject.entity.Post;
 import org.finalproject.entity.User;
 import org.finalproject.service.GeneralService;
 import org.springframework.data.domain.Page;
@@ -94,7 +95,10 @@ public class FriendRestController {
     @PutMapping
     public ResponseEntity<?> update(@RequestBody FriendRequestDto friend) {
         try {
-            friendService.save(dtoMapper.convertToEntity(friend));
+            Friend friendEntity = dtoMapper.convertToEntity(friend);
+            friendEntity.setCreatedDate(friendService.getOne(friendEntity.getId()).getCreatedDate());
+            friendEntity.setCreatedBy(friendService.getOne(friendEntity.getId()).getCreatedBy());
+            friendService.save(friendEntity);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

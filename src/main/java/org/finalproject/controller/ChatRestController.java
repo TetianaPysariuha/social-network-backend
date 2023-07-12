@@ -3,6 +3,7 @@ package org.finalproject.controller;
 import lombok.RequiredArgsConstructor;
 import org.finalproject.dto.*;
 import org.finalproject.entity.Chat;
+import org.finalproject.entity.Post;
 import org.finalproject.entity.User;
 import org.finalproject.service.DefaultChatService;
 import org.finalproject.service.GeneralService;
@@ -72,10 +73,10 @@ public class ChatRestController {
         }
     }*/
 
-    @GetMapping("/id")
-    public ResponseEntity<?> getById(@PathVariable("id") Long userId) {
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getById(@PathVariable("id") Long id) {
 
-        Chat chat = chatService.getOne(userId);
+        Chat chat = chatService.getOne(id);
         if (chat == null) {
             return ResponseEntity.badRequest().body("Chat not found");
         }
@@ -108,7 +109,10 @@ public class ChatRestController {
     public ResponseEntity<?> update(@RequestBody ChatDtoRequest chatDtoRequest) {
 
         try {
-            chatService.save(chatDtoMapper.convertToEntity(chatDtoRequest));
+            Chat chatEntity = chatDtoMapper.convertToEntity(chatDtoRequest);
+            chatEntity.setCreatedDate(chatService.getOne(chatEntity.getId()).getCreatedDate());
+            chatEntity.setCreatedBy(chatService.getOne(chatEntity.getId()).getCreatedBy());
+            chatService.save(chatEntity);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

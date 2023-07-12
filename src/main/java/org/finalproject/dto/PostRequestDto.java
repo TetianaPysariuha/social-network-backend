@@ -16,11 +16,13 @@ import java.util.Set;
 @EqualsAndHashCode
 @ToString
 public class PostRequestDto {
+
+    private Long id;
     private User user;
     private String postType;
     private String content;
     private Post parentId;
-    private Set<User> likes;
+    private List<User> likes;
     private Set<User> reposts;
     private List<PostImage> postImages;
 }

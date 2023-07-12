@@ -41,24 +41,24 @@ public class User extends BaseEntity {
     @Column(name = "profile_background_picture")
     private String profileBackgroundPicture;
 
-    @OneToMany (cascade = {CascadeType.MERGE },fetch = FetchType.EAGER ,mappedBy = "friend")
+    @OneToMany (fetch = FetchType.EAGER ,mappedBy = "friend")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
     List<Friend> users;
 
-    @OneToMany (cascade = {CascadeType.MERGE},fetch = FetchType.EAGER ,mappedBy = "user")
+    @OneToMany (fetch = FetchType.EAGER ,mappedBy = "user")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
     List<Friend> friends;
-    @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "user")
+    @OneToMany (cascade = CascadeType.REMOVE ,fetch = FetchType.EAGER ,mappedBy = "user")
     @JsonIgnore
     private List<Post> posts ;
-    @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "sender")
+    @OneToMany (cascade = CascadeType.REMOVE ,fetch = FetchType.EAGER ,mappedBy = "sender")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
     private List<Message> messages;
 
-    @ManyToMany(cascade = { CascadeType.MERGE },fetch = FetchType.EAGER )
+    @ManyToMany(cascade = CascadeType.REMOVE,fetch = FetchType.EAGER )
     @JsonIgnore
     @JoinTable(
             name = "users_chats",
@@ -66,21 +66,21 @@ public class User extends BaseEntity {
             inverseJoinColumns = { @JoinColumn(name = "chat_id") })
     private List<Chat> chats;
 
-    @ManyToMany(cascade = { CascadeType.MERGE },fetch = FetchType.EAGER )
+    @ManyToMany(fetch = FetchType.EAGER )
     @JsonIgnore
     @JoinTable(
             name = "users_liked_posts",
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "post_id") })
     private List<Post> likedPosts;
-    @ManyToMany(cascade = { CascadeType.MERGE },fetch = FetchType.EAGER )
+    @ManyToMany(fetch = FetchType.EAGER )
     @JsonIgnore
     @JoinTable(
             name = "users_reposted_posts",
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "post_id") })
     private Set<Post> reposts = new HashSet<>();
-    @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "user")
+    @OneToMany (cascade = CascadeType.REMOVE ,fetch = FetchType.EAGER ,mappedBy = "user")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
     private List<UserImage> userImages;

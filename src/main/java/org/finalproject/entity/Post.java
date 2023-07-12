@@ -35,9 +35,9 @@ public class Post extends BaseEntity{
     @JsonIgnore
     private Post parentId;
 
-  @OneToMany(cascade = {CascadeType.MERGE },fetch = FetchType.EAGER,mappedBy = "parentId")
+  @OneToMany(cascade = {CascadeType.REMOVE },fetch = FetchType.EAGER,mappedBy = "parentId")
     private List <Post> comments = new ArrayList<>();
-    @ManyToMany(cascade = {CascadeType.MERGE },fetch = FetchType.EAGER,mappedBy = "likedPosts")
+    @ManyToMany(fetch = FetchType.EAGER,mappedBy = "likedPosts")
     private List<User> likes;
 
     @ManyToMany(fetch = FetchType.EAGER,mappedBy = "reposts")

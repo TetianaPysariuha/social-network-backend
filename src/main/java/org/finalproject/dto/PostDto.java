@@ -24,7 +24,7 @@ public class PostDto {
     private String postType;
     private String content;
     private Post parentId;
-    private Set<User> likes;
+    private List<User> likes;
     private Set<User> reposts;
     private List<PostImage> postImages;
     private String createdBy;
