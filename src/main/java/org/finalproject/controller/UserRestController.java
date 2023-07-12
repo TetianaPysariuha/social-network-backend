@@ -41,7 +41,7 @@ public class UserRestController {
     @GetMapping
     public List<UserDto> getAll() {
 
-       List<User> userList =    userService.findAll();
+       List<User> userList =  userService.findAll();
        List<UserDto> userDtoList = userList.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
 
         return userDtoList;
