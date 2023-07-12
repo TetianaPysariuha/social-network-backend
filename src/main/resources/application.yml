@@ -36,9 +36,9 @@ spring:
       on-profile: dev
 ---
 spring:
-  #sql:
-    #init:
-      #mode: never
+  sql:
+    init:
+      mode: never
       #schema-locations: classpath:hr_schema_postgres.sql
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/}
@@ -47,7 +47,7 @@ spring:
     username: postgres
     password: postgres
   jpa:
-    open-in-view: false
+  #  open-in-view: true
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: none
