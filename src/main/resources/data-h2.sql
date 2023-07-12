@@ -66,23 +66,23 @@ VALUES
 
 INSERT INTO public.posts (user_id, post_type, content, parent_id, created_date, updated_date)
 VALUES
-    (NULL, 'post', 'Привет, мир!', NULL, '2023-06-25 10:00:00', '2023-06-25 10:00:00'),
-    (NULL, 'comment', 'Это отличный пост!', 1, '2023-06-25 10:05:00', '2023-06-25 10:05:00'),
-    (NULL, 'post', 'Здесь ничего интересного...', NULL, '2023-06-25 10:10:00', '2023-06-25 10:10:00');
+    (1, 'post', 'Привет, мир!', NULL, '2023-06-25 10:00:00', '2023-06-25 10:00:00'),
+    (2, 'comment', 'Это отличный пост!', 1, '2023-06-25 10:05:00', '2023-06-25 10:05:00'),
+    (3, 'post', 'Здесь ничего интересного...', NULL, '2023-06-25 10:10:00', '2023-06-25 10:10:00');
 
-INSERT INTO public.users_likes (id,post_id, user_id)
+INSERT INTO public.users_likes (post_id, user_id)
 VALUES
-    (100,1,2),
-    (101,1,3),
-    (102,2,3),
-    (103,2,1),
-    (104,3,2),
-    (105,3,1);
-INSERT INTO public.users_reposts (id,post_id, user_id)
+    (1,2),
+    (1,3),
+    (2,3),
+    (2,1),
+    (3,2),
+    (3,1);
+INSERT INTO public.users_reposts (post_id, user_id)
 VALUES
-    (150,2, 3),
-    (151,3, 1),
-    (152,1, 2);
+    (2, 3),
+    (3, 1),
+    (1, 2);
 INSERT INTO public.post_images (post_id, img_url, created_date, updated_date)
 VALUES
     (1, 'https://example.com/image1.jpg', '2023-06-25 10:00:00', '2023-06-25 10:00:00'),
