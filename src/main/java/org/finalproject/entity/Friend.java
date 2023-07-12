@@ -20,13 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class Friend extends BaseEntity {
 
     private String status;
-    @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE } ,fetch = FetchType.EAGER )
+    @ManyToOne(cascade = {CascadeType.MERGE } ,fetch = FetchType.EAGER )
     @JoinColumn(name = "user_id")
     @LazyCollection(LazyCollectionOption.FALSE)
 
     private User user;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE } ,fetch = FetchType.EAGER )
+    @ManyToOne(cascade = {CascadeType.MERGE } ,fetch = FetchType.EAGER )
     @JoinColumn(name = "friend_id")
     @LazyCollection(LazyCollectionOption.FALSE)
 

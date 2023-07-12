@@ -25,16 +25,16 @@ public class Message extends BaseEntity {
     @Column(name = "chat_entity_id")
     private Long chatId;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @ManyToOne( fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User sender;
 
-    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REMOVE},fetch = FetchType.EAGER,mappedBy = "messageId")
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE},fetch = FetchType.EAGER,mappedBy = "messageId")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
     private List<MessageImage> images = new ArrayList<>();
 
-    @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @ManyToOne( fetch = FetchType.EAGER)
     @JoinColumn(name = "chat_id")
     @JsonIgnore
     private Chat chat;

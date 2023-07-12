@@ -30,24 +30,24 @@ public class Post extends BaseEntity{
     @Column(name = "post_type")
     private String postType;
     private String content;
-    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id")
     @JsonIgnore
     private Post parentId;
 
-  @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE },fetch = FetchType.EAGER,mappedBy = "parentId")
+  @OneToMany(cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER,mappedBy = "parentId")
     private List<Post> comments = new ArrayList<>();
     @LazyCollection(LazyCollectionOption.FALSE)
-    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE },fetch = FetchType.EAGER,mappedBy = "likedPosts")
-    private List<User> likes = new ArrayList<>();
+    @ManyToMany(cascade = {CascadeType.MERGE },fetch = FetchType.EAGER,mappedBy = "likedPosts")
+    private List<User> likes ;
     @LazyCollection(LazyCollectionOption.FALSE)
-    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE },fetch = FetchType.EAGER,mappedBy = "reposts")
+    @ManyToMany(cascade = {CascadeType.MERGE },fetch = FetchType.EAGER,mappedBy = "reposts")
     @JsonIgnore
 
     private Set<User> reposts = new HashSet<>();
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE },fetch = FetchType.EAGER,mappedBy = "postId")
+    @OneToMany(cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER,mappedBy = "postId")
     private List<PostImage> postImages = new ArrayList<>() ;
 
 

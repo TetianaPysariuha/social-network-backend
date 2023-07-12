@@ -40,51 +40,51 @@ public class User extends BaseEntity {
     @Column(name = "profile_background_picture")
     private String profileBackgroundPicture;
 
-    @OneToMany (cascade = {CascadeType.MERGE ,CascadeType.PERSIST},fetch = FetchType.EAGER ,mappedBy = "friend")
+    @OneToMany (cascade = {CascadeType.MERGE },fetch = FetchType.EAGER ,mappedBy = "friend")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
-    List<Friend> users = new ArrayList<>();
+    List<Friend> users ;
 
-    @OneToMany (cascade = {CascadeType.MERGE,CascadeType.PERSIST},fetch = FetchType.EAGER ,mappedBy = "user")
+    @OneToMany (cascade = {CascadeType.MERGE},fetch = FetchType.EAGER ,mappedBy = "user")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
-    List<Friend> friends = new ArrayList<>();
-    @OneToMany (cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "user")
+    List<Friend> friends;
+    @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "user")
     @JsonIgnore
-    private List<Post> posts = new ArrayList<>() ;
-    @OneToMany (cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "sender")
+    private List<Post> posts  ;
+    @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "sender")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
-    private List<Message> messages = new ArrayList<>();
+    private List<Message> messages;
 
-    @ManyToMany(cascade = { CascadeType.PERSIST,CascadeType.MERGE },fetch = FetchType.EAGER )
+    @ManyToMany(cascade = { CascadeType.MERGE },fetch = FetchType.EAGER )
     @JsonIgnore
     @JoinTable(
             name = "users_chats",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "chat_id") })
-    private List<Chat> chats = new ArrayList<>();
+            joinColumns = { @JoinColumn(name = "chat_id") },
+            inverseJoinColumns = { @JoinColumn(name = "user_id") })
+    private List<Chat> chats ;
     @LazyCollection(LazyCollectionOption.FALSE)
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE },fetch = FetchType.EAGER )
+    @ManyToMany(cascade = { CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER )
     @JsonIgnore
     @JoinTable(
             name = "users_liked_posts",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "post_id") })
-    private List<Post> likedPosts = new ArrayList<>();
+            joinColumns = { @JoinColumn(name = " post_id") },
+            inverseJoinColumns = { @JoinColumn(name = " user_id ") })
+    private List<Post> likedPosts ;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @ManyToMany(cascade = { CascadeType.PERSIST,CascadeType.MERGE },fetch = FetchType.EAGER )
+    @ManyToMany(cascade = { CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER )
     @JsonIgnore
     @JoinTable(
             name = "users_reposted_posts",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "post_id") })
+            joinColumns = { @JoinColumn(name = "post_id") },
+            inverseJoinColumns = { @JoinColumn(name = "user_id") })
     private Set<Post> reposts = new HashSet<>();
-    @OneToMany (cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "user")
+    @OneToMany (cascade = {CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER ,mappedBy = "user")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
-    private List<UserImage> userImages = new ArrayList<>();
+    private List<UserImage> userImages ;
 
     @Override
     public String toString() {

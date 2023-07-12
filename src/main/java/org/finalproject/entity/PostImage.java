@@ -12,7 +12,7 @@ import lombok.*;
 @Entity
 @Table(name = "post_images")
 public class PostImage extends BaseEntity {
-    @ManyToOne(cascade = CascadeType.PERSIST,fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id")
     @JsonIgnore
     private Post postId;

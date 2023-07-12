@@ -189,7 +189,7 @@ public class UserRestController {
 
     }
 
-    @PutMapping("/{id}/likes")
+ /*   @PutMapping("/{id}/likes")
     public ResponseEntity<?> addLikes(@RequestParam Long id, @RequestBody PostRequestDto post) {
         try {
             Post postEntity = postService.getOne(post.getId());
@@ -227,5 +227,5 @@ public class UserRestController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 
-    }
+    }*/
 }
