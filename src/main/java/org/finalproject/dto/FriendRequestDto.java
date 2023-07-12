@@ -10,7 +10,7 @@ import org.finalproject.entity.User;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(of = "id")
 @ToString
 public class FriendRequestDto {
     @NotNull

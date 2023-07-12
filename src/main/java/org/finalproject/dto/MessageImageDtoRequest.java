@@ -16,8 +16,7 @@ public class MessageImageDtoRequest {
     private Long id;
     @NotNull
     private String imgUrl;
-    @NotNull
-    private Long messageId;
+
     @NotNull
     private Chat chat;
 }

@@ -13,7 +13,7 @@ public class MessageImageDto {
 
     private Long id;
     private String imgUrl;
-    private Long messageId;
+
     private Chat chat;
 
 }
