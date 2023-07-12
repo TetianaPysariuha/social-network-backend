@@ -104,14 +104,16 @@ CREATE TABLE public.posts (
 );
 
 DROP TABLE IF EXISTS public.users_liked_posts CASCADE;
-CREATE TABLE public.users_liked_posts (
+DROP TABLE IF EXISTS public.users_likes CASCADE;
+CREATE TABLE public.users_likes (
                                           id INT AUTO_INCREMENT PRIMARY KEY,
                                           post_id INTEGER REFERENCES posts(id),
                                           user_id INTEGER REFERENCES users(id)
 );
 
 DROP TABLE IF EXISTS public.users_reposted_posts CASCADE;
-CREATE TABLE public.users_reposted_posts (
+DROP TABLE IF EXISTS public.users_reposts CASCADE;
+CREATE TABLE public.users_reposts (
                                              id INT AUTO_INCREMENT PRIMARY KEY,
                                              post_id INTEGER REFERENCES posts(id),
                                              user_id INTEGER REFERENCES users(id)

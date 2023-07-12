@@ -68,7 +68,7 @@ public class User extends BaseEntity {
     @ManyToMany(cascade = { CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER )
     @JsonIgnore
     @JoinTable(
-            name = "users_liked_posts",
+            name = "users_likes",
             joinColumns = { @JoinColumn(name = " post_id") },
             inverseJoinColumns = { @JoinColumn(name = " user_id ") })
     private List<Post> likedPosts ;
@@ -77,7 +77,7 @@ public class User extends BaseEntity {
     @ManyToMany(cascade = { CascadeType.MERGE,CascadeType.REMOVE },fetch = FetchType.EAGER )
     @JsonIgnore
     @JoinTable(
-            name = "users_reposted_posts",
+            name = "users_reposts",
             joinColumns = { @JoinColumn(name = "post_id") },
             inverseJoinColumns = { @JoinColumn(name = "user_id") })
     private Set<Post> reposts = new HashSet<>();

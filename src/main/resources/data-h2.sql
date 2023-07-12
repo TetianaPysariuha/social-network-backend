@@ -70,19 +70,19 @@ VALUES
     (NULL, 'comment', 'Это отличный пост!', 1, '2023-06-25 10:05:00', '2023-06-25 10:05:00'),
     (NULL, 'post', 'Здесь ничего интересного...', NULL, '2023-06-25 10:10:00', '2023-06-25 10:10:00');
 
-INSERT INTO public.users_liked_posts (post_id, user_id)
+INSERT INTO public.users_likes (id,post_id, user_id)
 VALUES
-    (1,2),
-    (1,3),
-    (2,3),
-    (2,1),
-    (3,2),
-    (3,1);
-INSERT INTO public.users_reposted_posts (post_id, user_id)
+    (100,1,2),
+    (101,1,3),
+    (102,2,3),
+    (103,2,1),
+    (104,3,2),
+    (105,3,1);
+INSERT INTO public.users_reposts (id,post_id, user_id)
 VALUES
-    (2, 3),
-    (3, 1),
-    (1, 2);
+    (150,2, 3),
+    (151,3, 1),
+    (152,1, 2);
 INSERT INTO public.post_images (post_id, img_url, created_date, updated_date)
 VALUES
     (1, 'https://example.com/image1.jpg', '2023-06-25 10:00:00', '2023-06-25 10:00:00'),
