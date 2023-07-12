@@ -23,7 +23,7 @@ public class Chat extends BaseEntity {
     @JsonIgnore
     private List<MessageImage> messageImages;
 
-    @ManyToMany(mappedBy = "chats", fetch = FetchType.EAGER)
+    @ManyToMany(cascade =  CascadeType.PERSIST,mappedBy = "chats", fetch = FetchType.EAGER)
     private List<User> users;
 
     public Chat(List<User> user) {

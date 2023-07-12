@@ -18,8 +18,7 @@ public class MessageDtoRequest {
     @NotNull
     @Size(min = 1, message = "message content should have at least 1 characters")
     private String content;
-    @NotNull
-    private Chat chatId;
+
     @NotNull
     private User sender;
 

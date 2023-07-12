@@ -104,6 +104,7 @@ public class UserRestController {
     public void create(@RequestBody UserRequestDto user ) {
         userService.save(dtoMapper.convertToEntity(user) );
     }
+
     @PostMapping("/{id}/image")
     public void uploadImage(@PathVariable Long id,@RequestBody MultipartFile multipartFile ) {
         String imgUrl = null;
@@ -113,13 +114,14 @@ public class UserRestController {
             throw new RuntimeException(e);
         }
         User user = userService.getOne(id);
-     List < UserImage> userImages = user.getUserImages();
+     List<UserImage> userImages = user.getUserImages();
      UserImage newImage = new UserImage();
      newImage.setImageUrl(imgUrl);
      userImages.add(newImage);
      user.setUserImages(userImages);
         userService.save(user );
     }
+
     @PostMapping("/{id}/avatar")
     public void uploadAvatar(@PathVariable Long id,@RequestBody MultipartFile multipartFile ) {
         String imgUrl = null;
@@ -132,6 +134,7 @@ public class UserRestController {
        user.setProfilePicture(imgUrl);
         userService.save(user );
     }
+
     @PostMapping("/{id}/header")
     public void uploadHeader(@PathVariable Long id,@RequestBody MultipartFile multipartFile ) {
         String imgUrl = null;
@@ -144,6 +147,7 @@ public class UserRestController {
         user.setProfileBackgroundPicture(imgUrl);
         userService.save(user );
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id")Long id) {
         try {
@@ -172,11 +176,6 @@ public class UserRestController {
             userEntity.setCreatedDate(userService.getOne(userEntity.getId()).getCreatedDate());
             userEntity.setCreatedBy(userService.getOne(userEntity.getId()).getCreatedBy());
             userEntity.setPassword(userService.getOne(userEntity.getId()).getPassword());
-         /*   userEntity.setFriends(userService.getOne(userEntity.getId()).getFriends());
-            userEntity.setUsers(userService.getOne(userEntity.getId()).getUsers());
-            userEntity.setLikedPosts(userService.getOne(userEntity.getId()).getLikedPosts());
-            userEntity.setReposts(userService.getOne(userEntity.getId()).getReposts());
-            userEntity.setMessages(userService.getOne(userEntity.getId()).getMessages());*/
             userService.save(userEntity);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
@@ -184,6 +183,7 @@ public class UserRestController {
         }
 
     }
+
     @PutMapping("/{id}/likes")
     public ResponseEntity<?> addLikes(@RequestParam Long id, @RequestBody PostRequestDto post) {
         try {

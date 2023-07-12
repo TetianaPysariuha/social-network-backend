@@ -58,7 +58,7 @@ public class User extends BaseEntity {
     @JsonIgnore
     private List<Message> messages;
 
-    @ManyToMany(cascade = CascadeType.REMOVE,fetch = FetchType.EAGER )
+    @ManyToMany(cascade = {CascadeType.REMOVE,CascadeType.PERSIST},fetch = FetchType.EAGER )
     @JsonIgnore
     @JoinTable(
             name = "users_chats",

@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +26,8 @@ public class ChatRestController {
 
     private final GeneralService<Chat> chatService;
     private final DefaultChatService defaultChatService;
+
+    private final GeneralService<User> userService;
     private final ChatDtoMapper chatDtoMapper;
     private final UserDtoMapper userDtoMapper;
 
@@ -53,10 +56,18 @@ public class ChatRestController {
 
     @PostMapping
     public void createChat(@RequestBody UserRequestDto userRequestDto) {
+       User user = userService.getOne(userRequestDto.getId());
+        List<User> userList = new ArrayList<>();
+               userList.add(user);
+               List<Chat> userChats = user.getChats();
 
-        List<User> userList = List.of(userDtoMapper.convertToEntity(userRequestDto));
-        Chat chat = new Chat(userList);
-        chatService.save(chat);
+        Chat chat = new Chat();
+        chat.setUsers(userList);
+        userChats.add(chat);
+        user.setChats(userChats);
+        userService.save(user);
+
+
     }
 
     /*@GetMapping("/{content}")
@@ -113,6 +124,26 @@ public class ChatRestController {
             chatEntity.setCreatedDate(chatService.getOne(chatEntity.getId()).getCreatedDate());
             chatEntity.setCreatedBy(chatService.getOne(chatEntity.getId()).getCreatedBy());
             chatService.save(chatEntity);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}/participants")
+    public ResponseEntity<?> addUsers(@PathVariable Long id,@RequestBody UserRequestDto userDtoRequest) {
+
+        try {
+            User user = userService.getOne(userDtoRequest.getId());
+            Chat chat = chatService.getOne(id);
+            List<User> userList = chat.getUsers();
+            userList.add(user);
+            chat.setUsers(userList);
+            List<Chat> userChats = user.getChats();
+            userChats.add(chat);
+            user.setChats(userChats);
+            userService.save(user);
+
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
