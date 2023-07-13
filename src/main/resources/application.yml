@@ -16,6 +16,11 @@ spring:
     active: prod #dev
 ---
 spring:
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data-h2.sql
+      schema-locations: classpath:schema-h2.sql
   datasource:
     url: jdbc:h2:mem:testdb
     username: sa
@@ -24,19 +29,21 @@ spring:
   jpa:
     defer-datasource-initialization: true
     properties:
-      generate_ststistics: true
+      generate_statistics: true
     generate-ddl: true
   config:
     activate:
       on-profile: dev
 ---
 spring:
-  sql:
-    init:
-      mode: never
-      schema-locations: classpath:hr_schema_postgres.sql
+  #sql:
+    #init:
+      #mode: never
+      #schema-locations: classpath:hr_schema_postgres.sql
   datasource:
-    url: jdbc:postgresql://localhost:5432/
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/}
+    driver-class-name: org.postgresql.Driver
+    #url: jdbc:postgresql://localhost:5432/
     username: postgres
     password: postgres
   jpa:
@@ -53,3 +60,6 @@ spring:
       on-profile: prod
 welcome:
   message: welcome
+  cloudName: ${cloudName}
+  apiKey: ${apiKey}
+  apiSecret: ${apiSecret}

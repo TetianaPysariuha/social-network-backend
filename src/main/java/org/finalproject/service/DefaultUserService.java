@@ -1,22 +1,18 @@
-package org.finalproject.service.jwt;
+package org.finalproject.service;
 
-import lombok.NonNull;
+
 import lombok.RequiredArgsConstructor;
 import org.finalproject.entity.User;
 import org.finalproject.repository.UserJpaRepository;
+
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
-public class UserService {
+public class DefaultUserService extends GeneralService<User> {
 
     private final UserJpaRepository userRepository;
-
-    public Optional<User> getByEmail(@NonNull String email) {
-
-        return userRepository.getByEmail(email);
-    }
-
 }

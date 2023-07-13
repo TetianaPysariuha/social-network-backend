@@ -4,7 +4,7 @@ package org.finalproject.service.jwt;
 import io.jsonwebtoken.Claims;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.finalproject.entities.User;
+import org.finalproject.entity.User;
 import org.finalproject.exception.AuthException;
 import org.finalproject.jwt.JwtAuthentication;
 import org.finalproject.jwt.JwtRequest;
