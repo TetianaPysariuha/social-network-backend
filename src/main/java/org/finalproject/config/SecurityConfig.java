@@ -45,7 +45,7 @@ public class SecurityConfig {
             .and()
             .authorizeHttpRequests(
                 authz -> authz
-                    .requestMatchers("/api/auth/login", "/api/auth/token","/swagger-ui/**").permitAll()
+                    .requestMatchers("/api/auth/login", "/api/auth/token","/api/auth/refresh","/api/auth/registration","/swagger-ui/**").permitAll()
                     .anyRequest().authenticated()
                         .and()
                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
