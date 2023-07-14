@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,8 +47,13 @@ public class AuthService {
     public void register(@NonNull RegisterRequest authRequest) {
         User newUser = new User();
         newUser.setEmail(authRequest.getEmail());
-        newUser.setPassword(authRequest.getPassword());
-        newUser.setFullName(authRequest.getFullName());
+        String encodedPassword =  passwordEncoder.encode(authRequest.getPassword());
+        newUser.setPassword(encodedPassword);
+        String fullName = authRequest.getName() + authRequest.getSurname();
+        newUser.setFullName(fullName);
+        newUser.setGender(authRequest.getGender());
+        Date birthDate = new Date();
+        newUser.setBirthDate(birthDate);
         serviceUser.save(newUser);
     }
     public JwtResponse getAccessToken(@NonNull String refreshToken) {
