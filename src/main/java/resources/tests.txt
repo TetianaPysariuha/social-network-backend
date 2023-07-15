@@ -1,0 +1,18 @@
+1. Написать ресурс для работы с департаментами
+ CRUD и findAll
+- Rest controller
+- DTO (все поля и по ассоциациям managerName, departmentName, countryName)
+    private Integer id;
+    private String departmentName;
+    private String managerName;
+    private Set<EmployeeDto> employees = new HashSet<>();
+    private String countryName;
+- Mapper
+- Service
+- Repository
+
+2. Добавить ендпоинт в департаментах по получению департаментов по имени менеджера,
+с педжинацией
+
+/departments/2/1/Steven
+
