@@ -58,6 +58,16 @@ spring:
   config:
     activate:
       on-profile: prod
+
+      # Налаштування для Flyway
+      spring:
+        flyway:
+          url: ${DATABASE_URL}
+          user: postgres
+          password: postgres
+          locations: classpath:db/migration
+
+
 welcome:
   message: welcome
   cloudName: ${cloudName}
