@@ -43,17 +43,17 @@ spring:
       on-profile: dev
 ---
 spring:
-  #sql:
-    #init:
-     # mode: never
-
-      #schema-locations: classpath:hr_schema_postgres.sql
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:hr_data_postgres.sql
+      schema-locations: classpath:hr_schema_postgres.sql
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/}
     driver-class-name: org.postgresql.Driver
     #url: jdbc:postgresql://localhost:5432/
     username: postgres
-    password: postgres
+    password: root
   jpa:
     open-in-view: true
     defer-datasource-initialization: true

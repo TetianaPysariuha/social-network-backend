@@ -17,10 +17,7 @@ INSERT INTO public.users ( full_name,email,password,city,country,gender,work_pla
 INSERT INTO public.friends(user_id,friend_id,status,created_date,updated_date) VALUES
 
                                                                                    (1,2,'fulfilled','2016-07-26 05:15:58','2016-07-26 05:15:58'),
-                                                                                   (2,1,'fulfilled','2016-07-26 05:15:58','2016-07-26 05:15:58'),
                                                                                    (3,2,'fulfilled','2016-07-26 05:15:58','2016-07-26 05:15:58'),
-                                                                                   (1,3,'pending','2016-07-26 05:15:58','2016-07-26 05:15:58'),
-                                                                                   (2,3,'pending','2016-07-26 05:15:58','2016-07-26 05:15:58'),
                                                                                    (3,1,'pending','2016-07-26 05:15:58','2016-07-26 05:15:58');
 
 INSERT INTO chats (created_date, updated_date, created_by, updated_by)

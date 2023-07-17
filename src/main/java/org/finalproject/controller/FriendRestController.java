@@ -8,6 +8,8 @@ import org.finalproject.dto.FriendRequestDto;
 import org.finalproject.entity.Friend;
 import org.finalproject.entity.Post;
 import org.finalproject.entity.User;
+import org.finalproject.repository.FriendJpaRepository;
+import org.finalproject.service.DefaultFriendService;
 import org.finalproject.service.GeneralService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +25,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/friends")
 public class FriendRestController {
     private final GeneralService<Friend> friendService;
+
+    private final DefaultFriendService defaultService;
 
     private final FriendDtoMapper dtoMapper;
 
@@ -57,14 +61,12 @@ public class FriendRestController {
     @GetMapping("/{userId}/friends")
     public ResponseEntity<?>  getFriends(@PathVariable("userId")  Long  userId) {
 
+        List<Friend> friends = defaultService.findFriends(userId);
 
-        List<Friend> friends = friendService.findAll().stream().filter(el -> el.getUser().getId().equals(userId))
-                .collect(Collectors.toList());
+        List<FriendDto> friendDtoList = friends.stream().map(el->dtoMapper.convertToDto(el)).collect(Collectors.toList());
 
-        List<FriendDto> usersFriends = friends.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
 
-        return ResponseEntity.ok().body(usersFriends);
-
+        return ResponseEntity.ok().body(friendDtoList);
     }
 
     @PostMapping
