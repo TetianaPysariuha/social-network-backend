@@ -25,6 +25,8 @@ public class ChatRestController {
     private final GeneralService<Chat> chatService;
     private final DefaultChatService defaultChatService;
     private final ChatDtoMapper chatDtoMapper;
+
+    private final GeneralService<User> userService;
     private final UserDtoMapper userDtoMapper;
 
     @GetMapping
@@ -72,7 +74,7 @@ public class ChatRestController {
         }
     }*/
 
-    @GetMapping("/id")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable("id") Long userId) {
 
         Chat chat = chatService.getOne(userId);
@@ -109,6 +111,25 @@ public class ChatRestController {
 
         try {
             chatService.save(chatDtoMapper.convertToEntity(chatDtoRequest));
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @PutMapping("/{id}/participants")
+    public ResponseEntity<?> addUsers(@PathVariable Long id,@RequestBody UserRequestDto userDtoRequest) {
+
+        try {
+            User user = userService.getOne(userDtoRequest.getId());
+            Chat chat = chatService.getOne(id);
+            List<User> userList = chat.getUsers();
+            userList.add(user);
+            chat.setUsers(userList);
+            List<Chat> userChats = user.getChats();
+            userChats.add(chat);
+            user.setChats(userChats);
+            userService.save(user);
+
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

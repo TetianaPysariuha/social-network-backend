@@ -17,7 +17,7 @@ CREATE TABLE public.users (
                               created_date TIMESTAMP NOT NULL ,
                               updated_date TIMESTAMP NOT NULL,
                               activation_code VARCHAR ,
-                              activated BIT,
+                              activated boolean ,
                               created_by VARCHAR,
                               updated_by VARCHAR
 );

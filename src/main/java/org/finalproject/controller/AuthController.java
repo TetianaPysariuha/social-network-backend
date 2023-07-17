@@ -52,14 +52,14 @@ public class AuthController {
 
 
     @GetMapping("/activate/{code}")
-    public ResponseEntity<?> activate(@PathVariable ("code") String code) {
+    public String activate(@PathVariable ("code") String code) {
         Optional<User> userOptional = userService.findAll().stream().filter(el->el.getActivationCode().equals(code)).findAny();
         if(userOptional.isPresent()){
             User user = userOptional.get();
             user.setActivated(true);
             userService.save(user);
         }
-        return ResponseEntity.ok("Activated");
+        return "Activated Return to homepage http://localhost:5173";
 
     }
 }

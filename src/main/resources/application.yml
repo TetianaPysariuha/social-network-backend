@@ -20,7 +20,7 @@ logging:
 ---
 spring:
   profiles:
-    active: prod #dev
+    active: dev #dev
 ---
 spring:
   sql:
