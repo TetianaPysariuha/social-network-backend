@@ -5,6 +5,9 @@ jwt:
 server:
   port: 9000
 spring:
+  mail:
+    port: 587
+    host: smtp.gmail.com
   h2:
     console:
       enabled: true
@@ -17,7 +20,7 @@ logging:
 ---
 spring:
   profiles:
-    active: dev #dev
+    active: prod #dev
 ---
 spring:
   sql:
@@ -40,16 +43,16 @@ spring:
       on-profile: dev
 ---
 spring:
-  #sql:
-    #init:
-      #mode: never
-      #schema-locations: classpath:hr_schema_postgres.sql
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:hr_schema_postgres.sql
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/}
     driver-class-name: org.postgresql.Driver
     #url: jdbc:postgresql://localhost:5432/
     username: postgres
-    password: postgres
+    password: root
   jpa:
     open-in-view: false
     defer-datasource-initialization: true

@@ -7,10 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -37,6 +34,10 @@ public class User extends BaseEntity {
     @Column(name = "profile_picture")
     private String profilePicture;
     private String about;
+    @Column(name="activation_code")
+    private String activationCode = UUID.randomUUID().toString();
+
+   private boolean activated ;
 
     @Column(name = "profile_background_picture")
     private String profileBackgroundPicture;

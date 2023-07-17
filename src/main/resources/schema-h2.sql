@@ -14,6 +14,8 @@ CREATE TABLE public.users (
                               profile_background_picture VARCHAR (250)  ,
                               created_date TIMESTAMP NOT NULL ,
                               updated_date TIMESTAMP NOT NULL,
+                              activation_code VARCHAR ,
+                              activated BIT,
                               created_by VARCHAR,
                               updated_by VARCHAR
 );

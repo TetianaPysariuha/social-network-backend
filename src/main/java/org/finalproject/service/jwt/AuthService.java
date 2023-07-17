@@ -12,6 +12,8 @@ import org.finalproject.jwt.JwtResponse;
 import org.finalproject.jwt.RegisterRequest;
 import org.finalproject.service.GeneralService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +32,9 @@ public class AuthService {
     private final JwtProvider jwtProvider;
     @Autowired
     private GeneralService<User> serviceUser;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
 
     public JwtResponse login(@NonNull JwtRequest authRequest) {
@@ -54,6 +60,14 @@ public class AuthService {
         newUser.setGender(authRequest.getGender());
         Date birthDate = new Date();
         newUser.setBirthDate(birthDate);
+        newUser.setActivationCode(UUID.randomUUID().toString());
+        newUser.setActivated(false);
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(authRequest.getEmail());
+        simpleMailMessage.setSubject("test");
+        simpleMailMessage.setText("http://localhost:9000/api/auth/activate/"+ newUser.getActivationCode());
+
+        javaMailSender.send(simpleMailMessage);
         serviceUser.save(newUser);
     }
     public JwtResponse getAccessToken(@NonNull String refreshToken) {
