@@ -5,6 +5,7 @@ import org.finalproject.dto.MessageDto;
 import org.finalproject.dto.MessageDtoMapper;
 import org.finalproject.dto.MessageDtoRequest;
 import org.finalproject.entity.Message;
+import org.finalproject.entity.Post;
 import org.finalproject.service.GeneralService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -53,10 +54,10 @@ public class MessageRestController {
         messageService.save(messageDtoMapper.convertToEntity(messageDtoRequest));
     }
 
-    @GetMapping("/id")
-    public ResponseEntity<?> getById(@PathVariable("id") Long userId) {
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getById(@PathVariable("id") Long id) {
 
-        Message message = messageService.getOne(userId);
+        Message message = messageService.findEntityById(id);
         if (message == null) {
             return ResponseEntity.badRequest().body("Message not found");
         }
@@ -89,7 +90,10 @@ public class MessageRestController {
     public ResponseEntity<?> update(@RequestBody MessageDtoRequest messageDtoRequest) {
 
         try {
-            messageService.save(messageDtoMapper.convertToEntity(messageDtoRequest));
+            Message messageEntity = messageDtoMapper.convertToEntity(messageDtoRequest);
+            messageEntity.setCreatedDate(messageService.getOne(messageEntity.getId()).getCreatedDate());
+            messageEntity.setCreatedBy(messageService.getOne(messageEntity.getId()).getCreatedBy());
+            messageService.save(messageEntity);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

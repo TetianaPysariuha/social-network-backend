@@ -20,7 +20,7 @@ logging:
 ---
 spring:
   profiles:
-    active: dev #dev
+    active: prod #dev
 ---
 spring:
   sql:
@@ -46,6 +46,7 @@ spring:
   sql:
     init:
       mode: always
+      data-locations: classpath:hr_data_postgres.sql
       schema-locations: classpath:hr_schema_postgres.sql
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/}
@@ -54,7 +55,7 @@ spring:
     username: postgres
     password: root
   jpa:
-    open-in-view: false
+    open-in-view: true
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: none

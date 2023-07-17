@@ -5,7 +5,7 @@ CREATE TABLE public.users (
                               id SERIAL PRIMARY KEY,
                               full_name VARCHAR(250) NOT NULL,
                               email  VARCHAR (250) NOT NULL,
-                              password VARCHAR (250) NOT NULL,
+                              password VARCHAR (250),
                               city VARCHAR (250) ,
                               country VARCHAR (250) ,
                               gender VARCHAR (250) ,
