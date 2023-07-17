@@ -50,6 +50,7 @@ public class AuthService {
             throw new AuthException("Password is incorrect");
         }
     }
+
     public void register(@NonNull RegisterRequest authRequest) {
         User newUser = new User();
         newUser.setEmail(authRequest.getEmail());
@@ -65,11 +66,12 @@ public class AuthService {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setTo(authRequest.getEmail());
         simpleMailMessage.setSubject("test");
-        simpleMailMessage.setText("http://localhost:9000/api/auth/activate/"+ newUser.getActivationCode());
+        simpleMailMessage.setText("http://localhost:9000/api/auth/activate/" + newUser.getActivationCode());
 
         javaMailSender.send(simpleMailMessage);
         serviceUser.save(newUser);
     }
+
     public JwtResponse getAccessToken(@NonNull String refreshToken) {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);

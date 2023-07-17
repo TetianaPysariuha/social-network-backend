@@ -34,7 +34,7 @@ public class User extends BaseEntity {
     @Column(name = "profile_picture")
     private String profilePicture;
     private String about;
-    @Column(name="activation_code")
+    @Column(name = "activation_code")
     private String activationCode = UUID.randomUUID().toString();
 
    private boolean activated ;

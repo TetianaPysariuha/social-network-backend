@@ -35,6 +35,7 @@ public class SocialNetworkApplication implements ApplicationRunner {
 
         System.out.println("http://localhost:9000/h2-console");
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
 

@@ -33,11 +33,14 @@ public class AuthController {
         final JwtResponse token = authService.login(authRequest);
         return ResponseEntity.ok(token);
     }
+
     @PostMapping("registration")
     public ResponseEntity<JwtResponse> register(@RequestBody RegisterRequest authRequest) {
         authService.register(authRequest);
         return ResponseEntity.ok().build();
     }
+
+
     @PostMapping("token")
     public ResponseEntity<JwtResponse> getNewAccessToken(@RequestBody RefreshJwtRequest request) {
         final JwtResponse token = authService.getAccessToken(request.getRefreshToken());
@@ -54,7 +57,7 @@ public class AuthController {
     @GetMapping("/activate/{code}")
     public String activate(@PathVariable ("code") String code) {
         Optional<User> userOptional = userService.findAll().stream().filter(el->el.getActivationCode().equals(code)).findAny();
-        if(userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             User user = userOptional.get();
             user.setActivated(true);
             userService.save(user);
