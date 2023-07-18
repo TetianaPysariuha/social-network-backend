@@ -1,6 +1,8 @@
 server:
   port: 9000
 spring:
+  main:
+    allow-circular-references: true
   h2:
     console:
       enabled: true
@@ -36,9 +38,9 @@ spring:
       on-profile: dev
 ---
 spring:
-  sql:
-    init:
-      mode: never
+  #sql:
+    #init:
+      #mode: never
       #schema-locations: classpath:hr_schema_postgres.sql
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/}
@@ -64,8 +66,9 @@ spring:
         flyway:
           url: ${DATABASE_URL}
           user: postgres
-          password: postgres
+          password: root
           locations: classpath:db/migration
+
 
 
 welcome:
