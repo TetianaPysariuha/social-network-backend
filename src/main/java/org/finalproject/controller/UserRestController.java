@@ -1,12 +1,11 @@
 package org.finalproject.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.finalproject.dto.PostRequestDto;
-import org.finalproject.dto.UserDto;
+import org.finalproject.dto.*;
 
-import org.finalproject.dto.UserDtoMapper;
-import org.finalproject.dto.UserRequestDto;
+import org.finalproject.entity.Friend;
 import org.finalproject.entity.Post;
+import org.finalproject.service.DefaultFriendService;
 import org.finalproject.service.FileUpload;
 
 import org.finalproject.entity.User;
@@ -33,7 +32,11 @@ public class UserRestController {
 
     private final GeneralService<Post> postService;
 
+    private final DefaultFriendService defaultService;
+
     private final UserDtoMapper dtoMapper;
+
+    private final FriendDtoMapper friendMapper;
 
     private final FileUpload fileUpload;
 
@@ -69,16 +72,16 @@ public class UserRestController {
         return ResponseEntity.ok().body(dtoMapper.convertToDto(user) );
     }
 
-    @GetMapping("/{id}/friends")
-    public ResponseEntity<?>  getFriends(@PathVariable("id")  Long  userId) {
-        User user = userService.getOne(userId );
+    @GetMapping("/{userId}/friends")
+    public ResponseEntity<?>  getFriends(@PathVariable("userId")  Long  userId) {
 
-        if (user   == null) {
-            return ResponseEntity.badRequest().body("User not found");
-        }
-        return ResponseEntity.ok().body(user.getFriends() );
+        List<Friend> friends = defaultService.findFriends(userId);
+
+        List<FriendDto> friendDtoList = friends.stream().map(el->friendMapper.convertToDto(el)).collect(Collectors.toList());
+
+
+        return ResponseEntity.ok().body(friendDtoList);
     }
-
     @GetMapping("/{id}/chats")
     public ResponseEntity<?>  getChats(@PathVariable("id")  Long  userId) {
         User user = userService.getOne(userId );

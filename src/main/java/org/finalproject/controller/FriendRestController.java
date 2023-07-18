@@ -26,8 +26,6 @@ import java.util.stream.Collectors;
 public class FriendRestController {
     private final GeneralService<Friend> friendService;
 
-    private final DefaultFriendService defaultService;
-
     private final FriendDtoMapper dtoMapper;
 
 
@@ -58,16 +56,6 @@ public class FriendRestController {
         return ResponseEntity.ok().body(dtoMapper.convertToDto(friend) );
     }
 
-    @GetMapping("/{userId}/friends")
-    public ResponseEntity<?>  getFriends(@PathVariable("userId")  Long  userId) {
-
-        List<Friend> friends = defaultService.findFriends(userId);
-
-        List<FriendDto> friendDtoList = friends.stream().map(el->dtoMapper.convertToDto(el)).collect(Collectors.toList());
-
-
-        return ResponseEntity.ok().body(friendDtoList);
-    }
 
     @PostMapping
     public void create(@RequestBody FriendRequestDto friend ) {
