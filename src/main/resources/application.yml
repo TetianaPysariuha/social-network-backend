@@ -46,10 +46,10 @@ spring:
       on-profile: dev
 ---
 spring:
-  #sql:
-    #init:
-      #mode: never
-      #schema-locations: classpath:hr_schema_postgres.sql
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:hr_schema_postgres.sql
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/}
     driver-class-name: org.postgresql.Driver
@@ -70,12 +70,12 @@ spring:
       on-profile: prod
 
       # Налаштування для Flyway
-      spring:
-        flyway:
-          url: ${DATABASE_URL}
-          user: postgres
-          password: root
-          locations: classpath:db/migration
+     # spring:
+        #flyway:
+         # url: ${DATABASE_URL}
+         # user: postgres
+         # password: root
+          #locations: classpath:db/migration
 
 
 
