@@ -82,6 +82,7 @@ public class UserRestController {
 
         return ResponseEntity.ok().body(friendDtoList);
     }
+
     @GetMapping("/{id}/chats")
     public ResponseEntity<?>  getChats(@PathVariable("id")  Long  userId) {
         User user = userService.getOne(userId );
