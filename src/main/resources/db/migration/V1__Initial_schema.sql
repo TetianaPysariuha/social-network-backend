@@ -1,21 +1,21 @@
---create tables
-BEGIN;
 DROP TABLE IF EXISTS public.users  CASCADE ;
 CREATE TABLE public.users (
                               id SERIAL PRIMARY KEY,
                               full_name VARCHAR(250) NOT NULL,
                               email  VARCHAR (250) NOT NULL,
-                              password VARCHAR (250) ,
-                              city VARCHAR (250) NOT NULL,
-                              country VARCHAR (250) NOT NULL,
-                              gender VARCHAR (250) NOT NULL,
-                              work_place VARCHAR NOT NULL ,
-                              about VARCHAR (250) NOT NULL,
-                              birth_date TIMESTAMP NOT NULL ,
-                              profile_picture VARCHAR (250) NOT NULL ,
-                              profile_background_picture VARCHAR (250) NOT NULL ,
+                              password VARCHAR (250),
+                              city VARCHAR (250) ,
+                              country VARCHAR (250) ,
+                              gender VARCHAR (250) ,
+                              work_place VARCHAR  ,
+                              about VARCHAR (250) ,
+                              birth_date TIMESTAMP  ,
+                              profile_picture VARCHAR (250)  ,
+                              profile_background_picture VARCHAR (250)  ,
                               created_date TIMESTAMP NOT NULL ,
                               updated_date TIMESTAMP NOT NULL,
+                              activation_code VARCHAR ,
+                              activated boolean ,
                               created_by VARCHAR,
                               updated_by VARCHAR
 );
@@ -35,15 +35,6 @@ CREATE TABLE public.friends (
 );
 
 
-DROP TABLE IF EXISTS public.chats  CASCADE ;
-CREATE TABLE public.chats (
-                              id SERIAL PRIMARY KEY ,
-                              created_date TIMESTAMP NOT NULL,
-                              updated_date TIMESTAMP NOT NULL,
-                              created_by VARCHAR,
-                              updated_by VARCHAR
-);
-
 DROP TABLE IF EXISTS public.users_chats CASCADE ;
 CREATE TABLE public.users_chats (
                                     id SERIAL PRIMARY KEY,
@@ -53,7 +44,14 @@ CREATE TABLE public.users_chats (
                                     foreign key (chat_id) references chats(id)
 
 );
-
+DROP TABLE IF EXISTS public.chats  CASCADE ;
+CREATE TABLE public.chats (
+                              id SERIAL PRIMARY KEY ,
+                              created_date TIMESTAMP NOT NULL,
+                              updated_date TIMESTAMP NOT NULL,
+                              created_by VARCHAR,
+                              updated_by VARCHAR
+);
 DROP TABLE IF EXISTS public.messages  CASCADE ;
 CREATE TABLE public.messages (
                                  id SERIAL PRIMARY KEY ,
@@ -114,16 +112,12 @@ CREATE TABLE public.users_liked_posts (
                                           user_id INTEGER REFERENCES users(id)
 );
 
-
-
 DROP TABLE IF EXISTS public.users_reposted_posts CASCADE;
 CREATE TABLE public.users_reposted_posts (
                                              id SERIAL PRIMARY KEY,
                                              post_id INTEGER REFERENCES posts(id),
                                              user_id INTEGER REFERENCES users(id)
 );
-
-
 
 DROP TABLE IF EXISTS public.post_images CASCADE ;
 CREATE TABLE public.post_images (
@@ -135,9 +129,3 @@ CREATE TABLE public.post_images (
                                     created_by VARCHAR,
                                     updated_by VARCHAR
 );
-
-
-
-
-COMMIT;
-
