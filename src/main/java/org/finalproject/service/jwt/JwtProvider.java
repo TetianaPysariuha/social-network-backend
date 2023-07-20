@@ -60,6 +60,7 @@ public class JwtProvider {
                 .signWith(jwtRefreshSecret)
                 .compact();
     }
+
     public String generateOauthAccessToken(@NonNull String email) {
         final LocalDateTime now = LocalDateTime.now();
         final Instant accessExpirationInstant = now.plusMinutes(ACCESS_LEAVE_MINUTES).atZone(ZoneId.systemDefault()).toInstant();

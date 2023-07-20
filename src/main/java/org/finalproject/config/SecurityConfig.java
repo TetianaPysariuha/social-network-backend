@@ -51,6 +51,7 @@ public class SecurityConfig {
     private final JwtProvider jwtProvider;
     @Autowired
     private CustomOAuth2UserService oauthUserService;
+
     @Bean
     public CorsConfiguration corsConfiguration() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
@@ -74,7 +75,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .oauth2Login()
-                .loginPage("http://localhost:3000")
+                .loginPage("http://localhost:5173")
 
                 .userInfoEndpoint()
                 .userService(oauthUserService)
@@ -97,22 +98,23 @@ public class SecurityConfig {
 
 
                         String token = jwtProvider.generateOauthAccessToken(email);
+                        Map<String, String> newRefreshStorage = authService.getRefreshStorage();
+                        newRefreshStorage.put("token",token);
 
                         User authUser = new User();
                         authUser.setEmail(email);
                         authUser.setFullName(fullName);
                         Optional<User> existingUser = userService.findAll().stream().filter(el ->el.getEmail().equals(email)).findAny();
-                        if(existingUser.isEmpty()){
-                            userService.save(authUser);}
+                        if (existingUser.isEmpty()) {
+                            userService.save(authUser);
+                        }
 
 
-                        Map<String, String> newRefreshStorage = authService.getRefreshStorage();
-                        newRefreshStorage.put("token",token);
 
                         authService.setRefreshStorage(newRefreshStorage);
 
 
-                        response.sendRedirect("http//:localhost:3000");
+                        response.sendRedirect("/");
 
                     }
 
@@ -125,7 +127,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/api/auth/login", "/api/auth/token", "/api/auth/refresh","/swagger-ui/**","api/oauth2/authorization/google","/users/**","/friends/**").permitAll()
+                                .requestMatchers("/api/auth/login", "/api/auth/token", "/api/auth/refresh","/swagger-ui/**","api/oauth2/authorization/google","/users/**","/friends/**","/*/**").permitAll()
                                 .anyRequest().authenticated()
 
                                 .and()
@@ -137,6 +139,7 @@ public class SecurityConfig {
                 .build();
 
     }
+
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers("v3/api-docs/**");

@@ -14,6 +14,8 @@ import org.finalproject.jwt.JwtResponse;
 import org.finalproject.jwt.RegisterRequest;
 import org.finalproject.service.GeneralService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,16 +37,20 @@ public class AuthService {
 
     private  Map<String, HttpServletResponse> responseStorage = new HashMap<>();
     @Autowired
-    private GeneralService <User> serviceUser;
+    private GeneralService<User> serviceUser;
     @Autowired
     private  JwtProvider jwtProvider;
     @Autowired
     private  PasswordEncoder passwordEncoder;
 
+    @Autowired
+
+    private JavaMailSender javaMailSender;
+
     public JwtResponse login(@NonNull JwtRequest authRequest) {
         final User user = userService.getByEmail(authRequest.getEmail())
                 .orElseThrow(() -> new AuthException("User not found"));
-        if (passwordEncoder.matches(authRequest.getPassword(), user.getPassword())){
+        if (passwordEncoder.matches(authRequest.getPassword(), user.getPassword())) {
 
             final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
@@ -54,6 +60,7 @@ public class AuthService {
             throw new AuthException("Password is incorrect");
         }
     }
+
     public void register(@NonNull RegisterRequest authRequest) {
         User newUser = new User();
         newUser.setEmail(authRequest.getEmail());

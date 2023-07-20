@@ -5,12 +5,21 @@ jwt:
 server:
   port: 9000
 spring:
+  main:
+    allow-circular-references: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 903238603946-3291rnl4i6cmmcoigv6vaa2g0s741f43.apps.googleusercontent.com
+            client-secret: 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
+            scope: openid,profile,email
+
   mail:
     port: 587
     host: smtp.gmail.com
 
-  main:
-    allow-circular-references: true
   h2:
     console:
       enabled: true
@@ -55,7 +64,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     #url: jdbc:postgresql://localhost:5432/
     username: postgres
-    password: postgres
+    password: root
   jpa:
   #  open-in-view: true
     defer-datasource-initialization: true
@@ -74,7 +83,7 @@ spring:
         flyway:
           url: ${DATABASE_URL}
           user: postgres
-          password: postgres
+          password: root
           locations: classpath:db/migration
 
 

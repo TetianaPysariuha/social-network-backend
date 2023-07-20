@@ -45,10 +45,7 @@ class Oauth2Controller {
     }
 
     @GetMapping("/oauth2/authorization/google")
-    public ResponseEntity <?>  login( ) throws IOException {
-
-       // String auth = SecurityContextHolder.getContext().getAuthentication() .getPrincipal().toString();
-       // System.out.println(auth);
+    public ResponseEntity<?>  login( ) throws IOException {
 
 
         String access = authService.getRefreshStorage().get("token");
@@ -57,7 +54,7 @@ class Oauth2Controller {
         final String email = claims.getSubject();
         String refresh = jwtProvider.generateOauthRefreshToken(email);
         authService.loginAuth2(email,refresh);
-        final JwtResponse token =new JwtResponse(access,refresh);
+        final JwtResponse token = new JwtResponse(access,refresh);
 
         return ResponseEntity.ok(token);
 
