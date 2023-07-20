@@ -18,8 +18,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -53,12 +55,26 @@ public class AuthService {
         }
     }
     public void register(@NonNull RegisterRequest authRequest) {
-          User newUser = new User();
-          newUser.setEmail(authRequest.getEmail());
-          newUser.setPassword(authRequest.getPassword());
-          newUser.setFullName(authRequest.getFullName());
-          serviceUser.save(newUser);
+        User newUser = new User();
+        newUser.setEmail(authRequest.getEmail());
+        String encodedPassword =  passwordEncoder.encode(authRequest.getPassword());
+        newUser.setPassword(encodedPassword);
+        String fullName = authRequest.getName() + authRequest.getSurname();
+        newUser.setFullName(fullName);
+        newUser.setGender(authRequest.getGender());
+        Date birthDate = new Date();
+        newUser.setBirthDate(birthDate);
+        newUser.setActivationCode(UUID.randomUUID().toString());
+        newUser.setActivated(false);
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(authRequest.getEmail());
+        simpleMailMessage.setSubject("test");
+        simpleMailMessage.setText("http://localhost:9000/api/auth/activate/" + newUser.getActivationCode());
+
+        javaMailSender.send(simpleMailMessage);
+        serviceUser.save(newUser);
     }
+
     public void loginAuth2(String email,String refreshToken) {
 
 
