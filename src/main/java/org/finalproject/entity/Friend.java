@@ -16,12 +16,12 @@ import lombok.*;
 public class Friend extends BaseEntity {
 
     private String status;
-    @ManyToOne(cascade = {CascadeType.MERGE } ,fetch = FetchType.EAGER )
+    @ManyToOne(fetch = FetchType.EAGER )
     @JoinColumn(name = "user_id")
 
     private User user;
 
-    @ManyToOne(cascade = {CascadeType.MERGE } ,fetch = FetchType.EAGER )
+    @ManyToOne(fetch = FetchType.EAGER )
     @JoinColumn(name = "friend_id")
     private  User friend;
 

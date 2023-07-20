@@ -1,6 +1,16 @@
+jwt:
+  secret:
+    access: LejjnLZua6SlR7eZXByD2+9M5P+dYxK3IlfA6XgPksuXijiXMAcpulI03o2Vq+PjYENhgTJGXLNm7YS4f1+IMw==
+    refresh: cRO8f7Q/HaE/X1QjxAHYL8Dm5qkTI68WiNi9elE1NFqsL2up0RlZn/e7aD2R5i8cMvCksBEDhUAOZAhsypQaXw==
 server:
   port: 9000
 spring:
+  mail:
+    port: 587
+    host: smtp.gmail.com
+
+  main:
+    allow-circular-references: true
   h2:
     console:
       enabled: true
@@ -16,6 +26,11 @@ spring:
     active: prod #dev
 ---
 spring:
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data-h2.sql
+      schema-locations: classpath:schema-h2.sql
   datasource:
     url: jdbc:h2:mem:testdb
     username: sa
@@ -24,23 +39,25 @@ spring:
   jpa:
     defer-datasource-initialization: true
     properties:
-      generate_ststistics: true
+      generate_statistics: true
     generate-ddl: true
   config:
     activate:
       on-profile: dev
 ---
 spring:
-  sql:
-    init:
-      mode: never
-      schema-locations: classpath:hr_schema_postgres.sql
+ # sql:
+   # init:
+     # mode: always
+     # schema-locations: classpath:hr_schema_postgres.sql
   datasource:
-    url: jdbc:postgresql://localhost:5432/
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/}
+    driver-class-name: org.postgresql.Driver
+    #url: jdbc:postgresql://localhost:5432/
     username: postgres
     password: postgres
   jpa:
-    open-in-view: false
+  #  open-in-view: true
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: none
@@ -51,5 +68,19 @@ spring:
   config:
     activate:
       on-profile: prod
+
+       Налаштування для Flyway
+      spring:
+        flyway:
+          url: ${DATABASE_URL}
+          user: postgres
+          password: postgres
+          locations: classpath:db/migration
+
+
+
 welcome:
   message: welcome
+  cloudName: ${cloudName}
+  apiKey: ${apiKey}
+  apiSecret: ${apiSecret}

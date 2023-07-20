@@ -1,10 +1,9 @@
 package org.finalproject.repository;
 
-
-
-
 import org.finalproject.entity.BaseEntity;
-import org.finalproject.exception.DataNotFoundException;
+import org.finalproject.exeprion.DataNotFoundException;
+
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -18,4 +17,6 @@ public interface RepositoryInterface<E extends BaseEntity> extends JpaRepository
         }
         return entityOptional.get();
     }
+
 }
+

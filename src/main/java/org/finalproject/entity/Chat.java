@@ -1,18 +1,33 @@
 package org.finalproject.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.*;
 
-@NoArgsConstructor
+import java.util.List;
+
 @AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-@Entity
+@ToString(of = "id")
 @Getter
 @Setter
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Entity
 @Table(name = "chats")
 public class Chat extends BaseEntity {
 
+    @OneToMany(cascade =  CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "chat")
+    private List<Message> messages;
+
+    @OneToMany(cascade =  CascadeType.REMOVE, mappedBy = "chat")
+    @JsonIgnore
+    private List<MessageImage> messageImages;
+
+    @ManyToMany(cascade =  CascadeType.PERSIST,mappedBy = "chats", fetch = FetchType.EAGER)
+    private List<User> users;
+
+    public Chat(List<User> user) {
+
+        this.users = user;
+    }
 }

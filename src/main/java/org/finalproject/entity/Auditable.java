@@ -11,15 +11,17 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+
 import java.util.Date;
 
 @Getter
 @Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class Auditable<String> {
+public class Auditable<U> {
     @CreatedBy
     @Column(name = "created_by")
+
     private String createdBy;
 
     @CreatedDate
@@ -28,6 +30,7 @@ public class Auditable<String> {
 
     @LastModifiedBy
     @Column(name = "updated_by")
+
     private String updatedBy;
 
     @LastModifiedDate
