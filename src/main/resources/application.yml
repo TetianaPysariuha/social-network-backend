@@ -55,16 +55,16 @@ spring:
       on-profile: dev
 ---
 spring:
- # sql:
-   # init:
-     # mode: always
-     # schema-locations: classpath:hr_schema_postgres.sql
+  #sql:
+    #init:
+      #mode: always
+      #schema-locations: classpath:hr_schema_postgres.sql
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/}
     driver-class-name: org.postgresql.Driver
     #url: jdbc:postgresql://localhost:5432/
     username: postgres
-    password: root
+    password: postgres
   jpa:
   #  open-in-view: true
     defer-datasource-initialization: true
@@ -83,7 +83,7 @@ spring:
         flyway:
           url: ${DATABASE_URL}
           user: postgres
-          password: root
+          password: postgres
           locations: classpath:db/migration
 
 

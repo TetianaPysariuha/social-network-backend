@@ -47,7 +47,6 @@ class Oauth2Controller {
     @GetMapping("/oauth2/authorization/google")
     public ResponseEntity<?>  login( ) throws IOException {
 
-
         String access = authService.getRefreshStorage().get("token");
 
         final Claims claims = jwtProvider.getAccessClaims(access);

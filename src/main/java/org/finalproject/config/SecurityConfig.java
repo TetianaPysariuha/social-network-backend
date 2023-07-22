@@ -114,7 +114,7 @@ public class SecurityConfig {
                         authService.setRefreshStorage(newRefreshStorage);
 
 
-                        response.sendRedirect("/");
+                        response.sendRedirect("http://localhost:5173");
 
                     }
 
@@ -127,7 +127,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/api/auth/login", "/api/auth/token", "/api/auth/refresh","/swagger-ui/**","api/oauth2/authorization/google","/users/**","/friends/**","/*/**").permitAll()
+                                .requestMatchers("/api/auth/login", "/api/auth/token", "/api/auth/refresh","/swagger-ui/**","api/oauth2/authorization/google","*/**").permitAll()
                                 .anyRequest().authenticated()
 
                                 .and()

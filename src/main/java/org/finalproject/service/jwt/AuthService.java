@@ -20,6 +20,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,11 +69,15 @@ public class AuthService {
         newUser.setEmail(authRequest.getEmail());
         String encodedPassword =  passwordEncoder.encode(authRequest.getPassword());
         newUser.setPassword(encodedPassword);
-        String fullName = authRequest.getName() + authRequest.getSurname();
+        String fullName = authRequest.getName() +" " + authRequest.getSurname();
         newUser.setFullName(fullName);
         newUser.setGender(authRequest.getGender());
-        Date birthDate = new Date();
-        newUser.setBirthDate(birthDate);
+        LocalDate birthDate =  LocalDate.of(Integer.parseInt(authRequest.getYear()),Integer.parseInt(authRequest.getMonth()),Integer.parseInt(authRequest.getDay()));
+        ZoneId defaultZoneId = ZoneId.systemDefault();
+        Instant instant = birthDate.atStartOfDay(defaultZoneId).toInstant();
+        Date birthDay = Date.from(instant);
+
+        newUser.setBirthDate(birthDay);
         newUser.setActivationCode(UUID.randomUUID().toString());
         newUser.setActivated(false);
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
