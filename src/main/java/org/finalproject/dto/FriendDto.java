@@ -19,4 +19,5 @@ public class FriendDto {
     private User friend;
     private List<User> mutualFriends;
 
+    private User user;
 }

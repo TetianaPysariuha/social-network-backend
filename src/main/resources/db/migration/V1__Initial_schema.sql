@@ -33,7 +33,14 @@ CREATE TABLE public.friends (
                                 updated_by VARCHAR
 
 );
-
+DROP TABLE IF EXISTS public.chats  CASCADE ;
+CREATE TABLE public.chats (
+                              id SERIAL PRIMARY KEY ,
+                              created_date TIMESTAMP NOT NULL,
+                              updated_date TIMESTAMP NOT NULL,
+                              created_by VARCHAR,
+                              updated_by VARCHAR
+);
 
 DROP TABLE IF EXISTS public.users_chats CASCADE ;
 CREATE TABLE public.users_chats (
@@ -44,14 +51,7 @@ CREATE TABLE public.users_chats (
                                     foreign key (chat_id) references chats(id)
 
 );
-DROP TABLE IF EXISTS public.chats  CASCADE ;
-CREATE TABLE public.chats (
-                              id SERIAL PRIMARY KEY ,
-                              created_date TIMESTAMP NOT NULL,
-                              updated_date TIMESTAMP NOT NULL,
-                              created_by VARCHAR,
-                              updated_by VARCHAR
-);
+
 DROP TABLE IF EXISTS public.messages  CASCADE ;
 CREATE TABLE public.messages (
                                  id SERIAL PRIMARY KEY ,

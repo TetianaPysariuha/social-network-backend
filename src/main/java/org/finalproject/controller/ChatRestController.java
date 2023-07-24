@@ -85,6 +85,7 @@ public class ChatRestController {
     }*/
 
     @GetMapping("/{id}")
+
     public ResponseEntity<?> getById(@PathVariable("id") Long id) {
 
         Chat chat = chatService.getOne(id);
@@ -94,16 +95,16 @@ public class ChatRestController {
         return ResponseEntity.ok().body(chatDtoMapper.convertToDto(chat));
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> deleteChat(@RequestBody ChatDtoRequest chatDtoRequest) {
+        @DeleteMapping
+        public ResponseEntity<?> deleteChat(@RequestBody ChatDtoRequest chatDtoRequest) {
 
-        try {
-            chatService.delete(chatDtoMapper.convertToEntity(chatDtoRequest));
-            return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            try {
+                chatService.delete(chatDtoMapper.convertToEntity(chatDtoRequest));
+                return ResponseEntity.ok().build();
+            } catch (RuntimeException e) {
+                return ResponseEntity.badRequest().body(e.getMessage());
+            }
         }
-    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long chatId) {
@@ -149,6 +150,7 @@ public class ChatRestController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
 
 //    @GetMapping("/search")
 //    public ResponseEntity<?> findUserIdByPartOfName(@RequestBody String partOfName) {
