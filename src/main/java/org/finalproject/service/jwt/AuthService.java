@@ -69,7 +69,7 @@ public class AuthService {
         newUser.setEmail(authRequest.getEmail());
         String encodedPassword =  passwordEncoder.encode(authRequest.getPassword());
         newUser.setPassword(encodedPassword);
-        String fullName = authRequest.getName() +" " + authRequest.getSurname();
+        String fullName = authRequest.getName() + " " + authRequest.getSurname();
         newUser.setFullName(fullName);
         newUser.setGender(authRequest.getGender());
         LocalDate birthDate =  LocalDate.of(Integer.parseInt(authRequest.getYear()),Integer.parseInt(authRequest.getMonth()),Integer.parseInt(authRequest.getDay()));
