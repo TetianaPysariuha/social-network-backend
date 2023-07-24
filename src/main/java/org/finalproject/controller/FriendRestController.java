@@ -9,8 +9,6 @@ import org.finalproject.dto.*;
 import org.finalproject.entity.Friend;
 import org.finalproject.entity.User;
 import org.finalproject.service.DefaultFriendService;
-import org.finalproject.service.GeneralService;
-import org.finalproject.utilites.FriendStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,28 +24,27 @@ import java.util.stream.Collectors;
 @RequestMapping("/friends")
 @CrossOrigin(origins = {"http://127.0.0.1:5173/"})
 public class FriendRestController {
-    private final GeneralService<Friend> friendService;
-
+//    private final GeneralService<Friend> friendService;
     @Autowired
     private DefaultFriendService defaultFriendService;
-
     private final FriendDtoMapper dtoMapper;
     private final FriendFullDtoMapper friendFullDtoMapper;
     private final UserDtoMapper userDtoMapper;
-
+    private final FriendSuggestionsDtoMapper friendSuggestionsDtoMapper;
 
 
     @GetMapping
     public List<FriendFullDto> getAll() {
-        return friendService.findAll().stream().map(friendFullDtoMapper::convertToDto).collect(Collectors.toList());
-
+        return defaultFriendService.findAll().stream()
+                .map(friendFullDtoMapper::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{page}/{size}")
     public ResponseEntity<?> findAll(@PathVariable Integer page, @PathVariable Integer size) {
         Sort sort =  Sort.by(new Sort.Order(Sort.Direction.ASC,"id"));
         Pageable pageable = PageRequest.of(page,size,sort);
-        Page friends = friendService.findAll(pageable);
+        Page friends = defaultFriendService.findAll(pageable);
         List<Friend> friendList =  friends.toList();
         List<FriendDto> friendDtoList = friendList.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
         return ResponseEntity.ok(friendDtoList);
@@ -55,8 +52,7 @@ public class FriendRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?>  getById(@PathVariable("id")  Long  userId) {
-        Friend friend = friendService.getOne(userId );
-
+        Friend friend = defaultFriendService.getOne(userId );
         if (friend   == null) {
             return ResponseEntity.badRequest().body("Employer not found");
         }
@@ -65,18 +61,25 @@ public class FriendRestController {
 
     @GetMapping("/{userId}/friends")
     public ResponseEntity<?>  getFriends(@PathVariable("userId")  Long  userId) {
-
-
-        //List<Friend> friends = friendService.findAll().stream().filter(el -> el.getUser().getId().equals(userId))
-                //.collect(Collectors.toList());
         List<Friend> friends = defaultFriendService.friendsOfUser(userId);
         List<FriendDto> usersFriends = friends.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
         return ResponseEntity.ok().body(usersFriends);
     }
+
+    @GetMapping("/{userId}/requests")
+    public ResponseEntity<?>  getRequests(@PathVariable("userId")  Long  userId) {
+        List<Friend> friends = defaultFriendService.friendshipRequests(userId);
+        List<FriendFullDto> friendRequests = friends.stream().map(friendFullDtoMapper::convertToDto).toList();
+        return ResponseEntity.ok().body(friendRequests);
+    }
+
     @GetMapping("/{userId}/suggestions")
     public ResponseEntity<?>  getSuggestions(@PathVariable("userId")  Long  userId) {
         List<User> users = defaultFriendService.suggestedUsersForFriendship(userId);
-        List<UserDto> friendSuggestions = users.stream().map(userDtoMapper::convertToDto).collect(Collectors.toList());
+        List<FriendSuggestionsDto> friendSuggestions = users.stream()
+                .map(friendSuggestionsDtoMapper::convertToDto)
+                .map(el -> {el.setMutualFriends(defaultFriendService.getMutualFriends(userId, el.getFriend().getId())); return el;})
+                .collect(Collectors.toList());
         return ResponseEntity.ok().body(friendSuggestions);
     }
 
@@ -90,16 +93,16 @@ public class FriendRestController {
     public ResponseEntity<?> create(@RequestBody String parametersJson ) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode nameNodeAccountNumber = mapper.readTree(parametersJson);
-        Long userId = nameNodeAccountNumber.get("userId").asLong();
-        Long friendId = nameNodeAccountNumber.get("friendId").asLong();
+        Long userId = Long.parseLong(nameNodeAccountNumber.get("userId").asText());
+        Long friendId = Long.parseLong(nameNodeAccountNumber.get("friendId").asText());
         Friend newFriend = defaultFriendService.saveNewById(userId, friendId);
-        return ResponseEntity.ok().body(newFriend);
+        return ResponseEntity.ok().body(friendFullDtoMapper.convertToDto(newFriend));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable("id")Long userId) {
+    public ResponseEntity<?> deleteById(@PathVariable("id") Long userId) {
         try {
-            friendService.deleteById(userId);
+            defaultFriendService.deleteById(userId);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -109,39 +112,21 @@ public class FriendRestController {
     @DeleteMapping
     public ResponseEntity<?> deleteEmployee(@RequestBody FriendRequestDto friend) {
         try {
-            friendService.delete(dtoMapper.convertToEntity(friend));
+            defaultFriendService.delete(dtoMapper.convertToEntity(friend));
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-/*    @PutMapping
-    public ResponseEntity<?> update(@RequestBody String parametersJson ) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode friendUpdate = mapper.readTree(parametersJson);
-        Long userId = friendUpdate.get("userId").asLong();
-        Long friendId = friendUpdate.get("friendId").asLong();
-        Long id = friendUpdate.get("id").asLong();
-        String status = friendUpdate.get("status").asText();
-        System.out.println(status);
-        FriendStatus friendStatus = FriendStatus.forValue(status);
-        System.out.println(friendStatus);
-
-        try {
-            defaultFriendService.update(id,friendStatus,userId, friendId );
-            return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }*/
-
     @PutMapping
     public ResponseEntity<?> update(@RequestBody FriendRequestDto friendRequestDto) throws JsonProcessingException {
-
+        Friend result;
         try {
-            defaultFriendService.save(dtoMapper.convertToEntity(friendRequestDto));
-            return ResponseEntity.ok().build();
+            result = defaultFriendService.update(dtoMapper.convertToEntity(friendRequestDto));
+            return (result != null
+                    ? ResponseEntity.ok().body(friendFullDtoMapper.convertToDto(result))
+                    : ResponseEntity.badRequest().body("Such friendship have not found."));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

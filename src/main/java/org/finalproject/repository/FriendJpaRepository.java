@@ -4,7 +4,6 @@ import org.finalproject.entity.Friend;
 import org.finalproject.entity.User;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.util.List;
 
@@ -33,4 +32,7 @@ public interface FriendJpaRepository extends RepositoryInterface<Friend>, JpaSpe
             "group by t.friendID having count(*) > 1) " +
             "and u.id not in (:userId, :friendId)")
     List<User> getMutualFriends(Long userId, Long friendId);
+
+    @Query("select f from Friend f where :userId in (f.friend.id, f.user.id) and :friendId in (f.friend.id, f.user.id)")
+    List<Friend> getFriendByBothID(Long userId, Long friendId);
 }

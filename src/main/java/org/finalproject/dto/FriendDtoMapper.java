@@ -26,12 +26,6 @@ public class FriendDtoMapper extends GeneralFacade<Friend, FriendRequestDto,Frie
         entity.setStatus(FriendStatus.forValue(dto.getStatus()));
     }
 
-    protected void decorateDto(FriendFullDto dto, Friend entity) {
-        dto.setId(entity.getId());
-        dto.setStatus(entity.getStatus().getValue());
-        dto.setFriend(entity.getFriend());
-        dto.setMutualFriends(defaultFriendService.getMutualFriends(entity.getUser().getId(), entity.getFriend().getId()));
-    }
     @Override
     protected void decorateDto(FriendDto dto, Friend entity) {
         dto.setId(entity.getId());

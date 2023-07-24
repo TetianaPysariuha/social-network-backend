@@ -26,48 +26,46 @@ public class DefaultFriendService extends GeneralService<Friend> {
 
     public List<Friend> friendsOfUser(Long userId) {
         List<Friend> friends = friendRepository.friendsOfUser(userId);
-        friends.stream().map((el) -> {
+        return friends.stream().map((el) -> {
             if(Objects.equals(el.getFriend().getId(), userId)) {
                 User tmp = el.getFriend();
                 el.setFriend(el.getUser());
                 el.setUser(tmp);
             };
             return el;
-        });
-        return friends;
+        }).toList();
     }
 
     public List<User> suggestedUsersForFriendship(Long userId){
         return friendRepository.suggestedUsersForFriendship(userId);
     }
 
+    public List<Friend> friendshipRequests (Long userId) {
+        return friendRepository.friendsOfUser(userId).stream()
+                                .filter(el -> Objects.equals(el.getStatus(), FriendStatus.pending))
+                                .toList();
+    }
     public List<User> getMutualFriends(Long userId, Long friendId){
         return friendRepository.getMutualFriends(userId, friendId);
     }
 
-    @Override
-    public Friend save(Friend entity) {
-//        List<Friend> friends = friendsOfUser(entity.getUser().getId());
-//        List<Friend> filteredFriends = friends.stream().filter(el -> Objects.equals(el.getUser().getId(), entity.getUser().getId())
-//                && Objects.equals(el.getFriend().getId(), entity.getFriend().getId())).toList();
-//        if(filteredFriends.size()>0){
-//            return filteredFriends.get(0);
-//        } else{
-//            return super.save(entity);
-//        }
+    public Friend update(Friend entity) {
+        System.out.println("save");
         System.out.println(entity);
-        if(friendRepository.existsById(entity.getId())){
-            return super.save(entity);
+        Friend friend = friendRepository.findEntityById(entity.getId());
+        if(friend != null){
+            friend.setStatus(entity.getStatus());
+            System.out.println("friend");
+            System.out.println(friend);
+            return super.save(friend);
         } else {
             return null;
         }
     }
 
     public Friend saveNewById(Long userId, Long friendId) {
-        List<Friend> friends = friendsOfUser(userId);
-        List<Friend> filteredFriends = friends.stream().filter(el -> Objects.equals(el.getUser().getId(), userId)
-                && Objects.equals(el.getFriend().getId(), friendId)
-                && (el.getStatus() == FriendStatus.pending
+        List<Friend> friends = friendRepository.getFriendByBothID(userId, friendId);
+        List<Friend> filteredFriends = friends.stream().filter(el -> (el.getStatus() == FriendStatus.pending
                 || el.getStatus() == FriendStatus.accepted)).toList() ;
         if(filteredFriends.size()>0){
             return filteredFriends.get(0);
@@ -80,16 +78,15 @@ public class DefaultFriendService extends GeneralService<Friend> {
 
     public Friend update(Long id, FriendStatus friendStatus, Long userId, Long friendId) {
         Friend friend = getOne(id);
-        if(friend.getUser().getId() != userId) {
+        if(!Objects.equals(friend.getUser().getId(), userId)) {
             friend.setUser(userJpaRepository.findEntityById(userId));
         }
-        if(friend.getFriend().getId() != friendId) {
+        if(!Objects.equals(friend.getFriend().getId(), friendId)) {
             friend.setFriend(userJpaRepository.findEntityById(friendId));
         }
         if(friend.getStatus() != friendStatus) {
             friend.setStatus(friendStatus);
         }
-        System.out.println(friend);
         return super.save(friend);
     }
 }
