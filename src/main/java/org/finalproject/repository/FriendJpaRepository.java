@@ -18,7 +18,7 @@ public interface FriendJpaRepository extends RepositoryInterface<Friend>, JpaSpe
             " union" +
             " select f.friend.id from Friend f where :userId = f.user.id)" +
             " and u.id != :userId")
-    List<User> suggestedUsersForFriendship (Long userId);
+    List<User> suggestedUsersForFriendship(Long userId);
 
     @Query("select u from User u where u.id in (" +
             "select t.friendID from (" +

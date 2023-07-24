@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/friends")
 @CrossOrigin(origins = {"http://127.0.0.1:5173/"})
 public class FriendRestController {
-//    private final GeneralService<Friend> friendService;
+    //private final GeneralService<Friend> friendService;
     @Autowired
     private DefaultFriendService defaultFriendService;
     private final FriendDtoMapper dtoMapper;
@@ -78,16 +78,17 @@ public class FriendRestController {
         List<User> users = defaultFriendService.suggestedUsersForFriendship(userId);
         List<FriendSuggestionsDto> friendSuggestions = users.stream()
                 .map(friendSuggestionsDtoMapper::convertToDto)
-                .map(el -> {el.setMutualFriends(defaultFriendService.getMutualFriends(userId, el.getFriend().getId())); return el;})
+                .map(el -> { el.setMutualFriends(defaultFriendService.getMutualFriends(userId, el.getFriend().getId()));
+                    return el; })
                 .collect(Collectors.toList());
         return ResponseEntity.ok().body(friendSuggestions);
     }
 
-//    @PostMapping
-//    public ResponseEntity<?> create(@RequestBody FriendRequestDto friend ) {
-//        Friend newFriend = defaultFriendService.save(dtoMapper.convertToEntity(friend) );
-//        return ResponseEntity.ok().body(newFriend);
-//    }
+    /*@PostMapping
+    public ResponseEntity<?> create(@RequestBody FriendRequestDto friend ) {
+        Friend newFriend = defaultFriendService.save(dtoMapper.convertToEntity(friend) );
+        return ResponseEntity.ok().body(newFriend);
+    }*/
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody String parametersJson ) throws JsonProcessingException {
@@ -120,7 +121,7 @@ public class FriendRestController {
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody FriendRequestDto friendRequestDto) throws JsonProcessingException {
+    public ResponseEntity<?> update(@RequestBody FriendRequestDto friendRequestDto) {
         Friend result;
         try {
             result = defaultFriendService.update(dtoMapper.convertToEntity(friendRequestDto));

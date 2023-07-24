@@ -37,16 +37,21 @@ public abstract class GeneralFacade<E extends BaseEntity, I, O> {
         final O dto = mm.map(entity, getClassO());
         decorateDto(dto, entity);
         return dto;
-
     }
+
     public E convertToEntity(I rqDto) {
         final E entity = mm.map(rqDto, getClassE());
         decorateEntity(entity, rqDto);
         return entity;
     }
 
-    protected void decorateEntity(final E entity, final I dto) { };
-    protected void decorateDto(final O dto, final E entity) { };
+    protected void decorateEntity(final E entity, final I dto) {
+
+    }
+
+    protected void decorateDto(final O dto, final E entity) {
+
+    }
 
 
 
