@@ -6,11 +6,14 @@ import lombok.RequiredArgsConstructor;
 import org.finalproject.entity.Friend;
 import org.finalproject.entity.User;
 import org.finalproject.repository.FriendJpaRepository;
+import org.springframework.data.repository.query.Param;
 import org.finalproject.repository.UserJpaRepository;
 import org.finalproject.utilites.FriendStatus;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import java.util.List;
 import java.util.Objects;
@@ -22,6 +25,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DefaultFriendService extends GeneralService<Friend> {
     private final FriendJpaRepository friendRepository;
+
+
+   public List<Friend> findFriends(@Param("id")  Long id ) {
+       return friendRepository.findFriends(id);
+    }
     private final UserJpaRepository userJpaRepository;
 
     public List<Friend> friendsOfUser(Long userId) {
