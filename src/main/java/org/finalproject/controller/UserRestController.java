@@ -75,7 +75,7 @@ public class UserRestController {
     @GetMapping("/{userId}/friends")
     public ResponseEntity<?>  getFriends(@PathVariable("userId")  Long  userId) {
 
-        List<Friend> friends = defaultService.findFriends(userId);
+        List<Friend> friends = defaultService.friendsOfUser(userId);
 
         List<FriendDto> friendDtoList = friends.stream().map(el->friendMapper.convertToDto(el)).collect(Collectors.toList());
 

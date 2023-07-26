@@ -16,5 +16,5 @@ public class FriendDto {
 
     private  User friend;
 
-    private User user;
+
 }
