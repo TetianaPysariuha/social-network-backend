@@ -37,7 +37,6 @@ public abstract class GeneralFacade<E extends BaseEntity, I, O> {
         final O dto = mm.map(entity, getClassO());
         decorateDto(dto, entity);
         return dto;
-
     }
 
     public E convertToEntity(I rqDto) {
