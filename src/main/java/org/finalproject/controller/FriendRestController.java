@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/friends")
-//@CrossOrigin(origins = {"http://127.0.0.1:5173/"})
 public class FriendRestController {
     //private final GeneralService<Friend> friendService;
     @Autowired
@@ -48,7 +47,7 @@ public class FriendRestController {
         Pageable pageable = PageRequest.of(page,size,sort);
         Page friends = defaultFriendService.findAll(pageable);
         List<Friend> friendList =  friends.toList();
-        List<FriendDto> friendDtoList = friendList.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
+        List<FriendFullDto> friendDtoList = friendList.stream().map(dtoMapper::convertToFullDto).collect(Collectors.toList());
         return ResponseEntity.ok(friendDtoList);
     }
 
