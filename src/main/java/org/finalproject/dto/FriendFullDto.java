@@ -9,12 +9,11 @@ import org.finalproject.entity.User;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class FriendDto {
-
+public class FriendFullDto {
     private Long id;
     private String status;
 
-    private  User friend;
+    private User friend;
 
-
+    private User user;
 }
