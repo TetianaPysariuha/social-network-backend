@@ -10,19 +10,19 @@ public enum FriendStatus {
     rejected("rejected"),
     unfriended("unfriended");
 
-    private String val;
+    private final String val;
 
     FriendStatus(String val) {
-            this.val = val;
-        }
+        this.val = val;
+    }
+
     @JsonValue
     public String getValue() {
             return val;
         }
 
     @JsonCreator
-    public static FriendStatus forValue(String name)
-        {
-            return EnumUtils.getEnumMap(FriendStatus.class).get(name);
-        }
+    public static FriendStatus forValue(String name) {
+        return EnumUtils.getEnumMap(FriendStatus.class).get(name);
+    }
 }

@@ -2,8 +2,8 @@ package org.finalproject.dto;
 
 import lombok.*;
 import org.finalproject.entity.User;
-
 import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
