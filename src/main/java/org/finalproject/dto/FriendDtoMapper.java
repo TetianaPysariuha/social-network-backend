@@ -33,11 +33,5 @@ public class FriendDtoMapper extends GeneralFacade<Friend, FriendRequestDto,Frie
         dto.setFriend(entity.getFriend());
         dto.setMutualFriends(defaultFriendService.getMutualFriends(entity.getUser().getId(), entity.getFriend().getId()));
     }
-    @Autowired
-    private ModelMapper mm;
-
-    public FriendFullDto convertToFullDto(Friend entity) {
-        return mm.map(entity, FriendFullDto.class);
-    }
 }
 
