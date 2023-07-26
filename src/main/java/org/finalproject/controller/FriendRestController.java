@@ -4,6 +4,7 @@ package org.finalproject.controller;
 import lombok.RequiredArgsConstructor;
 import org.finalproject.dto.FriendDto;
 import org.finalproject.dto.FriendDtoMapper;
+import org.finalproject.dto.FriendFullDto;
 import org.finalproject.dto.FriendRequestDto;
 import org.finalproject.entity.Friend;
 import org.finalproject.entity.Post;
@@ -31,8 +32,8 @@ public class FriendRestController {
 
 
     @GetMapping
-    public List<FriendDto> getAll() {
-        return friendService.findAll().stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
+    public List<FriendFullDto> getAll() {
+        return friendService.findAll().stream().map(dtoMapper::convertToFullDto).collect(Collectors.toList());
 
     }
 
