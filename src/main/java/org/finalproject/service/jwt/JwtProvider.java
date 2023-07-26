@@ -62,7 +62,7 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String generateOauthAccessToken(@NonNull String email) {
+    public String generateOauthAccessToken(@NonNull String email,Long id) {
         final LocalDateTime now = LocalDateTime.now();
         final Instant accessExpirationInstant = now.plusMinutes(ACCESS_LEAVE_MINUTES).atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(accessExpirationInstant);
@@ -71,6 +71,7 @@ public class JwtProvider {
                 .setExpiration(accessExpiration)
                 .signWith(jwtAccessSecret)
                 .claim("email",email)
+                .claim("id",id)
                 .compact();
     }
 

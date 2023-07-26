@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.finalproject.entity.User;
 import org.finalproject.filter.JwtFilter;
+import org.finalproject.repository.UserJpaRepository;
 import org.finalproject.service.GeneralService;
 import org.finalproject.service.jwt.AuthService;
 import org.finalproject.service.jwt.CustomOAuth2UserService;
@@ -51,6 +52,8 @@ public class SecurityConfig {
     private final JwtProvider jwtProvider;
     @Autowired
     private CustomOAuth2UserService oauthUserService;
+
+    private final UserJpaRepository repository;
 
     @Bean
     public CorsConfiguration corsConfiguration() {
@@ -96,11 +99,6 @@ public class SecurityConfig {
                         String email = oauthUser.getClaims().get("email").toString();
                         String fullName = oauthUser.getClaims().get("name").toString();
 
-
-                        String token = jwtProvider.generateOauthAccessToken(email);
-                        Map<String, String> newRefreshStorage = authService.getRefreshStorage();
-                        newRefreshStorage.put("token",token);
-
                         User authUser = new User();
                         authUser.setEmail(email);
                         authUser.setFullName(fullName);
@@ -109,7 +107,11 @@ public class SecurityConfig {
                             userService.save(authUser);
                         }
 
+                        Long id = repository.getByEmail(email).get().getId();
 
+                        String token = jwtProvider.generateOauthAccessToken(email,id);
+                        Map<String, String> newRefreshStorage = authService.getRefreshStorage();
+                        newRefreshStorage.put("token",token);
 
                         authService.setRefreshStorage(newRefreshStorage);
 
