@@ -43,7 +43,7 @@ public class FriendRestController {
         Pageable pageable = PageRequest.of(page,size,sort);
         Page friends = friendService.findAll(pageable);
         List<Friend> friendList =  friends.toList();
-        List<FriendDto> friendDtoList = friendList.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
+        List<FriendFullDto> friendDtoList = friendList.stream().map(dtoMapper::convertToFullDto).collect(Collectors.toList());
         return ResponseEntity.ok(friendDtoList);
     }
 
