@@ -79,7 +79,6 @@ public class UserRestController {
 
         List<FriendDto> friendDtoList = friends.stream().map(el->friendMapper.convertToDto(el)).collect(Collectors.toList());
 
-
         return ResponseEntity.ok().body(friendDtoList);
     }
 
