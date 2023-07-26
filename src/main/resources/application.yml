@@ -86,10 +86,10 @@ spring:
           password: postgres
           locations: classpath:db/migration
 
-
-
 welcome:
   message: welcome
   cloudName: ${cloudName}
   apiKey: ${apiKey}
   apiSecret: ${apiSecret}
+  rabbitUserAndVHost: ${rabbitUser}
+  rabbitPass: ${rabbitPass}
