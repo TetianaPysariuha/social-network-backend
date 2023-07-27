@@ -1,9 +1,12 @@
 package org.finalproject.service;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.finalproject.entity.Friend;
 import org.finalproject.entity.User;
 import org.finalproject.repository.FriendJpaRepository;
+import org.hibernate.Session;
 import org.springframework.data.repository.query.Param;
 import org.finalproject.repository.UserJpaRepository;
 import org.finalproject.utilites.FriendStatus;
@@ -18,10 +21,14 @@ import java.util.Objects;
 public class DefaultFriendService extends GeneralService<Friend> {
     private final FriendJpaRepository friendRepository;
     private final UserJpaRepository userJpaRepository;
+    @PersistenceContext
+    EntityManager entityManager;
 
     public List<Friend> friendsOfUser(Long userId) {
         List<Friend> friends = friendRepository.friendsOfUser(userId);
+        org.hibernate.Session session = (Session) entityManager.getDelegate();
         return friends.stream().map((el) -> {
+            session.evict(el);
             if (Objects.equals(el.getFriend().getId(), userId)) {
                 User tmp = el.getFriend();
                 el.setFriend(el.getUser());
