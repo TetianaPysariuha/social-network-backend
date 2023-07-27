@@ -89,7 +89,7 @@ public class AuthService {
         serviceUser.save(newUser);
     }
 
-    public void sendMessage(String email,String code){
+    public void sendMessage(String email,String code) {
 
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setTo("leranmu@gmail.com");

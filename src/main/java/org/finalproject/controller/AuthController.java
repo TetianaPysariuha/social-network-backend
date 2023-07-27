@@ -74,10 +74,11 @@ public class AuthController {
         return "Activated Return to homepage http://localhost:5173";
 
     }
+
     @PostMapping("/passwordLetter")
-    public ResponseEntity <?> sendChangePasswordMessage(@RequestBody Email email) {
-        Optional   <User> userOptional = userService.findAll().stream().filter(el -> el.getEmail().equals(email.getEmail())).findAny();
-        if(userOptional.isEmpty()){
+    public ResponseEntity<?> sendChangePasswordMessage(@RequestBody Email email) {
+        Optional<User> userOptional =  userService.findAll().stream().filter(el -> el.getEmail().equals(email.getEmail())).findAny();
+        if (userOptional.isEmpty()) {
             return ResponseEntity.badRequest().body("User not found");
         }
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
@@ -90,11 +91,12 @@ public class AuthController {
         return ResponseEntity.ok().body("Ok");
 
     }
+
     @PutMapping
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
         try {
-         Optional   <User> userOptional = userService.findAll().stream().filter(el -> el.getActivationCode().equals(changePasswordRequest.getCode())).findAny();
-          if(userOptional.isEmpty()){
+         Optional<User> userOptional = userService.findAll().stream().filter(el -> el.getActivationCode().equals(changePasswordRequest.getCode())).findAny();
+          if (userOptional.isEmpty()) {
               return ResponseEntity.badRequest().body("User not found");
           }
           User user = userOptional.get();
