@@ -81,7 +81,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body("User not found");
         }
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setTo("leranmu@gmail.com");
+        simpleMailMessage.setTo(email.getEmail());
         simpleMailMessage.setSubject("Go to this page and use this code to restore your password");
         simpleMailMessage.setText("http://localhost:5173/password" + " " + "Code:"  + userOptional.get().getActivationCode());
 
