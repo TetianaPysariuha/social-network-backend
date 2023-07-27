@@ -89,6 +89,18 @@ public class AuthService {
         serviceUser.save(newUser);
     }
 
+    public void sendMessage(String email,String code){
+
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo("leranmu@gmail.com");
+        simpleMailMessage.setSubject("Go to this page and use this code to restore your password");
+        simpleMailMessage.setText("http://localhost:5173/password" + "Code:"  + code);
+
+        javaMailSender.send(simpleMailMessage);
+
+
+    }
+
     public void loginAuth2(String email,String refreshToken) {
 
 
