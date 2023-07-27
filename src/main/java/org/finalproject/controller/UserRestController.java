@@ -1,11 +1,14 @@
 package org.finalproject.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.finalproject.dto.*;
 
 import org.finalproject.entity.Friend;
 import org.finalproject.entity.Post;
+import org.finalproject.filter.JwtFilter;
 import org.finalproject.service.DefaultFriendService;
+import org.finalproject.service.DefaultUserService;
 import org.finalproject.service.FileUpload;
 
 import org.finalproject.entity.User;
@@ -16,17 +19,20 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
+@Slf4j
 public class UserRestController {
     private final GeneralService<User> userService;
 
@@ -34,7 +40,11 @@ public class UserRestController {
 
     private final DefaultFriendService defaultService;
 
+    private final DefaultUserService defaultUserService;
+
     private final UserDtoMapper dtoMapper;
+
+    private final JwtFilter jwt;
 
     private final FriendDtoMapper friendMapper;
 
@@ -70,6 +80,18 @@ public class UserRestController {
             return ResponseEntity.badRequest().body("User not found");
         }
         return ResponseEntity.ok().body(dtoMapper.convertToDto(user) );
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<?>  getProfile() {
+
+     String auth  = SecurityContextHolder.getContext().getAuthentication().getName();
+     Optional<User> profile  = defaultUserService.getByFullName(auth);
+
+    if (profile.isEmpty()) {
+    return ResponseEntity.badRequest().body("User not found");
+    }
+        return ResponseEntity.ok().body(profile.get());
     }
 
     @GetMapping("/{userId}/friends")

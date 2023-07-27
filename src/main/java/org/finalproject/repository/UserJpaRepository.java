@@ -13,4 +13,6 @@ public interface UserJpaRepository extends RepositoryInterface<User>, JpaSpecifi
 
     public Optional<User> getByEmail(@NonNull String email) ;
 
+    public Optional<User> getByFullName(@NonNull String fullName) ;
+
 }
