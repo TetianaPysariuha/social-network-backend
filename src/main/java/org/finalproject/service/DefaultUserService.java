@@ -18,6 +18,9 @@ public class DefaultUserService extends GeneralService<User> {
 
     private final UserJpaRepository userRepository;
 
+    public Optional<User> getByEmail(String email) {
+        return userRepository.getByEmail(email);
+    }
 
     public Optional<User> getByFullName(String fullName) {
         return userRepository.getByFullName(fullName);

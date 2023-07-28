@@ -1,9 +1,5 @@
 package org.finalproject.config;
 
-
-
-
-
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -109,7 +105,7 @@ public class SecurityConfig {
 
                         Long id = repository.getByEmail(email).get().getId();
 
-                        String token = jwtProvider.generateOauthAccessToken(email,id);
+                        String token = jwtProvider.generateOauthAccessToken(email,id,fullName);
                         Map<String, String> newRefreshStorage = authService.getRefreshStorage();
                         newRefreshStorage.put("token",token);
 

@@ -7,6 +7,7 @@ import org.finalproject.dto.*;
 import org.finalproject.entity.Friend;
 import org.finalproject.entity.Post;
 import org.finalproject.filter.JwtFilter;
+import org.finalproject.jwt.Email;
 import org.finalproject.service.DefaultFriendService;
 import org.finalproject.service.DefaultUserService;
 import org.finalproject.service.FileUpload;
@@ -80,6 +81,16 @@ public class UserRestController {
             return ResponseEntity.badRequest().body("User not found");
         }
         return ResponseEntity.ok().body(dtoMapper.convertToDto(user) );
+    }
+
+    @GetMapping("/email")
+    public ResponseEntity<?>  getByEmail(@RequestBody Email email) {
+     Optional<User> userOptional = defaultUserService.getByEmail(email.getEmail());
+
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+        return ResponseEntity.ok().body(dtoMapper.convertToDto(userOptional.get()) );
     }
 
     @GetMapping("/profile")
