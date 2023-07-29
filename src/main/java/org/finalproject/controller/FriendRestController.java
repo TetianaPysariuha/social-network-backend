@@ -116,7 +116,6 @@ public class FriendRestController {
         System.out.println(parametersJson);
         ObjectMapper mapper = new ObjectMapper();
         JsonNode nameNodeAccountNumber = mapper.readTree(parametersJson);
-        //Long userId = Long.parseLong(nameNodeAccountNumber.get("userId").asText());
         Long friendId = Long.parseLong(nameNodeAccountNumber.get("friendId").asText());
         Friend newFriend = defaultFriendService.saveNewById(user.getId(), friendId);
         return ResponseEntity.ok().body(friendFullDtoMapper.convertToDto(newFriend));
