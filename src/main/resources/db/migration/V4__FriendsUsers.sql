@@ -1,4 +1,52 @@
-DELETE FROM public.Users;
+DROP TABLE IF EXISTS public.users  CASCADE ;
+CREATE TABLE public.users (
+                              id SERIAL PRIMARY KEY,
+                              full_name VARCHAR(250) NOT NULL,
+                              email  VARCHAR (250) NOT NULL,
+                              password VARCHAR (250),
+                              city VARCHAR (250) ,
+                              country VARCHAR (250) ,
+                              gender VARCHAR (250) ,
+                              work_place VARCHAR  ,
+                              about VARCHAR (250) ,
+                              birth_date TIMESTAMP  ,
+                              profile_picture VARCHAR (250)  ,
+                              profile_background_picture VARCHAR (250)  ,
+                              created_date TIMESTAMP NOT NULL ,
+                              updated_date TIMESTAMP NOT NULL,
+                              activation_code VARCHAR ,
+                              activated boolean ,
+                              created_by VARCHAR,
+                              updated_by VARCHAR
+);
+
+
+DROP TABLE IF EXISTS public.friends CASCADE ;
+CREATE TABLE public.friends (
+                                id SERIAL PRIMARY KEY,
+                                user_id INT REFERENCES users(id) ,
+                                friend_id INT REFERENCES users(id),
+                                status VARCHAR (250) NOT NULL,
+
+                                created_date TIMESTAMP NOT NULL ,
+                                updated_date TIMESTAMP NOT NULL,
+                                created_by VARCHAR,
+                                updated_by VARCHAR
+
+);
+DROP TABLE IF EXISTS public.posts CASCADE ;
+CREATE TABLE public.posts (
+                              id SERIAL PRIMARY KEY,
+                              user_id INT REFERENCES users(id),
+                              post_type VARCHAR(255) NOT NULL,
+                              content VARCHAR(255),
+                              parent_id INT REFERENCES posts(id),
+                              created_date TIMESTAMP NOT NULL,
+                              updated_date TIMESTAMP NOT NULL,
+                              created_by VARCHAR,
+                              updated_by VARCHAR
+);
+
 INSERT INTO public.users (
     full_name,
     email,
@@ -24,7 +72,6 @@ INSERT INTO public.users (
 ('Igor Gray','IgorGray@gmail.com','$2a$10$BXH1wlAJPIMXvjnJTBoRuea4CvZwSs8/Zqz4bDRZBDJ6hxvXoHlqq','Kyiv','Ukraine','male','NTKI','student',PARSEDATETIME('08 Dec 2008, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQ8MANQDcQRChsMnCj5bfwMOBbkGENZqZ2eA&usqp=CAU','https://klike.net/uploads/posts/2019-09/1568528357_1.jpg',PARSEDATETIME('06 Sep 1998, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'), true,'a42f726b-5483-4082-bf3c-f9fc7f980c00');
 
 
-DELETE FROM public.friends;
 INSERT INTO public.friends(user_id,friend_id,status,created_date,updated_date) VALUES
 (1,2,'accepted',PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
 (2,3,'accepted',PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
@@ -33,3 +80,10 @@ INSERT INTO public.friends(user_id,friend_id,status,created_date,updated_date) V
 (2,4,'pending',PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
 (1,5,'pending',PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en')),
 (2,5,'accepted',PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'),PARSEDATETIME('26 Jul 2016, 05:15:58 AM','dd MMM yyyy, hh:mm:ss a','en'));
+
+
+INSERT INTO public.posts (user_id, post_type, content, parent_id, created_date, updated_date)
+VALUES
+    (1, 'post', 'Привет, мир!', NULL, '2023-06-25 10:00:00', '2023-06-25 10:00:00'),
+    (3, 'comment', 'Это отличный пост!', 1, '2023-06-25 10:05:00', '2023-06-25 10:05:00'),
+    (2, 'post', 'Здесь ничего интересного...', NULL, '2023-06-25 10:10:00', '2023-06-25 10:10:00');
