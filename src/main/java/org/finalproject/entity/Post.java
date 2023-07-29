@@ -48,5 +48,17 @@ public class Post extends BaseEntity{
     @JoinColumn(name = "post_id")
     private List<PostImage> postImages ;
 
+    public boolean addLike(User user) {
+        if (user == null) {
+            return false;
+        }
+        try {
+            this.likes.add(user);
+            user.getLikedPosts().add(this);
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
+    }
 
 }

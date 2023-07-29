@@ -1,12 +1,14 @@
 package org.finalproject.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.finalproject.config.AuditorAwareImpl;
 import org.finalproject.dto.PostDto;
 import org.finalproject.dto.PostDtoMapper;
 import org.finalproject.dto.PostRequestDto;
 import org.finalproject.entity.Post;
 import org.finalproject.entity.PostTypes;
 import org.finalproject.entity.User;
+import org.finalproject.service.DefaultUserService;
 import org.finalproject.service.GeneralService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,13 +27,56 @@ import java.util.stream.Collectors;
 public class PostRestController {
     private final GeneralService<Post> postService;
     private final PostDtoMapper dtoMapper;
+    private final DefaultUserService userService;
+    private final AuditorAwareImpl auditorAwareImpl;
+
+
+    @PutMapping("/like-post/{id}")
+    public Boolean likePost(@PathVariable("id") Long postId) {
+        try {
+            Post post = postService.getOne(postId);
+
+            if (post == null) {
+                return false;
+            }
+
+            User loggedUser = userService.getUserByEmail(auditorAwareImpl.getCurrentAuditor().get()).get();
+            if (loggedUser == null) {
+                return false;
+            }
+            System.out.println(post.getLikes());
+            System.out.println("-----------------------------------------------");
+            System.out.println(loggedUser);
+            System.out.println("-----------------------------------------------");
+            System.out.println(post.getLikes().contains(loggedUser));
+
+
+            if (post.getLikes().contains(loggedUser)) {
+                return false;
+            }
+
+            if (post.addLike(loggedUser)) {
+                postService.save(post);
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
 
     @GetMapping
     public List<PostDto> getAll() {
+
         // return userService.findAll().stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
         List<Post> postList = postService.findAll();
         List<PostDto> postDtoList = postList.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
         // return userList;
+        String string = auditorAwareImpl.getCurrentAuditor().get();
+        System.out.println(string);
         return postDtoList;
     }
 
