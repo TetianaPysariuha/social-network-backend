@@ -11,7 +11,7 @@ import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = {"id","email","fullName"})
 @Getter
 @Setter
 @Entity

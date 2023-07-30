@@ -4,16 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.finalproject.dto.*;
 
-import org.finalproject.entity.Friend;
-import org.finalproject.entity.Post;
+import org.finalproject.entity.*;
 import org.finalproject.filter.JwtFilter;
 import org.finalproject.jwt.Email;
 import org.finalproject.service.DefaultFriendService;
 import org.finalproject.service.DefaultUserService;
 import org.finalproject.service.FileUpload;
 
-import org.finalproject.entity.User;
-import org.finalproject.entity.UserImage;
 import org.finalproject.service.GeneralService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,6 +41,10 @@ public class UserRestController {
     private final DefaultUserService defaultUserService;
 
     private final UserDtoMapper dtoMapper;
+
+    private final PostDtoMapper postMapper;
+
+    private final ChatDtoMapper chatMapper;
 
     private final JwtFilter jwt;
 
@@ -110,7 +111,7 @@ public class UserRestController {
 
         List<Friend> friends = defaultService.friendsOfUser(userId);
 
-        List<FriendDto> friendDtoList = friends.stream().map(el->friendMapper.convertToDto(el)).collect(Collectors.toList());
+        List<FriendDto> friendDtoList = friends.stream().map(friendMapper::convertToDto).collect(Collectors.toList());
 
         return ResponseEntity.ok().body(friendDtoList);
     }
@@ -122,7 +123,9 @@ public class UserRestController {
         if (user   == null) {
             return ResponseEntity.badRequest().body("User not found");
         }
-        return ResponseEntity.ok().body(user.getChats() );
+        List<Chat> userChats = user.getChats();
+        List<ChatDto> userChatsDto = userChats.stream().map(chatMapper::convertToDto).collect(Collectors.toList());
+        return ResponseEntity.ok().body(userChatsDto );
     }
 
     @GetMapping("/{id}/posts")
@@ -133,7 +136,9 @@ public class UserRestController {
         if (user   == null) {
             return ResponseEntity.badRequest().body("User not found");
         }
-        return ResponseEntity.ok().body(user.getPosts() );
+        List<Post> userPosts = user.getPosts();
+        List<PostDto> userPostsDto = userPosts.stream().map(postMapper::convertToDto).collect(Collectors.toList());
+        return ResponseEntity.ok().body(userPostsDto );
     }
 
     @PostMapping
@@ -224,8 +229,18 @@ public class UserRestController {
     public ResponseEntity<?> addLikes(@RequestParam Long id, @RequestBody PostRequestDto post) {
         try {
             Post postEntity = postService.getOne(post.getId());
+            if ( postEntity == null ) {
+                return ResponseEntity.badRequest().body("Post not found");
+            }
             List<User> likes = postEntity.getLikes();
             User newLike = userService.getOne(id);
+            if ( newLike == null ) {
+                return ResponseEntity.badRequest().body("User not found");
+            }
+            if ( likes.contains( newLike ) ) {
+                return ResponseEntity.badRequest().body("Already liked");
+            }
+
             likes.add(newLike);
             List<Post> likedPosts = newLike.getLikedPosts();
             likedPosts.add(postEntity);
