@@ -1,9 +1,11 @@
 package org.finalproject.service.jwt;
 
 
+
+
 import io.jsonwebtoken.Claims;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.*;
 import org.finalproject.entity.User;
 import org.finalproject.exception.AuthException;
 import org.finalproject.jwt.JwtAuthentication;
@@ -18,6 +20,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,26 +30,34 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Getter
+@Setter
+@AllArgsConstructor
 public class AuthService {
+    @Autowired
+    private  UserService userService;
+    private  Map<String, String> refreshStorage = new HashMap<>();
 
-    private final UserService userService;
-    private final Map<String, String> refreshStorage = new HashMap<>();
-    private final JwtProvider jwtProvider;
+    private  Map<String, HttpServletResponse> responseStorage = new HashMap<>();
     @Autowired
     private GeneralService<User> serviceUser;
+    @Autowired
+    private  JwtProvider jwtProvider;
+    @Autowired
+    private  PasswordEncoder passwordEncoder;
 
     @Autowired
+
     private JavaMailSender javaMailSender;
-    private final PasswordEncoder passwordEncoder;
 
     public JwtResponse login(@NonNull JwtRequest authRequest) {
         final User user = userService.getByEmail(authRequest.getEmail())
                 .orElseThrow(() -> new AuthException("User not found"));
         if (passwordEncoder.matches(authRequest.getPassword(), user.getPassword())) {
-            // if (user.getEncryptedPassword().equals(authRequest.getPassword())) {
+
             final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
-            refreshStorage.put(user.getEmail(), refreshToken);
+            refreshStorage.put(authRequest.getEmail(), refreshToken);
             return new JwtResponse(accessToken, refreshToken);
         } else {
             throw new AuthException("Password is incorrect");
@@ -56,11 +69,15 @@ public class AuthService {
         newUser.setEmail(authRequest.getEmail());
         String encodedPassword =  passwordEncoder.encode(authRequest.getPassword());
         newUser.setPassword(encodedPassword);
-        String fullName = authRequest.getName() + authRequest.getSurname();
+        String fullName = authRequest.getName() + " " + authRequest.getSurname();
         newUser.setFullName(fullName);
         newUser.setGender(authRequest.getGender());
-        Date birthDate = new Date();
-        newUser.setBirthDate(birthDate);
+        LocalDate birthDate =  LocalDate.of(Integer.parseInt(authRequest.getYear()),Integer.parseInt(authRequest.getMonth()),Integer.parseInt(authRequest.getDay()));
+        ZoneId defaultZoneId = ZoneId.systemDefault();
+        Instant instant = birthDate.atStartOfDay(defaultZoneId).toInstant();
+        Date birthDay = Date.from(instant);
+
+        newUser.setBirthDate(birthDay);
         newUser.setActivationCode(UUID.randomUUID().toString());
         newUser.setActivated(false);
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
@@ -72,11 +89,36 @@ public class AuthService {
         serviceUser.save(newUser);
     }
 
+    public void sendMessage(String email,String code) {
+
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo("leranmu@gmail.com");
+        simpleMailMessage.setSubject("Go to this page and use this code to restore your password");
+        simpleMailMessage.setText("http://localhost:5173/password" + "Code:"  + code);
+
+        javaMailSender.send(simpleMailMessage);
+
+
+    }
+
+    public void loginAuth2(String email,String refreshToken) {
+
+
+        refreshStorage.put(email, refreshToken);
+
+
+    }
+
     public JwtResponse getAccessToken(@NonNull String refreshToken) {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             final String email = claims.getSubject();
+
+            System.out.println(email);
             final String saveRefreshToken = refreshStorage.get(email);
+
+            System.out.println(saveRefreshToken);
+            System.out.println(saveRefreshToken.equals(refreshToken));
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
                 final User user = userService.getByEmail(email)
                         .orElseThrow(() -> new AuthException("User not found"));

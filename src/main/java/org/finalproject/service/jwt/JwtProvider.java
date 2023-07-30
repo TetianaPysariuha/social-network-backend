@@ -2,6 +2,7 @@ package org.finalproject.service.jwt;
 
 
 
+
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -44,7 +45,7 @@ public class JwtProvider {
                 .setSubject(user.getEmail())
                 .setExpiration(accessExpiration)
                 .signWith(jwtAccessSecret)
-                .claim("fullName", user.getFullName())
+                .claim("firstName", user.getFullName())
                 .claim("id", user.getId())
                 .claim("email",user.getEmail())
                 .compact();
@@ -56,6 +57,31 @@ public class JwtProvider {
         final Date refreshExpiration = Date.from(refreshExpirationInstant);
         return Jwts.builder()
                 .setSubject(user.getEmail())
+                .setExpiration(refreshExpiration)
+                .signWith(jwtRefreshSecret)
+                .compact();
+    }
+
+    public String generateOauthAccessToken(@NonNull String email,Long id,String fullName) {
+        final LocalDateTime now = LocalDateTime.now();
+        final Instant accessExpirationInstant = now.plusMinutes(ACCESS_LEAVE_MINUTES).atZone(ZoneId.systemDefault()).toInstant();
+        final Date accessExpiration = Date.from(accessExpirationInstant);
+        return Jwts.builder()
+                .setSubject(email)
+                .setExpiration(accessExpiration)
+                .signWith(jwtAccessSecret)
+                .claim("firstName", fullName)
+                .claim("email",email)
+                .claim("id",id)
+                .compact();
+    }
+
+    public String generateOauthRefreshToken(@NonNull String email) {
+        final LocalDateTime now = LocalDateTime.now();
+        final Instant refreshExpirationInstant = now.plusDays(REFRESH_LEAVE_DAYS).atZone(ZoneId.systemDefault()).toInstant();
+        final Date refreshExpiration = Date.from(refreshExpirationInstant);
+        return Jwts.builder()
+                .setSubject(email)
                 .setExpiration(refreshExpiration)
                 .signWith(jwtRefreshSecret)
                 .compact();

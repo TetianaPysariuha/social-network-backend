@@ -11,11 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class FriendDto {
-
-    private Long id;
-    private String status;
+public class FriendSuggestionsDto {
     private User friend;
     private List<User> mutualFriends;
-
 }

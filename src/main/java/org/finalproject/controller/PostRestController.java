@@ -6,11 +6,9 @@ import org.finalproject.dto.PostDto;
 import org.finalproject.dto.PostDtoMapper;
 import org.finalproject.dto.PostRequestDto;
 import org.finalproject.entity.Post;
-import org.finalproject.entity.PostTypes;
 import org.finalproject.entity.User;
 import org.finalproject.service.DefaultPostService;
 import org.finalproject.service.DefaultUserService;
-import org.finalproject.service.GeneralService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,8 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLOutput;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +37,7 @@ public class PostRestController {
             if (commentedPost == null) {
                 return false;
             }
-            User loggedUser = userService.getUserByEmail(auditorAwareImpl.getCurrentAuditor().get()).orElse(null);
+            User loggedUser = userService.getByEmail(auditorAwareImpl.getCurrentAuditor().get()).orElse(null);
             if (loggedUser == null) {
                 return false;
             }
@@ -65,7 +62,7 @@ public class PostRestController {
             if (repostedPost == null) {
                 return false;
             }
-            User loggedUser = userService.getUserByEmail(auditorAwareImpl.getCurrentAuditor().get()).orElse(null);
+            User loggedUser = userService.getByEmail(auditorAwareImpl.getCurrentAuditor().get()).orElse(null);
             if (loggedUser == null) {
                 return false;
             }
@@ -89,7 +86,7 @@ public class PostRestController {
                 return false;
             }
 
-            User loggedUser = userService.getUserByEmail(auditorAwareImpl.getCurrentAuditor().get()).get();
+            User loggedUser = userService.getByEmail(auditorAwareImpl.getCurrentAuditor().get()).get();
             if (loggedUser == null) {
                 return false;
             }
@@ -122,7 +119,7 @@ public class PostRestController {
                 return false;
             }
 
-            User loggedUser = userService.getUserByEmail(auditorAwareImpl.getCurrentAuditor().get()).get();
+            User loggedUser = userService.getByEmail(auditorAwareImpl.getCurrentAuditor().get()).get();
             if (loggedUser == null) {
                 return false;
             }
@@ -146,13 +143,8 @@ public class PostRestController {
 
     @GetMapping
     public List<PostDto> getAll() {
-
-        // return userService.findAll().stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
         List<Post> postList = postService.findAll();
         List<PostDto> postDtoList = postList.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
-        // return userList;
-        String string = auditorAwareImpl.getCurrentAuditor().get();
-        System.out.println(string);
         return postDtoList;
     }
 
@@ -202,6 +194,5 @@ public class PostRestController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-
     }
 }

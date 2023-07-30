@@ -12,6 +12,7 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id", "email", "fullName"})
+
 @Getter
 @Setter
 @Entity
@@ -35,9 +36,10 @@ public class User extends BaseEntity {
     private String profilePicture;
     private String about;
     @Column(name = "activation_code")
+    @JsonIgnore
     private String activationCode = UUID.randomUUID().toString();
-
-   private boolean activated ;
+    @JsonIgnore
+    private boolean activated ;
 
     @Column(name = "profile_background_picture")
     private String profileBackgroundPicture;

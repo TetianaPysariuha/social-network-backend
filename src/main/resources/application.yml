@@ -5,12 +5,21 @@ jwt:
 server:
   port: 9000
 spring:
+  main:
+    allow-circular-references: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 903238603946-3291rnl4i6cmmcoigv6vaa2g0s741f43.apps.googleusercontent.com
+            client-secret: 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
+            scope: openid,profile,email
+
   mail:
     port: 587
     host: smtp.gmail.com
 
-  main:
-    allow-circular-references: true
   h2:
     console:
       enabled: true
@@ -46,10 +55,10 @@ spring:
       on-profile: dev
 ---
 spring:
- # sql:
-   # init:
-     # mode: always
-     # schema-locations: classpath:hr_schema_postgres.sql
+  #sql:
+    #init:
+      #mode: always
+      #schema-locations: classpath:hr_schema_postgres.sql
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/}
     driver-class-name: org.postgresql.Driver
