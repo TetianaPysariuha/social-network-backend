@@ -20,4 +20,5 @@ public class RabbitMQProducerServiceImpl implements RabbitMQProducerService {
         rabbitTemplate.convertAndSend("ExchangeRabbit", routingKey, message);
     }
 
+
 }
