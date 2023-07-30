@@ -101,7 +101,7 @@ public class UserRestController {
         if (user   == null) {
             return ResponseEntity.badRequest().body("User not found");
         }
-        return ResponseEntity.ok().body(user.getPosts() );
+        return ResponseEntity.ok().body(user.getPosts());
     }
 
     @PostMapping
