@@ -51,7 +51,7 @@ public class AuthController {
     @PostMapping("registration")
     public ResponseEntity<?> register(@RequestBody RegisterRequest authRequest) {
         Optional<User> existingUser = service.getByEmail(authRequest.getEmail());
-        if ( existingUser.isPresent() ){
+        if ( existingUser.isPresent() ) {
          return ResponseEntity.badRequest().body("User with that email already exists");
         }
         authService.register(authRequest);
