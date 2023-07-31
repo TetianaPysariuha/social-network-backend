@@ -74,7 +74,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .oauth2Login()
-                .loginPage("http://localhost:5173")
+                .loginPage("https://social-network-a3sm8ouoc-alexhiriavenko.vercel.app")
 
                 .userInfoEndpoint()
                 .userService(oauthUserService)
@@ -112,7 +112,7 @@ public class SecurityConfig {
                         authService.setRefreshStorage(newRefreshStorage);
 
 
-                        response.sendRedirect("http://localhost:5173");
+                        response.sendRedirect("https://social-network-a3sm8ouoc-alexhiriavenko.vercel.app");
 
                     }
 
@@ -125,7 +125,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/api/auth/login", "/api/auth/token", "/api/auth/refresh","/swagger-ui/**","api/oauth2/authorization/google","*/**").permitAll()
+                                .requestMatchers("/api/auth/login", "/api/auth/token","/api/auth","/api/auth/sendLetter","/api/auth/refresh","/swagger-ui/**","api/oauth2/authorization/google","*/**").permitAll()
                                 .anyRequest().authenticated()
 
                                 .and()
