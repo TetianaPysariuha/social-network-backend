@@ -7,7 +7,6 @@ import org.finalproject.dto.*;
 import org.finalproject.entity.*;
 import org.finalproject.filter.JwtFilter;
 import org.finalproject.jwt.Email;
-import org.finalproject.repository.UserJpaRepository;
 import org.finalproject.service.DefaultFriendService;
 import org.finalproject.service.DefaultUserService;
 import org.finalproject.service.FileUpload;
@@ -97,6 +96,7 @@ public class UserRestController {
         }
         return ResponseEntity.ok().body(dtoMapper.convertToDto(userOptional.get()) );
     }
+
     @GetMapping("/part")
     public ResponseEntity<?>  getByPartOfName(@RequestParam String   part) {
         List<User> userList = defaultUserService.getUserByPartOfName(part);
