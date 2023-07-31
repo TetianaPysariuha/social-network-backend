@@ -126,7 +126,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/api/auth/login", "/api/auth/token","/api/auth","/api/auth/passwordLetter","/api/auth/refresh","/swagger-ui/**","api/oauth2/authorization/google","*/**").permitAll()
+                                .requestMatchers("/api/auth/login", "/api/auth/token","/api/auth","/api/auth/passwordLetter","/api/auth/refresh","/swagger-ui/**","api/oauth2/authorization/google","/*/**").permitAll()
                                 .anyRequest().authenticated()
 
                                 .and()
