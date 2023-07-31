@@ -136,6 +136,7 @@ public class UserRestController {
         if (user   == null) {
             return ResponseEntity.badRequest().body("User not found");
         }
+
         List<Post> userPosts = user.getPosts();
         List<PostDto> userPostsDto = userPosts.stream().map(postMapper::convertToDto).collect(Collectors.toList());
         return ResponseEntity.ok().body(userPostsDto );

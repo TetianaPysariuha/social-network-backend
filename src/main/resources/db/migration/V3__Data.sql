@@ -1,3 +1,4 @@
+
 DROP TABLE IF EXISTS public.users  CASCADE ;
 CREATE TABLE public.users (
                               id SERIAL PRIMARY KEY,
@@ -47,6 +48,7 @@ CREATE TABLE public.posts (
                               updated_by VARCHAR
 );
 
+
 INSERT INTO public.users ( full_name,email,password,city,country,gender,work_place,about,birth_date,profile_picture,profile_background_picture,created_date,updated_date,activated,activation_code) VALUES
                                                                                                                                                                                                         ('Alex Smith','alex@gmail.com','$2a$10$BXH1wlAJPIMXvjnJTBoRuea4CvZwSs8/Zqz4bDRZBDJ6hxvXoHlqq','New York','USA','male','UIGA','successful investor','1987-07-26 05:15:58','https://qph.cf2.quoracdn.net/main-qimg-ed424b4d548229863a57603462976e3e.webp' ,'https://photographylife.com/wp-content/uploads/2017/01/Best-of-2016-Nasim-Mansurov-20.jpg','1976-07-26 05:15:58','2016-07-26 05:15:58',true,'a42f726b-5483-4082-bf3c-f9fc7f980c00') ,
                                                                                                                                                                                                         ('Cris Thomson','cris@gmail.com','$2a$10$BXH1wlAJPIMXvjnJTBoRuea4CvZwSs8/Zqz4bDRZBDJ6hxvXoHlqq','London','Great Britain','male','JklO','web designer','1995-07-26 05:15:58', 'https://assets.thehansindia.com/h-upload/2020/05/16/969648-k-pop-singer-bts-v-most-han.webp','https://ichef.bbci.co.uk/news/999/cpsprodpb/6D5A/production/_119449972_10.jpg','1985-07-26 05:15:58','2016-07-26 05:15:58',true,'a42f726b-5483-4082-bf3c-f9fc7f980c00'),
@@ -76,5 +78,4 @@ VALUES
     (1, 'post', 'Привет, мир!', NULL, '2023-06-25 10:00:00', '2023-06-25 10:00:00'),
     (3, 'comment', 'Это отличный пост!', 1, '2023-06-25 10:05:00', '2023-06-25 10:05:00'),
     (2, 'post', 'Здесь ничего интересного...', NULL, '2023-06-25 10:10:00', '2023-06-25 10:10:00');
-
 

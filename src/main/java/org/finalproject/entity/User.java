@@ -11,7 +11,8 @@ import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id","email","fullName"})
+@EqualsAndHashCode(of = {"id", "email", "fullName"})
+
 @Getter
 @Setter
 @Entity
@@ -91,6 +92,7 @@ public class User extends BaseEntity {
     @Override
     public String toString() {
         return "User{" +
+                "id='" + getId() + '\'' +
                 "fullName='" + fullName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +

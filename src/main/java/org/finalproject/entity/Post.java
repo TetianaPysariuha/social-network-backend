@@ -16,7 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = {"id", "user"})
 @Getter
 @Setter
 @Entity
@@ -48,5 +48,36 @@ public class Post extends BaseEntity{
     @JoinColumn(name = "post_id")
     private List<PostImage> postImages ;
 
+    public Post(User user, String postType, String content, Post parentId) {
+        this.user = user;
+        this.postType = postType;
+        this.content = content;
+        this.parentId = parentId;
+    }
 
+    public boolean addLike(User user) {
+        if (user == null) {
+            return false;
+        }
+        try {
+            this.likes.add(user);
+            user.getLikedPosts().add(this);
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
+    }
+
+    public boolean removeLike(User user) {
+        if (user == null) {
+            return false;
+        }
+        try {
+            this.likes.remove(user);
+            user.getLikedPosts().remove(this);
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
+    }
 }
