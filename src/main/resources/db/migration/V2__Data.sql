@@ -57,9 +57,9 @@ VALUES
 
 INSERT INTO public.posts (user_id, post_type, content, parent_id, created_date, updated_date)
 VALUES
-    (1, 'post', 'Привет, мир!', NULL, '2023-06-25 10:00:00', '2023-06-25 10:00:00'),
-    (3, 'comment', 'Это отличный пост!', 1, '2023-06-25 10:05:00', '2023-06-25 10:05:00'),
-    (2, 'post', 'Здесь ничего интересного...', NULL, '2023-06-25 10:10:00', '2023-06-25 10:10:00');
+    (NULL, 'post', 'Привет, мир!', NULL, '2023-06-25 10:00:00', '2023-06-25 10:00:00'),
+    (NULL, 'comment', 'Это отличный пост!', 1, '2023-06-25 10:05:00', '2023-06-25 10:05:00'),
+    (NULL, 'post', 'Здесь ничего интересного...', NULL, '2023-06-25 10:10:00', '2023-06-25 10:10:00');
 
 INSERT INTO public.users_liked_posts (post_id, user_id)
 VALUES
@@ -76,8 +76,8 @@ VALUES
     (1, 2);
 INSERT INTO public.post_images (post_id, img_url, created_date, updated_date)
 VALUES
-    (1, 'https://oir.mobi/uploads/posts/2021-03/1616578779_29-p-fon-dlya-feisbuka-35.jpg', '2023-06-25 10:00:00', '2023-06-25 10:00:00'),
-    (2, 'https://img3.akspic.ru/previews/6/4/2/8/6/168246/168246-skazhi_igru-lyudo_king-kosti-igra_v_kosti-azartnaya_igra-500x.jpg', '2023-06-25 10:05:00', '2023-06-25 10:05:00');
+    (1, 'https://example.com/image1.jpg', '2023-06-25 10:00:00', '2023-06-25 10:00:00'),
+    (2, 'https://example.com/image2.jpg', '2023-06-25 10:05:00', '2023-06-25 10:05:00');
 INSERT INTO public.users_chats (user_id,chat_id) VALUES
 
                                                      (1,1),
