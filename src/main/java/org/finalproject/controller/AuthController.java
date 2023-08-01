@@ -8,6 +8,7 @@ import org.finalproject.entity.User;
 import org.finalproject.jwt.*;
 import org.finalproject.service.GeneralService;
 import org.finalproject.service.jwt.AuthService;
+import org.finalproject.service.jwt.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -34,6 +35,10 @@ public class AuthController {
 
     @Autowired
 
+    private UserService service;
+
+    @Autowired
+
     private JavaMailSender javaMailSender;
 
 
@@ -44,7 +49,11 @@ public class AuthController {
     }
 
     @PostMapping("registration")
-    public ResponseEntity<JwtResponse> register(@RequestBody RegisterRequest authRequest) {
+    public ResponseEntity<?> register(@RequestBody RegisterRequest authRequest) {
+        Optional<User> existingUser = service.getByEmail(authRequest.getEmail());
+        if ( existingUser.isPresent() ) {
+         return ResponseEntity.badRequest().body("User with that email already exists");
+        }
         authService.register(authRequest);
         return ResponseEntity.ok().build();
     }
@@ -71,7 +80,7 @@ public class AuthController {
             user.setActivated(true);
             userService.save(user);
         }
-        return "Activated Return to homepage http://localhost:5173";
+        return "Activated Return to homepage https://social-network-a3sm8ouoc-alexhiriavenko.vercel.app";
 
     }
 
@@ -84,7 +93,7 @@ public class AuthController {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setTo(email.getEmail());
         simpleMailMessage.setSubject("Go to this page and use this code to restore your password");
-        simpleMailMessage.setText("http://localhost:5173/password" + " " + "Code:"  + userOptional.get().getActivationCode());
+        simpleMailMessage.setText("https://social-network-a3sm8ouoc-alexhiriavenko.vercel.app/password" + " " + "Code:"  + userOptional.get().getActivationCode());
 
         javaMailSender.send(simpleMailMessage);
 

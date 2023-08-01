@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,6 +52,8 @@ public class UserRestController {
     private final FriendDtoMapper friendMapper;
 
     private final FileUpload fileUpload;
+
+
 
 
     @GetMapping
@@ -92,6 +95,16 @@ public class UserRestController {
             return ResponseEntity.badRequest().body("User not found");
         }
         return ResponseEntity.ok().body(dtoMapper.convertToDto(userOptional.get()) );
+    }
+
+    @GetMapping("/part")
+    public ResponseEntity<?>  getByPartOfName(@RequestParam String   part) {
+        List<User> userList = defaultUserService.getUserByPartOfName(part);
+
+        if (userList.isEmpty()) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+        return ResponseEntity.ok().body(userList.stream().map(dtoMapper::convertToDto) );
     }
 
     @GetMapping("/profile")
