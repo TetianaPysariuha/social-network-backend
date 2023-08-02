@@ -1,19 +1,21 @@
 package org.finalproject.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.finalproject.config.AuditorAwareImpl;
 import org.finalproject.dto.PostDto;
 import org.finalproject.dto.PostDtoMapper;
 import org.finalproject.dto.PostRequestDto;
 import org.finalproject.entity.Post;
-import org.finalproject.entity.PostTypes;
 import org.finalproject.entity.User;
-import org.finalproject.service.GeneralService;
+import org.finalproject.service.DefaultPostService;
+import org.finalproject.service.DefaultUserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,15 +24,127 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("/posts")
 public class PostRestController {
-    private final GeneralService<Post> postService;
+    private final DefaultPostService postService;
     private final PostDtoMapper dtoMapper;
+    private final DefaultUserService userService;
+    private final AuditorAwareImpl auditorAwareImpl;
+
+
+    @PostMapping("/comment/{id}")
+    public Boolean commentPost(@PathVariable("id") Long postId, String content) {
+        try {
+            Post commentedPost = postService.getOne(postId);
+            if (commentedPost == null) {
+                return false;
+            }
+            User loggedUser = userService.getByEmail(auditorAwareImpl.getCurrentAuditor().get()).orElse(null);
+            if (loggedUser == null) {
+                return false;
+            }
+            if (content == null || content.trim().isEmpty()) {
+                return false;
+            }
+            Post newCommentPost = new Post(loggedUser, "comment", content, commentedPost);
+            commentedPost.getComments().add(newCommentPost);
+            postService.save(newCommentPost);
+            postService.save(commentedPost);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @PostMapping("/repost/{id}")
+    public Boolean repostPost(@PathVariable("id") Long postId, String content) {
+        try {
+            Post repostedPost = postService.getOne(postId);
+            if (repostedPost == null) {
+                return false;
+            }
+            User loggedUser = userService.getByEmail(auditorAwareImpl.getCurrentAuditor().get()).orElse(null);
+            if (loggedUser == null) {
+                return false;
+            }
+            Post newPost = new Post(loggedUser, "post", content, repostedPost);
+            loggedUser.getReposts().add(newPost);
+            postService.save(newPost);
+            userService.save(loggedUser);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @PutMapping("/remove-like-post/{id}")
+    public Boolean removeLikePost(@PathVariable("id") Long postId) {
+        try {
+            Post post = postService.getOne(postId);
+
+            if (post == null) {
+                return false;
+            }
+
+            User loggedUser = userService.getByEmail(auditorAwareImpl.getCurrentAuditor().get()).get();
+            if (loggedUser == null) {
+                return false;
+            }
+
+            if (!post.getLikes().contains(loggedUser)) {
+                return false;
+            }
+
+            System.out.println(loggedUser.getLikedPosts());
+            if (post.removeLike(loggedUser)) {
+                System.out.println(loggedUser.getLikedPosts());
+                postService.save(post);
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    @PutMapping("/like-post/{id}")
+    public Boolean likePost(@PathVariable("id") Long postId) {
+        try {
+            Post post = postService.getOne(postId);
+
+            if (post == null) {
+                return false;
+            }
+
+            User loggedUser = userService.getByEmail(auditorAwareImpl.getCurrentAuditor().get()).get();
+            if (loggedUser == null) {
+                return false;
+            }
+
+            if (post.getLikes().contains(loggedUser)) {
+                return false;
+            }
+
+            if (post.addLike(loggedUser)) {
+                postService.save(post);
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
 
     @GetMapping
     public List<PostDto> getAll() {
-        // return userService.findAll().stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
         List<Post> postList = postService.findAll();
         List<PostDto> postDtoList = postList.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
-        // return userList;
         return postDtoList;
     }
 
@@ -80,6 +194,5 @@ public class PostRestController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-
     }
 }
