@@ -126,6 +126,7 @@ public class AuthController {
           if (userOptional.isEmpty()) {
               return ResponseEntity.badRequest().body("User not found");
           }
+
           User user = userOptional.get();
           String password = changePasswordRequest.getNewPassword();
           user.setPassword(passwordEncoder.encode(password));
