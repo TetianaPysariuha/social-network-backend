@@ -33,7 +33,6 @@ VALUES
     (2, 'comment', 'Какой классный день провели!', 14, '2023-06-25 11:10:00', '2023-06-25 11:10:00'),
     (1, 'post', 'Спасибо за отличное вечеринку! ', NULL, '2023-06-25 11:15:00', '2023-06-25 11:15:00');
 
-
 DROP TABLE IF EXISTS public.users_liked_posts CASCADE;
 CREATE TABLE public.users_liked_posts (
                                           id SERIAL PRIMARY KEY,
@@ -55,7 +54,6 @@ CREATE TABLE public.post_images (
                                     created_by VARCHAR,
                                     updated_by VARCHAR
 );
-
 INSERT INTO public.post_images (post_id, img_url, created_date, updated_date)
 VALUES
     (3, 'https://cdn.pixabay.com/photo/2020/08/28/13/15/river-5524569_1280.jpg', '2023-06-25 10:10:00', '2023-06-25 10:10:00'),
