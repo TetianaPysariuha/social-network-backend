@@ -89,8 +89,8 @@ public class RabbitConfig {
     }
 
     @Bean
-    Binding binding4(Queue queue3, DirectExchange exchange) {
+    Binding binding4(Queue queue4, DirectExchange exchange) {
 
-        return BindingBuilder.bind(queue3).to(exchange).with("commentRoutingKey");
+        return BindingBuilder.bind(queue4).to(exchange).with("commentRoutingKey");
     }
 }
