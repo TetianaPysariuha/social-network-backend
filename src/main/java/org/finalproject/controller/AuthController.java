@@ -2,7 +2,9 @@ package org.finalproject.controller;
 
 
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.finalproject.dto.UserRequestDto;
 import org.finalproject.entity.User;
 import org.finalproject.jwt.*;
@@ -13,15 +15,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("api/auth")
 @RequiredArgsConstructor
+@Getter
+@Setter
 @CrossOrigin(origins = {"http://localhost:3000"})
 public class AuthController {
 
@@ -36,6 +43,8 @@ public class AuthController {
     @Autowired
 
     private UserService service;
+
+    private String url = "http://localhost:5173";
 
     @Autowired
 
@@ -84,6 +93,15 @@ public class AuthController {
 
     }
 
+    @PostMapping
+    public ResponseEntity<?> getUrl(@RequestBody Email url) {
+       setUrl(url.getEmail());
+
+        return  ResponseEntity.ok(url);
+
+    }
+
+
     @PostMapping("/passwordLetter")
     public ResponseEntity<?> sendChangePasswordMessage(@RequestBody Email email) {
         Optional<User> userOptional =  userService.findAll().stream().filter(el -> el.getEmail().equals(email.getEmail())).findAny();
@@ -108,6 +126,7 @@ public class AuthController {
           if (userOptional.isEmpty()) {
               return ResponseEntity.badRequest().body("User not found");
           }
+
           User user = userOptional.get();
           String password = changePasswordRequest.getNewPassword();
           user.setPassword(passwordEncoder.encode(password));
