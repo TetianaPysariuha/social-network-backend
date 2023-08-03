@@ -1,5 +1,21 @@
+DROP TABLE IF EXISTS public.posts CASCADE ;
+CREATE TABLE public.posts (
+                              id SERIAL PRIMARY KEY,
+                              user_id INT REFERENCES users(id),
+                              post_type VARCHAR(255) NOT NULL,
+                              content VARCHAR(255),
+                              parent_id INT REFERENCES posts(id),
+                              created_date TIMESTAMP NOT NULL,
+                              updated_date TIMESTAMP NOT NULL,
+                              created_by VARCHAR,
+                              updated_by VARCHAR
+);
+
 INSERT INTO public.posts (user_id, post_type, content, parent_id, created_date, updated_date)
 VALUES
+    (1, 'post', 'Привет, мир!', NULL, '2023-06-25 10:00:00', '2023-06-25 10:00:00'),
+    (3, 'comment', 'Это отличный пост!', 1, '2023-06-25 10:05:00', '2023-06-25 10:05:00'),
+    (2, 'post', 'Здесь ничего интересного...', NULL, '2023-06-25 10:10:00', '2023-06-25 10:10:00'),
     (1, 'post', 'Здесь я провел восхитительный отпуск!', NULL, '2023-06-25 10:00:00', '2023-06-25 10:00:00'),
     (3, 'comment', 'Прекрасное фото! ', 1, '2023-06-25 10:05:00', '2023-06-25 10:05:00'),
     (2, 'post', 'Новый рецепт моей любимой пасты ', NULL, '2023-06-25 10:10:00', '2023-06-25 10:10:00'),
@@ -17,9 +33,28 @@ VALUES
     (2, 'comment', 'Какой классный день провели!', 14, '2023-06-25 11:10:00', '2023-06-25 11:10:00'),
     (1, 'post', 'Спасибо за отличное вечеринку! ', NULL, '2023-06-25 11:15:00', '2023-06-25 11:15:00');
 
+
+DROP TABLE IF EXISTS public.users_liked_posts CASCADE;
+CREATE TABLE public.users_liked_posts (
+                                          id SERIAL PRIMARY KEY,
+                                          post_id INTEGER REFERENCES posts(id),
+                                          user_id INTEGER REFERENCES users(id)
+);
+
 INSERT INTO public.users_liked_posts (post_id, user_id)
 VALUES
-    (1, 2),(1, 3),(2, 3),(2, 1),(3, 2),(3, 1),(4, 2),(4, 3),(6, 3),(5, 1),(5, 2),(8, 1),(7, 2),(7, 3),(9, 3),(11, 1),(10, 2),(10, 1),(11, 2),(7, 3),(13, 3),(12, 1),(12, 2),(14, 1),(15, 1),(15, 2),(16, 2),(16, 3),(17, 3),(17, 1),(18, 1),(18, 2),(19, 2),(19, 3),(20, 1),(20, 3),(21, 3),(21, 1),(22, 2),(22, 3),(23, 1),(23, 2),(24, 2),(24, 3),(25, 1),(25, 3);
+    (1, 2),(1, 3),(2, 3),(2, 1),(3, 2),(3, 1),(4, 2),(4, 3),(6, 3),(5, 1),(5, 2),(8, 1),(7, 2),(7, 3),(9, 3),(11, 1),(10, 2),(10, 1),(11, 2),(7, 3),(13, 3),(12, 1),(12, 2),(14, 1),(15, 1),(15, 2),(16, 2),(16, 3),(17, 3),(17, 1),(18, 1),(18, 2);
+
+DROP TABLE IF EXISTS public.post_images CASCADE ;
+CREATE TABLE public.post_images (
+                                    id SERIAL PRIMARY KEY,
+                                    post_id INT REFERENCES posts(id),
+                                    img_url VARCHAR(255),
+                                    created_date TIMESTAMP NOT NULL,
+                                    updated_date TIMESTAMP NOT NULL,
+                                    created_by VARCHAR,
+                                    updated_by VARCHAR
+);
 
 INSERT INTO public.post_images (post_id, img_url, created_date, updated_date)
 VALUES

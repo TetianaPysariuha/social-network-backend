@@ -74,7 +74,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .oauth2Login()
-                .loginPage("http://localhost:5173")
+                .loginPage("https://social-network-a3sm8ouoc-alexhiriavenko.vercel.app")
 
                 .userInfoEndpoint()
                 .userService(oauthUserService)
@@ -91,6 +91,7 @@ public class SecurityConfig {
                         OidcUser oauthUser = (OidcUser) authentication.getPrincipal();
 
                         System.out.println(oauthUser.getClaims().get("email"));
+
                         System.out.println(oauthUser.getClaims().get("name"));
                         String email = oauthUser.getClaims().get("email").toString();
                         String fullName = oauthUser.getClaims().get("name").toString();
@@ -112,7 +113,7 @@ public class SecurityConfig {
                         authService.setRefreshStorage(newRefreshStorage);
 
 
-                        response.sendRedirect("http://localhost:5173");
+                        response.sendRedirect("https://social-network-a3sm8ouoc-alexhiriavenko.vercel.app");
 
                     }
 
@@ -125,7 +126,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/api/auth/login", "/api/auth/token", "/api/auth/refresh","/swagger-ui/**","api/oauth2/authorization/google","*/**").permitAll()
+                                .requestMatchers("/api/auth/login", "/api/auth/token","/api/auth","/api/auth/passwordLetter","/api/auth/refresh","/swagger-ui/**","api/oauth2/authorization/google","/*/**").permitAll()
                                 .anyRequest().authenticated()
 
                                 .and()
