@@ -3,7 +3,10 @@ package org.finalproject.service;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.finalproject.dto.ChatDto;
+import org.finalproject.dto.ChatSpecDto;
 import org.finalproject.entity.Chat;
+import org.finalproject.entity.ChatSpecProjection;
 import org.finalproject.entity.Message;
 import org.finalproject.repository.ChatRepository;
 import org.finalproject.repository.MessageRepository;
@@ -13,13 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class DefaultChatService extends GeneralService<Chat> {
 
-    private ChatRepository chatRepository;
+    private final ChatRepository chatRepository;
 //    private MessageRepository messageRepository;
 //
 //    public List<Chat> findByContent(String content) {
@@ -41,5 +45,11 @@ public class DefaultChatService extends GeneralService<Chat> {
 //        return chatRepository.findAllById(usersId);
 //    }
 
+    public List<ChatSpecDto> getChatsForUserExceptUserId(Long userId) {
+        List<ChatSpecProjection> projections = chatRepository.getChatsForUserExceptUserId(userId);
+        return projections.stream()
+                .map(ChatSpecDto::fromProjection)
+                .collect(Collectors.toList());
+    }
 
 }
