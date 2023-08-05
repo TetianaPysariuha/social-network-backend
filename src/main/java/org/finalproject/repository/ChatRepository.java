@@ -32,5 +32,5 @@ public interface ChatRepository extends RepositoryInterface<Chat>, JpaSpecificat
             "WHERE m2.chat_id = c.id " +
             ")", nativeQuery = true)
     List<ChatSpecProjection> getChatsForUserExceptUserId(@Param("id") Long userId);
-    
+
 }
