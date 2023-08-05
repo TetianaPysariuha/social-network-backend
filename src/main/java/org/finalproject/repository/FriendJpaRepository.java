@@ -17,9 +17,9 @@ public interface FriendJpaRepository extends RepositoryInterface<Friend>, JpaSpe
     List<Friend> friendsOfUser(Long userId);
 
     @Query("select u from User u where u.id not in (" +
-            "select f.user.id from Friend f where :userId = f.friend.id" +
+            "select f.user.id from Friend f where :userId = f.friend.id and f.status in ('pending', 'accepted')" +
             " union" +
-            " select f.friend.id from Friend f where :userId = f.user.id)" +
+            " select f.friend.id from Friend f where :userId = f.user.id and f.status in ('pending', 'accepted'))" +
             " and u.id != :userId")
     List<User> suggestedUsersForFriendship(Long userId);
 

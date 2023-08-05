@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/friends")
-@CrossOrigin(origins = {"http://127.0.0.1:5173/"})
+@CrossOrigin(origins = {"http://127.0.0.1:5173"})
 public class FriendRestController {
     //private final GeneralService<Friend> friendService;
     @Autowired
@@ -68,6 +68,7 @@ public class FriendRestController {
 
     @GetMapping("/{userId}/friends")
     public ResponseEntity<?>  getFriends(@PathVariable("userId")  Long  userId) {
+        System.out.println(userId);
         List<Friend> friends = defaultFriendService.friendsOfUser(userId);
         List<FriendDto> usersFriends = friends.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
         return ResponseEntity.ok().body(usersFriends);
@@ -106,6 +107,7 @@ public class FriendRestController {
         try {
             User user = userService.getByEmail(auth).get();
             List<User> users = defaultFriendService.suggestedUsersForFriendship(user.getId());
+            System.out.println(users);
             List<FriendSuggestionsDto> friendSuggestions = users.stream()
                     .map(friendSuggestionsDtoMapper::convertToDto)
                     .map(el -> {
