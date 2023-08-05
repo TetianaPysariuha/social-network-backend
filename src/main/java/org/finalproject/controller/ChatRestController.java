@@ -151,20 +151,6 @@ public class ChatRestController {
         }
     }
 
-
-    //    @GetMapping("/search")
-//    public ResponseEntity<?> findUserIdByPartOfName(@RequestBody String partOfName) {
-//
-//        List<Chat> chatList = defaultChatService.findUserIdByPartOfName(partOfName);
-//        List<ChatDto> chatDtoList = chatList.stream()
-//                .map(chatDtoMapper::convertToDto)
-//                .collect(Collectors.toList());
-//        if (chatList.isEmpty()) {
-//            return ResponseEntity.badRequest().body("Chat not found");
-//        } else {
-//            return ResponseEntity.ok(chatDtoList);
-//        }
-//    }
     @GetMapping("/{id}/participants")
     public ResponseEntity<?> getChatsForUserExceptUserId(@PathVariable Long id) {
 
