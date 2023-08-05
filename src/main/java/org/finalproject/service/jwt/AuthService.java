@@ -83,10 +83,22 @@ public class AuthService {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setTo(authRequest.getEmail());
         simpleMailMessage.setSubject("test");
-        simpleMailMessage.setText("http://localhost:9000/api/auth/activate/" + newUser.getActivationCode());
+        simpleMailMessage.setText("https://social-network-backend-2782464b9c31.herokuapp.com/api/auth/activate/" + newUser.getActivationCode());
 
         javaMailSender.send(simpleMailMessage);
         serviceUser.save(newUser);
+    }
+
+    public void sendMessage(String email,String code) {
+
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(email);
+        simpleMailMessage.setSubject("Go to this page and use this code to restore your password");
+        simpleMailMessage.setText("https://social-network-a3sm8ouoc-alexhiriavenko.vercel.app/password" + "Code:"  + code);
+
+        javaMailSender.send(simpleMailMessage);
+
+
     }
 
     public void loginAuth2(String email,String refreshToken) {

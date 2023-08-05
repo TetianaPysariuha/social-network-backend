@@ -3,6 +3,7 @@ package org.finalproject.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import org.finalproject.utilites.FriendStatus;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,7 +16,9 @@ import lombok.*;
 @ToString
 public class Friend extends BaseEntity {
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private FriendStatus status;
+
     @ManyToOne(fetch = FetchType.EAGER )
     @JoinColumn(name = "user_id")
 
@@ -24,6 +27,5 @@ public class Friend extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER )
     @JoinColumn(name = "friend_id")
     private  User friend;
-
-
+    /*cascade = {CascadeType.MERGE } */
 }
