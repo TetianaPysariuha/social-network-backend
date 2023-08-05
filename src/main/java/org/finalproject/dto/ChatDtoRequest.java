@@ -22,4 +22,5 @@ public class ChatDtoRequest {
     private List<MessageImage> messageImages;
     @NotNull
     private List<User> users;
+
 }
