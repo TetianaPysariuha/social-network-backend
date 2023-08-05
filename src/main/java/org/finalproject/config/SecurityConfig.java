@@ -1,17 +1,15 @@
 package org.finalproject.config;
 
-
-
-
-
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
+import org.finalproject.controller.AuthController;
 import org.finalproject.entity.User;
 import org.finalproject.filter.JwtFilter;
+import org.finalproject.repository.UserJpaRepository;
 import org.finalproject.service.GeneralService;
 import org.finalproject.service.jwt.AuthService;
 import org.finalproject.service.jwt.CustomOAuth2UserService;
@@ -46,11 +44,14 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
 
     private final AuthService authService;
+    private final AuthController authController;
     private final GeneralService<User> userService;
 
     private final JwtProvider jwtProvider;
     @Autowired
     private CustomOAuth2UserService oauthUserService;
+
+    private final UserJpaRepository repository;
 
     @Bean
     public CorsConfiguration corsConfiguration() {
@@ -75,7 +76,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .oauth2Login()
-                .loginPage("http://localhost:5173")
+                .loginPage( authController.getUrl() )
 
                 .userInfoEndpoint()
                 .userService(oauthUserService)
@@ -92,14 +93,10 @@ public class SecurityConfig {
                         OidcUser oauthUser = (OidcUser) authentication.getPrincipal();
 
                         System.out.println(oauthUser.getClaims().get("email"));
+
                         System.out.println(oauthUser.getClaims().get("name"));
                         String email = oauthUser.getClaims().get("email").toString();
                         String fullName = oauthUser.getClaims().get("name").toString();
-
-
-                        String token = jwtProvider.generateOauthAccessToken(email);
-                        Map<String, String> newRefreshStorage = authService.getRefreshStorage();
-                        newRefreshStorage.put("token",token);
 
                         User authUser = new User();
                         authUser.setEmail(email);
@@ -109,12 +106,16 @@ public class SecurityConfig {
                             userService.save(authUser);
                         }
 
+                        Long id = repository.getByEmail(email).get().getId();
 
+                        String token = jwtProvider.generateOauthAccessToken(email,id,fullName);
+                        Map<String, String> newRefreshStorage = authService.getRefreshStorage();
+                        newRefreshStorage.put("token",token);
 
                         authService.setRefreshStorage(newRefreshStorage);
 
 
-                        response.sendRedirect("http://localhost:5173");
+                        response.sendRedirect( authController.getUrl());
 
                     }
 
@@ -127,7 +128,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/api/auth/login", "/api/auth/token", "/api/auth/refresh","/swagger-ui/**","api/oauth2/authorization/google","*/**").permitAll()
+                                .requestMatchers("/api/auth/login","/api/auth/**", "/api/auth/token","/api/auth","/api/auth/passwordLetter","/api/auth/refresh","/swagger-ui/**","api/oauth2/authorization/google","/*/**").permitAll()
                                 .anyRequest().authenticated()
 
                                 .and()

@@ -6,11 +6,13 @@ import org.finalproject.entity.Chat;
 import org.finalproject.entity.User;
 import org.finalproject.service.DefaultChatService;
 import org.finalproject.service.GeneralService;
+import org.finalproject.service.jwt.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,7 +27,8 @@ public class ChatRestController {
     private final GeneralService<Chat> chatService;
     private final DefaultChatService defaultChatService;
 
-    private final GeneralService<User> userService;
+    private final UserService userService;
+    private final GeneralService<User> generalService;
     private final ChatDtoMapper chatDtoMapper;
     private final UserDtoMapper userDtoMapper;
 
@@ -53,9 +56,10 @@ public class ChatRestController {
     }
 
     @PostMapping
-    public void createChat(@RequestBody UserRequestDto userRequestDto) {
+    public void createChat() {
 
-        User user = userService.getOne(userRequestDto.getId());
+        String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        User user = userService.getByEmail(auth).get();
         List<User> userList = new ArrayList<>();
         userList.add(user);
         List<Chat> userChats = user.getChats();
@@ -63,7 +67,7 @@ public class ChatRestController {
         chat.setUsers(userList);
         userChats.add(chat);
         user.setChats(userChats);
-        userService.save(user);
+        generalService.save(user);
 
     }
 
@@ -128,10 +132,11 @@ public class ChatRestController {
     }
 
     @PutMapping("/{id}/participants")
-    public ResponseEntity<?> addUsers(@PathVariable Long id, @RequestBody UserRequestDto userDtoRequest) {
+    public ResponseEntity<?> addUsers(@PathVariable Long id) {
 
+        String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        User user = userService.getByEmail(auth).get();
         try {
-            User user = userService.getOne(userDtoRequest.getId());
             Chat chat = chatService.getOne(id);
             List<User> userList = chat.getUsers();
             userList.add(user);
@@ -139,27 +144,21 @@ public class ChatRestController {
             List<Chat> userChats = user.getChats();
             userChats.add(chat);
             user.setChats(userChats);
-            userService.save(user);
+            generalService.save(user);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
+    @GetMapping("/{id}/participants")
+    public ResponseEntity<?> getChatsForUserExceptUserId(@PathVariable Long id) {
 
-//    @GetMapping("/search")
-//    public ResponseEntity<?> findUserIdByPartOfName(@RequestBody String partOfName) {
-//
-//        List<Chat> chatList = defaultChatService.findUserIdByPartOfName(partOfName);
-//        List<ChatDto> chatDtoList = chatList.stream()
-//                .map(chatDtoMapper::convertToDto)
-//                .collect(Collectors.toList());
-//        if (chatList.isEmpty()) {
-//            return ResponseEntity.badRequest().body("Chat not found");
-//        } else {
-//            return ResponseEntity.ok(chatDtoList);
-//        }
-//    }
-
-
+        try {
+            List<ChatSpecDto> chatSpecDtoList = defaultChatService.getChatsForUserExceptUserId(id);
+            return ResponseEntity.ok().body(chatSpecDtoList);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
