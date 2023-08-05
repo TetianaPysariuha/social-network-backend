@@ -1,7 +1,5 @@
 package org.finalproject.repository;
 
-import org.finalproject.dto.ChatDto;
-import org.finalproject.dto.ChatSpecDto;
 import org.finalproject.entity.Chat;
 import org.finalproject.entity.ChatSpecProjection;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -11,10 +9,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ChatRepository extends RepositoryInterface<Chat>, JpaSpecificationExecutor<Chat> {
-
-//    need to be in UserRepo?
-//    @Query("Select id FROM Users m WHERE fullName LIKE %:partOfName% ")
-//    List<Long> findUserIdByPartOfName(String partOfName);
 
     @Query(value = "SELECT DISTINCT " +
             "c.id AS id, " +
@@ -38,7 +32,6 @@ public interface ChatRepository extends RepositoryInterface<Chat>, JpaSpecificat
             "WHERE m2.chat_id = c.id " +
             ")", nativeQuery = true)
     List<ChatSpecProjection> getChatsForUserExceptUserId(@Param("id") Long userId);
-
 
 
 }
