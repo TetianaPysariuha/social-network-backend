@@ -12,16 +12,16 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig {
 
-    @Value("${rabbitUserAndVHost}")
+    @Value("{rabbitUserAndVHost}")
     private String rabbitUserAndVHost;
 
-    @Value("${rabbitPass}")
+    @Value("{rabbitPass}")
     private String rabbitPass;
 
     @Bean
     public ConnectionFactory connectionFactory() {
 
-        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory("whale.rmq.cloudamqp.com");
+        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory("amqps://tnjaskux:CwZKUs5tzAcTPPlLIhT9vLxTWH7km98o@whale.rmq.cloudamqp.com/tnjaskux");
         cachingConnectionFactory.setUsername(rabbitUserAndVHost);
         cachingConnectionFactory.setPassword(rabbitPass);
         cachingConnectionFactory.setVirtualHost(rabbitUserAndVHost);
