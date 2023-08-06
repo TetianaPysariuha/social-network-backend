@@ -55,7 +55,7 @@ VALUES
 INSERT INTO messages (content, created_date, updated_date, created_by, updated_by, chat_id, user_id)
 VALUES
     ('Hello', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Alex Smith', 'Alex Smith', 1, 1),
-    ('Hi', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Cris Thomson', 'Cris Thomson', 1, 2),
+    ('Hi', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Cris Thomson"', 'Cris Thomson', 1, 2),
     ('How are you?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Cris Thomson"', 'Cris Thomson', 1, 2),
     ('Fine, thanks. And you?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Alex Smith', 'Alex Smith', 1, 1),
     ('What about your project?', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Greg White', 'Greg White', 2, 3),
