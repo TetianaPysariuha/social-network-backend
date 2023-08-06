@@ -129,13 +129,13 @@ public class ChatRestController {
         }
     }
 
-    @PutMapping("/participants")
-    public ResponseEntity<?> addUsers() {
+    @PutMapping("/{id}/participants")
+    public ResponseEntity<?> addUsers(@PathVariable Long id) {
 
         String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        User user = userService.getByEmail(auth).get();
         try {
-            User user = userService.getByEmail(auth).get();
-            Chat chat = chatService.getOne(user.getId());
+            Chat chat = chatService.getOne(id);
             List<User> userList = chat.getUsers();
             userList.add(user);
             chat.setUsers(userList);
