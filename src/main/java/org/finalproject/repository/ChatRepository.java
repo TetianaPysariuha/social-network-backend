@@ -14,6 +14,7 @@ public interface ChatRepository extends RepositoryInterface<Chat>, JpaSpecificat
             "c.id AS id, " +
             "uc.user_id AS userId, " +
             "u.full_name AS fullName, " +
+            "u.profile_picture AS profilePicture, " + // Додано поле profile_picture
             "m.content AS content, " +
             "m.created_date AS lastMessageDate " +
             "FROM " +
