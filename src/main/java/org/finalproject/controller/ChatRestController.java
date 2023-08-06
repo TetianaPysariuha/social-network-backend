@@ -39,7 +39,6 @@ public class ChatRestController {
         return chatList.stream()
                 .map(chatDtoMapper::convertToDto)
                 .collect(Collectors.toList());
-
     }
 
     @GetMapping("/{page}/{size}")
@@ -68,7 +67,6 @@ public class ChatRestController {
         userChats.add(chat);
         user.setChats(userChats);
         generalService.save(user);
-
     }
 
     /*@GetMapping("/{content}")
@@ -131,13 +129,13 @@ public class ChatRestController {
         }
     }
 
-    @PutMapping("/{id}/participants")
-    public ResponseEntity<?> addUsers(@PathVariable Long id) {
+    @PutMapping("/participants")
+    public ResponseEntity<?> addUsers() {
 
         String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        User user = userService.getByEmail(auth).get();
         try {
-            Chat chat = chatService.getOne(id);
+            User user = userService.getByEmail(auth).get();
+            Chat chat = chatService.getOne(user.getId());
             List<User> userList = chat.getUsers();
             userList.add(user);
             chat.setUsers(userList);
@@ -151,11 +149,13 @@ public class ChatRestController {
         }
     }
 
-    @GetMapping("/{id}/participants")
-    public ResponseEntity<?> getChatsForUserExceptUserId(@PathVariable Long id) {
+    @GetMapping("/participants")
+    public ResponseEntity<?> getChatsForUserExceptUserId() {
 
+        String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         try {
-            List<ChatSpecDto> chatSpecDtoList = defaultChatService.getChatsForUserExceptUserId(id);
+            User user = userService.getByEmail(auth).get();
+            List<ChatSpecDto> chatSpecDtoList = defaultChatService.getChatsForUserExceptUserId(user.getId());
             return ResponseEntity.ok().body(chatSpecDtoList);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

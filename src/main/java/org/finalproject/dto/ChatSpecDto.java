@@ -18,12 +18,13 @@ public class ChatSpecDto {
     private String fullName;
     private String content;
     private Date lastMessageDate;
+    private String profilePicture;
 
     public static ChatSpecDto fromProjection(ChatSpecProjection projection) {
         return new ChatSpecDto(
                 projection.getId(), projection.getUserId(),
                 projection.getFullName(), projection.getContent(),
-                projection.getLastMessageDate()
+                projection.getLastMessageDate(), projection.getProfilePicture()
         );
     }
 
