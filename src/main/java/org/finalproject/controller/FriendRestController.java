@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/friends")
+@CrossOrigin(origins = {"http://127.0.0.1:5173"})
 public class FriendRestController {
     //private final GeneralService<Friend> friendService;
     @Autowired
@@ -67,6 +68,7 @@ public class FriendRestController {
 
     @GetMapping("/{userId}/friends")
     public ResponseEntity<?>  getFriends(@PathVariable("userId")  Long  userId) {
+        System.out.println(userId);
         List<Friend> friends = defaultFriendService.friendsOfUser(userId);
         List<FriendDto> usersFriends = friends.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
         return ResponseEntity.ok().body(usersFriends);
@@ -75,32 +77,48 @@ public class FriendRestController {
     @GetMapping("/userFriends")
     public ResponseEntity<?>  getUserFriends() {
         String auth  = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        User user = userService.getByEmail(auth).get();
-        List<Friend> friends = defaultFriendService.friendsOfUser(user.getId());
-        List<FriendDto> usersFriends = friends.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
-        return ResponseEntity.ok().body(usersFriends);
+        try {
+            User user = userService.getByEmail(auth).get();
+            List<Friend> friends = defaultFriendService.friendsOfUser(user.getId());
+            List<FriendDto> usersFriends = friends.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
+            return ResponseEntity.ok().body(usersFriends);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/requests")
     public ResponseEntity<?>  getRequests() {
         String auth  = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        User user = userService.getByEmail(auth).get();
-        List<Friend> friends = defaultFriendService.friendshipRequests(user.getId());
-        List<FriendFullDto> friendRequests = friends.stream().map(friendFullDtoMapper::convertToDto).toList();
-        return ResponseEntity.ok().body(friendRequests);
+        try {
+            User user = userService.getByEmail(auth).get();
+            List<Friend> friends = defaultFriendService.friendshipRequests(user.getId());
+            List<FriendFullDto> friendRequests = friends.stream().map(friendFullDtoMapper::convertToDto).toList();
+            return ResponseEntity.ok().body(friendRequests);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/suggestions")
     public ResponseEntity<?>  getSuggestions() {
         String auth  = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        User user = userService.getByEmail(auth).get();
-        List<User> users = defaultFriendService.suggestedUsersForFriendship(user.getId());
-        List<FriendSuggestionsDto> friendSuggestions = users.stream()
-                .map(friendSuggestionsDtoMapper::convertToDto)
-                .map(el -> { el.setMutualFriends(defaultFriendService.getMutualFriends(user.getId(), el.getFriend().getId()));
-                    return el; })
-                .collect(Collectors.toList());
-        return ResponseEntity.ok().body(friendSuggestions);
+        System.out.println(auth);
+        try {
+            User user = userService.getByEmail(auth).get();
+            List<User> users = defaultFriendService.suggestedUsersForFriendship(user.getId());
+            System.out.println(users);
+            List<FriendSuggestionsDto> friendSuggestions = users.stream()
+                    .map(friendSuggestionsDtoMapper::convertToDto)
+                    .map(el -> {
+                        el.setMutualFriends(defaultFriendService.getMutualFriends(user.getId(), el.getFriend().getId()));
+                        return el;
+                    })
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok().body(friendSuggestions);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     /*@PostMapping
@@ -112,13 +130,17 @@ public class FriendRestController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody String parametersJson ) throws JsonProcessingException {
         String auth  = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        User user = userService.getByEmail(auth).get();
-        System.out.println(parametersJson);
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode nameNodeAccountNumber = mapper.readTree(parametersJson);
-        Long friendId = Long.parseLong(nameNodeAccountNumber.get("friendId").asText());
-        Friend newFriend = defaultFriendService.saveNewById(user.getId(), friendId);
-        return ResponseEntity.ok().body(friendFullDtoMapper.convertToDto(newFriend));
+        try {
+            User user = userService.getByEmail(auth).get();
+            System.out.println(parametersJson);
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode nameNodeAccountNumber = mapper.readTree(parametersJson);
+            Long friendId = Long.parseLong(nameNodeAccountNumber.get("friendId").asText());
+            Friend newFriend = defaultFriendService.saveNewById(user.getId(), friendId);
+            return ResponseEntity.ok().body(friendFullDtoMapper.convertToDto(newFriend));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
