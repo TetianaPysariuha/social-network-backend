@@ -14,7 +14,7 @@ public interface ChatRepository extends RepositoryInterface<Chat>, JpaSpecificat
             "c.id AS id, " +
             "uc.user_id AS userId, " +
             "u.full_name AS fullName, " +
-            "u.profile_picture AS profilePicture, " + // Додано поле profile_picture
+            "u.profile_picture AS profilePicture, " +
             "m.content AS content, " +
             "m.created_date AS lastMessageDate " +
             "FROM " +
@@ -27,6 +27,7 @@ public interface ChatRepository extends RepositoryInterface<Chat>, JpaSpecificat
             "messages m ON c.id = m.chat_id " +
             "WHERE " +
             "u.id <> :id " +
+            "AND c.id IN (SELECT cc.chat_id FROM users_chats cc WHERE cc.user_id = :id) " + // Додано пробіл перед AND
             "AND m.id = ( " +
             "SELECT MAX(m2.id) " +
             "FROM messages m2 " +
