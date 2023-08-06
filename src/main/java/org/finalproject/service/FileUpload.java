@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -26,26 +28,47 @@ public class FileUpload {
 
     }
 
-    public String uploadPostFile(MultipartFile multipartFile, Long postId) throws IOException {
+    public List<String> uploadUseListOfrFiles(List<MultipartFile> multipartFiles, Long userId) throws IOException {
+
+        String folder = userId.toString().concat("/user images");
+        List<String> filesUrl = new ArrayList<>();
+        for (MultipartFile multipartFile : multipartFiles) {
+            filesUrl.add(cloudinary.uploader()
+                    .upload(multipartFile.getBytes(),
+                            Map.of(folder, UUID.randomUUID().toString()))
+                    .get("url")
+                    .toString());
+        }
+        return filesUrl;
+    }
+
+    public List<String> uploadPostFile(List<MultipartFile> multipartFiles, Long postId) throws IOException {
 
         String folder = postId.toString().concat("/post images");
-        return cloudinary.uploader()
-                .upload(multipartFile.getBytes(),
-                        Map.of(folder, UUID.randomUUID().toString()))
-                .get("url")
-                .toString();
+        List<String> filesUrl = new ArrayList<>();
+        for (MultipartFile multipartFile : multipartFiles) {
+            filesUrl.add(cloudinary.uploader()
+                    .upload(multipartFile.getBytes(),
+                            Map.of(folder, UUID.randomUUID().toString()))
+                    .get("url")
+                    .toString());
+        }
+        return filesUrl;
 
     }
 
-    public String uploadMessageFile(MultipartFile multipartFile, Long messageId) throws IOException {
+    public List<String> uploadMessageFile(List<MultipartFile> multipartFiles, Long messageId) throws IOException {
 
         String folder = messageId.toString().concat("/message images");
-        return cloudinary.uploader()
-                .upload(multipartFile.getBytes(),
-                        Map.of(folder, UUID.randomUUID().toString()))
-                .get("url")
-                .toString();
-
+        List<String> filesUrl = new ArrayList<>();
+        for (MultipartFile multipartFile : multipartFiles) {
+            filesUrl.add(cloudinary.uploader()
+                    .upload(multipartFile.getBytes(),
+                            Map.of(folder, UUID.randomUUID().toString()))
+                    .get("url")
+                    .toString());
+        }
+        return filesUrl;
     }
 
 
