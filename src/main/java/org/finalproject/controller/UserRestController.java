@@ -141,6 +141,19 @@ public class UserRestController {
         return ResponseEntity.ok().body(userChatsDto );
     }
 
+    @GetMapping("/chats")
+    public ResponseEntity<?>  getAuthorizedUserChats() {
+        String auth  = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> profile  = defaultUserService.getByFullName(auth);
+
+        if (profile.isEmpty()) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+        List<Chat> userChats = profile.get().getChats();
+        List<ChatDto> userChatsDto = userChats.stream().map(chatMapper::convertToDto).collect(Collectors.toList());
+        return ResponseEntity.ok().body(userChatsDto );
+    }
+
     @GetMapping("/{id}/posts")
 
     public ResponseEntity<?>  getPosts(@PathVariable("id")  Long  userId) {

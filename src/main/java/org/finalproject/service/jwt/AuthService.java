@@ -93,8 +93,8 @@ public class AuthService {
 
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setTo(email);
-        simpleMailMessage.setSubject("Go to this page and use this code to restore your password");
-        simpleMailMessage.setText("https://social-network-a3sm8ouoc-alexhiriavenko.vercel.app/password" + "Code:"  + code);
+        simpleMailMessage.setSubject(" Use this code to restore your password");
+        simpleMailMessage.setText( "Code:"  + code);
 
         javaMailSender.send(simpleMailMessage);
 
