@@ -26,7 +26,7 @@ public class Message extends BaseEntity {
 
     @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    @JsonIgnore
+    // @JsonIgnore
     private User sender;
 
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "messageId")

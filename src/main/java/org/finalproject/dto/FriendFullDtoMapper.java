@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FriendFullDtoMapper extends GeneralFacade<Friend, FriendRequestDto, FriendFullDto> {
+public class FriendFullDtoMapper extends GeneralFacade<Friend, FriendRequestDto,FriendFullDto> {
 
     @Autowired
     private DefaultFriendService defaultFriendService;

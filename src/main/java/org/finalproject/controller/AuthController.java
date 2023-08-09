@@ -89,7 +89,7 @@ public class AuthController {
             user.setActivated(true);
             userService.save(user);
         }
-        return "Activated Return to homepage https://social-network-a3sm8ouoc-alexhiriavenko.vercel.app";
+        return "Activated Return to homepage ";
 
     }
 
@@ -110,8 +110,8 @@ public class AuthController {
         }
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setTo(email.getEmail());
-        simpleMailMessage.setSubject("Go to this page and use this code to restore your password");
-        simpleMailMessage.setText("https://social-network-a3sm8ouoc-alexhiriavenko.vercel.app/password" + " " + "Code:"  + userOptional.get().getActivationCode());
+        simpleMailMessage.setSubject(" Use this code to restore your password");
+        simpleMailMessage.setText(" Code:"  + userOptional.get().getActivationCode());
 
         javaMailSender.send(simpleMailMessage);
 
