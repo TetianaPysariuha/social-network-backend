@@ -25,7 +25,8 @@ public class DefaultUserService extends GeneralService<User> {
     }
 
     public List<User> getUserByPartOfName(String part) {
-        return userRepository.findUserByPartOfName(part);
+        String partDb = part.toUpperCase();
+        return userRepository.findUserByPartOfName(partDb);
     }
 
     public Optional<User> getByFullName(String fullName) {

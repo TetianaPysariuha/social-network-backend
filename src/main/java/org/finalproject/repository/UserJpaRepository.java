@@ -19,7 +19,7 @@ public interface UserJpaRepository extends RepositoryInterface<User>, JpaSpecifi
 
     public Optional<User> getByFullName(@NonNull String fullName) ;
 
-    @Query(value = " from User  where fullName like %:part%")
+    @Query(value = " from User  u where  Upper(u.fullName) like %:part%")
     List<User> findUserByPartOfName(@Param("part")  String part );
 
 }

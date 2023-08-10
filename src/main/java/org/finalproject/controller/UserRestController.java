@@ -241,10 +241,17 @@ public class UserRestController {
     public ResponseEntity<?> update(@RequestBody UserRequestDto user) {
         try {
             User userEntity = dtoMapper.convertToEntity(user);
-            userEntity.setCreatedDate(userService.getOne(userEntity.getId()).getCreatedDate());
-            userEntity.setCreatedBy(userService.getOne(userEntity.getId()).getCreatedBy());
-            userEntity.setPassword(userService.getOne(userEntity.getId()).getPassword());
-            userService.save(userEntity);
+            User userDb = userService.getOne(userEntity.getId());
+            userDb.setFullName(userEntity.getFullName());
+            userDb.setEmail(userEntity.getEmail());
+            userDb.setBirthDate(userEntity.getBirthDate());
+            userDb.setCity(userEntity.getCity());
+            userDb.setProfileBackgroundPicture(userEntity.getProfileBackgroundPicture());
+            userDb.setProfilePicture(userEntity.getProfilePicture());
+            userDb.setAbout(userEntity.getAbout());
+            userDb.setCountry(userEntity.getCountry());
+            userDb.setWorkPlace(userEntity.getWorkPlace());
+            userService.save(userDb);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
