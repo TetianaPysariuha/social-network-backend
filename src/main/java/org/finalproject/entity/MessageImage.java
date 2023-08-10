@@ -1,6 +1,5 @@
 package org.finalproject.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,12 +18,12 @@ public class MessageImage extends BaseEntity {
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "message_id")
-    @JsonIgnore
+    //    @JsonIgnore
     private Message messageId;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "chat_id")
-    @JsonIgnore
+    // @JsonIgnore
     private Chat chat;
 
 }
