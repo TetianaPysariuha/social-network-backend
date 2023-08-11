@@ -1,4 +1,4 @@
-package org.finalproject.dto;
+package org.finalproject.dto.chat;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
