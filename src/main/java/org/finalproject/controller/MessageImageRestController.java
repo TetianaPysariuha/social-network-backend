@@ -2,9 +2,9 @@ package org.finalproject.controller;
 
 
 import lombok.RequiredArgsConstructor;
-import org.finalproject.dto.MessageImageDto;
-import org.finalproject.dto.MessageImageDtoMapper;
-import org.finalproject.dto.MessageImageDtoRequest;
+import org.finalproject.dto.chat.MessageImageDto;
+import org.finalproject.dto.chat.MessageImageDtoMapper;
+import org.finalproject.dto.chat.MessageImageDtoRequest;
 import org.finalproject.entity.MessageImage;
 import org.finalproject.service.GeneralService;
 import org.springframework.data.domain.Page;

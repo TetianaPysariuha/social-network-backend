@@ -2,6 +2,10 @@ package org.finalproject.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.finalproject.dto.*;
+import org.finalproject.dto.chat.ChatDto;
+import org.finalproject.dto.chat.ChatDtoMapper;
+import org.finalproject.dto.chat.ChatDtoRequest;
+import org.finalproject.dto.chat.ChatSpecDto;
 import org.finalproject.entity.Chat;
 import org.finalproject.entity.User;
 import org.finalproject.service.DefaultChatService;
@@ -37,7 +41,7 @@ public class ChatRestController {
 
         List<Chat> chatList = chatService.findAll();
         return chatList.stream()
-                .map(chatDtoMapper::convertToDto)
+                .map(chatDtoMapper::decorateDto)
                 .collect(Collectors.toList());
     }
 
@@ -49,7 +53,7 @@ public class ChatRestController {
         Page chats = chatService.findAll(pageable);
         List<Chat> chatList = chats.toList();
         List<ChatDto> chatDtoList = chatList.stream()
-                .map(chatDtoMapper::convertToDto)
+                .map(chatDtoMapper::decorateDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(chatDtoList);
     }

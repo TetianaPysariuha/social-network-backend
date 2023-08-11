@@ -14,14 +14,15 @@ public class RabbitConfig {
 
     @Value("{rabbitUserAndVHost}")
     private String rabbitUserAndVHost;
-
     @Value("{rabbitPass}")
     private String rabbitPass;
+    @Value("{cloudamqp_url}")
+    private String cloudamqpUrl;
 
     @Bean
     public ConnectionFactory connectionFactory() {
 
-        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory("amqps://tnjaskux:CwZKUs5tzAcTPPlLIhT9vLxTWH7km98o@whale.rmq.cloudamqp.com/tnjaskux");
+        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(cloudamqpUrl);
         cachingConnectionFactory.setUsername(rabbitUserAndVHost);
         cachingConnectionFactory.setPassword(rabbitPass);
         cachingConnectionFactory.setVirtualHost(rabbitUserAndVHost);
