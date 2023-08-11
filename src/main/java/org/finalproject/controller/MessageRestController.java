@@ -118,12 +118,12 @@ public class MessageRestController {
             User user = userService.getByEmail(auth).get();
             Message messageEntity = messageDtoMapper.convertToEntity(messageDtoRequest);
             messageEntity.setSender(user);
-            //            messageEntity.setCreatedDate(messageService.getOne(messageEntity.getId()).getCreatedDate());
-            //            messageEntity.setCreatedBy(messageService.getOne(messageEntity.getId()).getCreatedBy());
+            messageEntity.setCreatedDate(messageService.getOne(messageEntity.getId()).getCreatedDate());
+            messageEntity.setCreatedBy(messageService.getOne(messageEntity.getId()).getCreatedBy());
             messageService.save(messageEntity);
-            ObjectMapper objectMapper = new ObjectMapper();
-            String message = objectMapper.writeValueAsString(messageDtoRequest);
-            rabbit.sendMessage(message, "messageRoutingKey");
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            String message = objectMapper.writeValueAsString(messageDtoRequest);
+//            rabbit.sendMessage(message, "messageRoutingKey");
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
