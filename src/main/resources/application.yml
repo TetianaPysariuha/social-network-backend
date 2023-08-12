@@ -88,8 +88,8 @@ spring:
 
 welcome:
   message: welcome
-  cloudName: ${cloudName}
-  apiKey: ${apiKey}
-  apiSecret: ${apiSecret}
+  cloudName: 553129798267134
+  apiKey: a3F7FNiU3IfkmQgnf8H1uHZyWzk
+  apiSecret: dhbq0uk5g
   rabbitUserAndVHost: ${rabbitUser}
   rabbitPass: ${rabbitPass}

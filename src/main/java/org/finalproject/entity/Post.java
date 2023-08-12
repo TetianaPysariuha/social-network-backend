@@ -15,8 +15,6 @@ import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
-
-@EqualsAndHashCode(of = {"id", "user"})
 @Getter
 @Setter
 @Entity
@@ -25,7 +23,6 @@ import java.util.Set;
 public class Post extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     private User user;
     @Column(name = "post_type")
     private String postType;
