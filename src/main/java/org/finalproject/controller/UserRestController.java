@@ -118,7 +118,7 @@ public class UserRestController {
     if (profile.isEmpty()) {
     return ResponseEntity.badRequest().body("User not found");
     }
-        return ResponseEntity.ok().body(profile.get());
+        return ResponseEntity.ok().body(dtoMapper.convertToDto(profile.get()));
     }
 
     @GetMapping("/{userId}/friends")
