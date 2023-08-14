@@ -1,10 +1,7 @@
 package org.finalproject.config;
 
 import com.cloudinary.Cloudinary;
-
-
 import org.springframework.beans.factory.annotation.Value;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,12 +11,11 @@ import java.util.Map;
 @Configuration
 public class CloudinaryConfig {
 
-
-    @Value("{$cloudName}")
+    @Value("${cloudName:dj2nj7o4i}")
     private String cloudName;
-    @Value("{apiKey}")
+    @Value("${apiKey:229692442485891}")
     private String apiKey;
-    @Value("{apiSecret}")
+    @Value("${apiSecret:I_rj8NAZBz_aDikFAgyLjlmYRB4}")
     private String apiSecret;
 
 
