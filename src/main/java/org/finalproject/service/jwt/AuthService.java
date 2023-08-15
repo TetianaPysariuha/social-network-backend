@@ -107,7 +107,6 @@ public class AuthService {
 
         refreshStorage.put(email, refreshToken);
 
-
     }
 
     public JwtResponse getAccessToken(@NonNull String refreshToken) {
