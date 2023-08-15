@@ -21,8 +21,6 @@ public class FriendDtoMapper extends GeneralFacade<Friend, FriendRequestDto,Frie
     @Override
     protected void decorateEntity(Friend entity, FriendRequestDto dto) {
         entity.setId(dto.getId());
-        entity.setUser(userJpaRepository.findEntityById(dto.getUserID()));
-        entity.setFriend(userJpaRepository.findEntityById(dto.getFriendID()));
         entity.setStatus(FriendStatus.forValue(dto.getStatus()));
     }
 

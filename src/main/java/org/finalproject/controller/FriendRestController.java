@@ -8,19 +8,14 @@ import lombok.RequiredArgsConstructor;
 import org.finalproject.dto.*;
 import org.finalproject.entity.Friend;
 import org.finalproject.entity.User;
-import org.finalproject.jwt.JwtAuthentication;
 import org.finalproject.service.DefaultFriendService;
 import org.finalproject.service.jwt.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.finalproject.repository.FriendJpaRepository;
-import org.finalproject.service.DefaultFriendService;
-import org.finalproject.service.GeneralService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -68,10 +63,33 @@ public class FriendRestController {
 
     @GetMapping("/{userId}/friends")
     public ResponseEntity<?>  getFriends(@PathVariable("userId")  Long  userId) {
-        System.out.println(userId);
         List<Friend> friends = defaultFriendService.friendsOfUser(userId);
         List<FriendDto> usersFriends = friends.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
         return ResponseEntity.ok().body(usersFriends);
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<?> getFriendsByName(@RequestBody String parametersJson) throws JsonProcessingException {
+        String auth  = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        try {
+            User user = userService.getByEmail(auth).get();
+            ObjectMapper mapper = new ObjectMapper();
+
+            System.out.println(parametersJson);
+
+            JsonNode nameNodeAccountNumber = mapper.readTree(parametersJson);
+            String friendName = nameNodeAccountNumber.get("friendName").asText();
+
+            System.out.println(friendName);
+            System.out.println(user.getId());
+
+
+            List<Friend> friends = defaultFriendService.getFriendByName(user.getId(), friendName);
+            List<FriendDto> usersFriends = friends.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
+            return ResponseEntity.ok().body(usersFriends);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/userFriends")
@@ -103,11 +121,9 @@ public class FriendRestController {
     @GetMapping("/suggestions")
     public ResponseEntity<?>  getSuggestions() {
         String auth  = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        System.out.println(auth);
         try {
             User user = userService.getByEmail(auth).get();
             List<User> users = defaultFriendService.suggestedUsersForFriendship(user.getId());
-            System.out.println(users);
             List<FriendSuggestionsDto> friendSuggestions = users.stream()
                     .map(friendSuggestionsDtoMapper::convertToDto)
                     .map(el -> {
@@ -132,7 +148,6 @@ public class FriendRestController {
         String auth  = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         try {
             User user = userService.getByEmail(auth).get();
-            System.out.println(parametersJson);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode nameNodeAccountNumber = mapper.readTree(parametersJson);
             Long friendId = Long.parseLong(nameNodeAccountNumber.get("friendId").asText());
@@ -164,10 +179,10 @@ public class FriendRestController {
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody FriendRequestDto friendRequestDto) throws JsonProcessingException {
+    public ResponseEntity<?> changeStatus(@RequestBody FriendChangeStatusRequestDto requestForChange) throws JsonProcessingException {
         Friend result;
         try {
-            result = defaultFriendService.update(dtoMapper.convertToEntity(friendRequestDto));
+            result = defaultFriendService.changeStatus(requestForChange.getId(), requestForChange.getStatus());
             return (result != null
                     ? ResponseEntity.ok().body(friendFullDtoMapper.convertToDto(result))
                     : ResponseEntity.badRequest().body("Such friendship have not found."));
