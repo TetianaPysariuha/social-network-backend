@@ -95,14 +95,10 @@ public class FriendRestController {
     @GetMapping("/userFriends")
     public ResponseEntity<?>  getUserFriends() {
         String auth  = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        try {
-            User user = userService.getByEmail(auth).get();
-            List<Friend> friends = defaultFriendService.friendsOfUser(user.getId());
-            List<FriendDto> usersFriends = friends.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
-            return ResponseEntity.ok().body(usersFriends);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        User user = userService.getByEmail(auth).get();
+        List<Friend> friends = defaultFriendService.friendsOfUser(user.getId());
+        List<FriendDto> usersFriends = friends.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
+        return ResponseEntity.ok().body(usersFriends);
     }
 
     @GetMapping("/requests")

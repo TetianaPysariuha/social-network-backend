@@ -57,6 +57,7 @@ public class AuthService {
 
             final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
+            refreshStorage.clear();
             refreshStorage.put(authRequest.getEmail(), refreshToken);
             return new JwtResponse(accessToken, refreshToken);
         } else {
@@ -93,8 +94,8 @@ public class AuthService {
 
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setTo(email);
-        simpleMailMessage.setSubject("Go to this page and use this code to restore your password");
-        simpleMailMessage.setText("https://social-network-a3sm8ouoc-alexhiriavenko.vercel.app/password" + "Code:"  + code);
+        simpleMailMessage.setSubject(" Use this code to restore your password");
+        simpleMailMessage.setText( "Code:"  + code);
 
         javaMailSender.send(simpleMailMessage);
 
@@ -105,7 +106,6 @@ public class AuthService {
 
 
         refreshStorage.put(email, refreshToken);
-
 
     }
 
@@ -139,11 +139,12 @@ public class AuthService {
                         .orElseThrow(() -> new AuthException("User not found"));
                 final String accessToken = jwtProvider.generateAccessToken(user);
                 final String newRefreshToken = jwtProvider.generateRefreshToken(user);
+                refreshStorage.clear();
                 refreshStorage.put(user.getEmail(), newRefreshToken);
                 return new JwtResponse(accessToken, newRefreshToken);
             }
         }
-        throw new AuthException("JWT token is invalid");
+        return new JwtResponse(null, null);
     }
 
     public JwtAuthentication getAuthInfo() {

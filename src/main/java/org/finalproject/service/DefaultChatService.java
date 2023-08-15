@@ -1,7 +1,7 @@
 package org.finalproject.service;
 
 import lombok.RequiredArgsConstructor;
-import org.finalproject.dto.ChatSpecDto;
+import org.finalproject.dto.chat.ChatSpecDto;
 import org.finalproject.entity.Chat;
 import org.finalproject.entity.ChatSpecProjection;
 import org.finalproject.repository.ChatRepository;

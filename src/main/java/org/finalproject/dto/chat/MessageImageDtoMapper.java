@@ -1,4 +1,4 @@
-package org.finalproject.dto;
+package org.finalproject.dto.chat;
 
 import org.finalproject.entity.MessageImage;
 import org.finalproject.facade.GeneralFacade;

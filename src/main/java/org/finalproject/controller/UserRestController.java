@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.finalproject.dto.*;
 
+import org.finalproject.dto.chat.ChatDto;
+import org.finalproject.dto.chat.ChatDtoMapper;
 import org.finalproject.entity.*;
 import org.finalproject.filter.JwtFilter;
 import org.finalproject.jwt.Email;
@@ -116,7 +118,7 @@ public class UserRestController {
     if (profile.isEmpty()) {
     return ResponseEntity.badRequest().body("User not found");
     }
-        return ResponseEntity.ok().body(profile.get());
+        return ResponseEntity.ok().body(dtoMapper.convertToDto(profile.get()));
     }
 
     @GetMapping("/{userId}/friends")
@@ -137,6 +139,19 @@ public class UserRestController {
             return ResponseEntity.badRequest().body("User not found");
         }
         List<Chat> userChats = user.getChats();
+        List<ChatDto> userChatsDto = userChats.stream().map(chatMapper::convertToDto).collect(Collectors.toList());
+        return ResponseEntity.ok().body(userChatsDto );
+    }
+
+    @GetMapping("/chats")
+    public ResponseEntity<?>  getAuthorizedUserChats() {
+        String auth  = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> profile  = defaultUserService.getByFullName(auth);
+
+        if (profile.isEmpty()) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+        List<Chat> userChats = profile.get().getChats();
         List<ChatDto> userChatsDto = userChats.stream().map(chatMapper::convertToDto).collect(Collectors.toList());
         return ResponseEntity.ok().body(userChatsDto );
     }
@@ -228,10 +243,17 @@ public class UserRestController {
     public ResponseEntity<?> update(@RequestBody UserRequestDto user) {
         try {
             User userEntity = dtoMapper.convertToEntity(user);
-            userEntity.setCreatedDate(userService.getOne(userEntity.getId()).getCreatedDate());
-            userEntity.setCreatedBy(userService.getOne(userEntity.getId()).getCreatedBy());
-            userEntity.setPassword(userService.getOne(userEntity.getId()).getPassword());
-            userService.save(userEntity);
+            User userDb = userService.getOne(userEntity.getId());
+            userDb.setFullName(userEntity.getFullName());
+            userDb.setEmail(userEntity.getEmail());
+            userDb.setBirthDate(userEntity.getBirthDate());
+            userDb.setCity(userEntity.getCity());
+            userDb.setProfileBackgroundPicture(userEntity.getProfileBackgroundPicture());
+            userDb.setProfilePicture(userEntity.getProfilePicture());
+            userDb.setAbout(userEntity.getAbout());
+            userDb.setCountry(userEntity.getCountry());
+            userDb.setWorkPlace(userEntity.getWorkPlace());
+            userService.save(userDb);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
