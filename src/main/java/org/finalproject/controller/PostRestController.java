@@ -1,6 +1,7 @@
 package org.finalproject.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.finalproject.config.AuditorAwareImpl;
 import org.finalproject.dto.PostDto;
 import org.finalproject.dto.PostDtoMapper;
@@ -14,12 +15,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/posts")
@@ -31,17 +35,23 @@ public class PostRestController {
 
 
     @PostMapping("/comment/{id}")
-    public Boolean commentPost(@PathVariable("id") Long postId, String content) {
+    public Boolean commentPost(@PathVariable("id") Long postId, @RequestBody Map<String, String> requestBody) {
+        String content = requestBody.get("content");
         try {
             Post commentedPost = postService.getOne(postId);
+            System.out.println(content);
             if (commentedPost == null) {
+                log.warn("post is null");
                 return false;
             }
+            System.out.println(auditorAwareImpl.getCurrentAuditor().get());
             User loggedUser = userService.getByEmail(auditorAwareImpl.getCurrentAuditor().get()).orElse(null);
             if (loggedUser == null) {
+                log.warn("loggedUser is null");
                 return false;
             }
             if (content == null || content.trim().isEmpty()) {
+                log.warn("Content is null or empty");
                 return false;
             }
             Post newCommentPost = new Post(loggedUser, "comment", content, commentedPost);
@@ -56,14 +66,17 @@ public class PostRestController {
     }
 
     @PostMapping("/repost/{id}")
-    public Boolean repostPost(@PathVariable("id") Long postId, String content) {
+    public Boolean repostPost(@PathVariable("id") Long postId, @RequestBody Map<String, String> requestBody) {
+        String content = requestBody.get("content");
         try {
             Post repostedPost = postService.getOne(postId);
             if (repostedPost == null) {
+                log.warn("reposted post is null");
                 return false;
             }
             User loggedUser = userService.getByEmail(auditorAwareImpl.getCurrentAuditor().get()).orElse(null);
             if (loggedUser == null) {
+                log.warn("loggedUser is null");
                 return false;
             }
             Post newPost = new Post(loggedUser, "post", content, repostedPost);
@@ -83,15 +96,18 @@ public class PostRestController {
             Post post = postService.getOne(postId);
 
             if (post == null) {
+                log.warn("Post is null");
                 return false;
             }
 
             User loggedUser = userService.getByEmail(auditorAwareImpl.getCurrentAuditor().get()).get();
             if (loggedUser == null) {
+                log.warn("LoggedUser is null");
                 return false;
             }
 
             if (!post.getLikes().contains(loggedUser)) {
+                log.warn("post is unliked already");
                 return false;
             }
 
@@ -116,15 +132,18 @@ public class PostRestController {
             Post post = postService.getOne(postId);
 
             if (post == null) {
+                log.warn("post is null");
                 return false;
             }
 
             User loggedUser = userService.getByEmail(auditorAwareImpl.getCurrentAuditor().get()).get();
             if (loggedUser == null) {
+                log.warn("loggedUser is null");
                 return false;
             }
 
             if (post.getLikes().contains(loggedUser)) {
+                log.warn("loggedUser is liked already");
                 return false;
             }
 
