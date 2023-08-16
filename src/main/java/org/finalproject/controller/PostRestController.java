@@ -1,7 +1,6 @@
 package org.finalproject.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.codehaus.jackson.map.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.finalproject.config.AuditorAwareImpl;
 import org.finalproject.dto.PostDto;
@@ -11,8 +10,6 @@ import org.finalproject.entity.Post;
 import org.finalproject.entity.User;
 import org.finalproject.service.DefaultPostService;
 import org.finalproject.service.DefaultUserService;
-import org.finalproject.service.FileUpload;
-import org.finalproject.service.RabbitMQProducerServiceImpl;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,8 +32,6 @@ public class PostRestController {
     private final PostDtoMapper dtoMapper;
     private final DefaultUserService userService;
     private final AuditorAwareImpl auditorAwareImpl;
-    private final RabbitMQProducerServiceImpl rabbitMQProducerServiceImpl;
-    private final FileUpload fileUpload;
 
 
     @PostMapping("/comment/{id}")
@@ -63,9 +58,6 @@ public class PostRestController {
             commentedPost.getComments().add(newCommentPost);
             postService.save(newCommentPost);
             postService.save(commentedPost);
-            //ObjectMapper objectMapper = new ObjectMapper();
-            //String postJson = objectMapper.writeValueAsString(newCommentPost);
-            //RabbitMQProducerServiceImpl.sendMessage(postJson, "commentRoutingKey");
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -155,15 +147,8 @@ public class PostRestController {
                 return false;
             }
 
-            System.out.println(loggedUser.getLikedPosts());
             if (post.addLike(loggedUser)) {
-                System.out.println(loggedUser.getLikedPosts());
                 postService.save(post);
-
-                ObjectMapper objectMapper = new ObjectMapper();
-
-                //String postJson = "{\"loggedUserId\":" + loggedUser.getId() + ", \"postId\":" + postId + "}";
-                //RabbitMQProducerServiceImpl.sendMessage(postJson, "commentRoutingKey");
                 return true;
             } else {
                 return false;
@@ -204,8 +189,6 @@ public class PostRestController {
 
     @PostMapping
     public void create(@RequestBody PostRequestDto post) {
-//        fileUpload.uploadPostFile()
-//        Post newPost = new Post(fileUpload.uploadPostFile());
         postService.save(dtoMapper.convertToEntity(post));
     }
 
