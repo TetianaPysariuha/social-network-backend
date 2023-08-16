@@ -57,7 +57,7 @@ public class AuthService {
 
             final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
-           if(refreshStorage.containsKey(authRequest.getEmail())){
+           if (refreshStorage.containsKey(authRequest.getEmail())) {
                return new JwtResponse(accessToken, refreshStorage.get(authRequest.getEmail()));
 
            }
