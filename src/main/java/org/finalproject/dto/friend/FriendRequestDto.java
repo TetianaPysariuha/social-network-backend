@@ -1,4 +1,4 @@
-package org.finalproject.dto;
+package org.finalproject.dto.friend;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -10,9 +10,11 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class FriendChangeStatusRequestDto {
+public class FriendRequestDto {
     @NotNull
     @Min(1)
     private Long id;
     private String status;
+    private Long userID;
+    private Long friendID;
 }

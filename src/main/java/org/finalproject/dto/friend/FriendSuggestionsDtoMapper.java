@@ -1,4 +1,4 @@
-package org.finalproject.dto;
+package org.finalproject.dto.friend;
 
 import org.finalproject.entity.User;
 import org.finalproject.facade.GeneralFacade;

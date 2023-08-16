@@ -1,4 +1,4 @@
-package org.finalproject.dto;
+package org.finalproject.dto.friend;
 
 import org.finalproject.entity.Friend;
 import org.finalproject.facade.GeneralFacade;
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FriendFullDtoMapper extends GeneralFacade<Friend, FriendRequestDto,FriendFullDto> {
+public class FriendDtoMapper extends GeneralFacade<Friend, FriendRequestDto,FriendDto> {
 
     @Autowired
     private DefaultFriendService defaultFriendService;
@@ -19,17 +19,15 @@ public class FriendFullDtoMapper extends GeneralFacade<Friend, FriendRequestDto,
     @Override
     protected void decorateEntity(Friend entity, FriendRequestDto dto) {
         entity.setId(dto.getId());
-        entity.setUser(userJpaRepository.findEntityById(dto.getUserID()));
-        entity.setFriend(userJpaRepository.findEntityById(dto.getFriendID()));
         entity.setStatus(FriendStatus.forValue(dto.getStatus()));
     }
 
     @Override
-    protected void decorateDto(FriendFullDto dto, Friend entity) {
+    protected void decorateDto(FriendDto dto, Friend entity) {
         dto.setId(entity.getId());
         dto.setStatus(entity.getStatus().getValue());
         dto.setFriend(entity.getFriend());
         dto.setMutualFriends(defaultFriendService.getMutualFriends(entity.getUser().getId(), entity.getFriend().getId()));
-        dto.setUser(entity.getUser());
     }
 }
+

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.finalproject.dto.*;
+import org.finalproject.dto.friend.*;
 import org.finalproject.entity.Friend;
 import org.finalproject.entity.User;
 import org.finalproject.service.DefaultFriendService;
