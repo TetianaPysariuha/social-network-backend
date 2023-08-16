@@ -1,8 +1,6 @@
-package org.finalproject.dto;
+package org.finalproject.dto.chat;
 
 import lombok.*;
-import org.finalproject.entity.Chat;
-import org.finalproject.entity.Message;
 
 @Getter
 @Setter
@@ -12,9 +10,10 @@ import org.finalproject.entity.Message;
 @ToString(of = "id")
 public class MessageImageDto {
 
+    //@JsonProperty("message_image_id")
     private Long id;
     private String imgUrl;
-    private Message messageId;
+    private MessageDto messageId;
 
 
 }

@@ -1,7 +1,6 @@
 package org.finalproject.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.LazyCollection;
@@ -31,12 +30,13 @@ public class Message extends BaseEntity {
 
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "messageId")
     @LazyCollection(LazyCollectionOption.FALSE)
-    @JsonIgnore
+    //  @JsonIgnore
     private List<MessageImage> images;
 
     @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinColumn(name = "chat_id")
-    @JsonIgnore
+    //  @JsonIgnore
+    // @JsonBackReference
     private Chat chat;
 
 

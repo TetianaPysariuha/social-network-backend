@@ -1,8 +1,7 @@
-package org.finalproject.dto;
+package org.finalproject.dto.chat;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.finalproject.entity.Chat;
 
 @Getter
 @Setter
@@ -17,7 +16,7 @@ public class MessageImageDtoRequest {
     @NotNull
     private String imgUrl;
     @NotNull
-    private Long messageId;
+    private MessageDto messageId;
     @NotNull
-    private Chat chat;
+    private ChatDto chat;
 }

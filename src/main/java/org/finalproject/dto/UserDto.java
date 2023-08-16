@@ -1,6 +1,5 @@
 package org.finalproject.dto;
 
-import jakarta.persistence.Column;
 import lombok.*;
 
 import java.util.Date;
@@ -12,6 +11,7 @@ import java.util.Date;
 @EqualsAndHashCode
 @ToString
 public class UserDto {
+
     private Long id;
 
     private String fullName;
@@ -22,8 +22,8 @@ public class UserDto {
 
     private String country;
 
-    private String  city;
-    private String  gender;
+    private String city;
+    private String gender;
 
     private String workPlace;
 

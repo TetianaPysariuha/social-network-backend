@@ -1,10 +1,9 @@
-package org.finalproject.dto;
+package org.finalproject.dto.chat;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.finalproject.entity.Chat;
-import org.finalproject.entity.User;
+import org.finalproject.dto.UserDto;
 
 @Getter
 @Setter
@@ -13,6 +12,7 @@ import org.finalproject.entity.User;
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
 public class MessageDtoRequest {
+
     @NotNull
     private Long id;
     @NotNull
@@ -20,9 +20,9 @@ public class MessageDtoRequest {
     private String content;
 
     @NotNull
-    private User sender;
+    private UserDto sender;
 
     @NotNull
-    private Chat chat;
+    private ChatDto chat;
 
 }
