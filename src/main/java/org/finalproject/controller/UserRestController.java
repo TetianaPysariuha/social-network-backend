@@ -6,6 +6,8 @@ import org.finalproject.dto.*;
 
 import org.finalproject.dto.chat.ChatDto;
 import org.finalproject.dto.chat.ChatDtoMapper;
+import org.finalproject.dto.friend.FriendDto;
+import org.finalproject.dto.friend.FriendDtoMapper;
 import org.finalproject.entity.*;
 import org.finalproject.filter.JwtFilter;
 import org.finalproject.jwt.Email;

@@ -1,6 +1,7 @@
-package org.finalproject.dto;
+package org.finalproject.dto.friend;
 
 import lombok.*;
+import org.finalproject.dto.UserDto;
 import org.finalproject.entity.User;
 
 import java.util.List;
@@ -12,6 +13,6 @@ import java.util.List;
 @EqualsAndHashCode
 @ToString
 public class FriendSuggestionsDto {
-    private User friend;
-    private List<User> mutualFriends;
+    private UserDto friend;
+    private List<UserDto> mutualFriends;
 }
