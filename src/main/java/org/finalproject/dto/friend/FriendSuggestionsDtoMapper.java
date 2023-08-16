@@ -1,5 +1,6 @@
-package org.finalproject.dto;
+package org.finalproject.dto.friend;
 
+import org.finalproject.dto.UserDtoMapper;
 import org.finalproject.entity.User;
 import org.finalproject.facade.GeneralFacade;
 import org.finalproject.repository.UserJpaRepository;
@@ -13,10 +14,12 @@ public class FriendSuggestionsDtoMapper extends GeneralFacade<User, FriendReques
     private DefaultFriendService defaultFriendService;
     @Autowired
     private UserJpaRepository userJpaRepository;
+    @Autowired
+    private UserDtoMapper userDtoMapper;
 
     @Override
     protected void decorateDto(FriendSuggestionsDto dto, User entity) {
-        dto.setFriend(entity);
+        dto.setFriend(userDtoMapper.convertToDto(entity));
         dto.setMutualFriends(null);
     }
 

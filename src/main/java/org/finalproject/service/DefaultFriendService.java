@@ -88,4 +88,28 @@ public class DefaultFriendService extends GeneralService<Friend> {
                                             userJpaRepository.findEntityById(friendId)));
         }
     }
+
+    public Friend changeStatus(Long id, String status) {
+        Friend friend = friendRepository.findEntityById(id);
+        if (friend != null) {
+            friend.setStatus(FriendStatus.forValue(status));
+            return super.save(friend);
+        } else {
+            return null;
+        }
+    }
+
+    public List<Friend> getFriendByName(Long id, String name) {
+        List<Friend> friends = friendRepository.getFriendByUserIdFriendName(id, name);
+        org.hibernate.Session session = (Session) entityManager.getDelegate();
+        return friends.stream().map((el) -> {
+            session.evict(el);
+            if (Objects.equals(el.getFriend().getId(), id)) {
+                User tmp = el.getFriend();
+                el.setFriend(el.getUser());
+                el.setUser(tmp);
+            }
+            return el;
+        }).toList();
+    }
 }

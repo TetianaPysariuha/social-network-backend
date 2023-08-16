@@ -57,6 +57,7 @@ public class AuthService {
 
             final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
+            refreshStorage.clear();
             refreshStorage.put(authRequest.getEmail(), refreshToken);
             return new JwtResponse(accessToken, refreshToken);
         } else {
@@ -106,7 +107,6 @@ public class AuthService {
 
         refreshStorage.put(email, refreshToken);
 
-
     }
 
     public JwtResponse getAccessToken(@NonNull String refreshToken) {
@@ -139,11 +139,12 @@ public class AuthService {
                         .orElseThrow(() -> new AuthException("User not found"));
                 final String accessToken = jwtProvider.generateAccessToken(user);
                 final String newRefreshToken = jwtProvider.generateRefreshToken(user);
+                refreshStorage.clear();
                 refreshStorage.put(user.getEmail(), newRefreshToken);
                 return new JwtResponse(accessToken, newRefreshToken);
             }
         }
-        throw new AuthException("JWT token is invalid");
+        return new JwtResponse(null, null);
     }
 
     public JwtAuthentication getAuthInfo() {
