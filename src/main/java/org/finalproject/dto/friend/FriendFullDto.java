@@ -1,6 +1,7 @@
 package org.finalproject.dto.friend;
 
 import lombok.*;
+import org.finalproject.dto.UserDto;
 import org.finalproject.entity.User;
 import java.util.List;
 
@@ -14,8 +15,8 @@ public class FriendFullDto {
 
     private Long id;
     private String status;
-    private User user;
-    private User friend;
-    private List<User> mutualFriends;
+    private UserDto user;
+    private UserDto friend;
+    private List<UserDto> mutualFriends;
 
 }

@@ -124,7 +124,10 @@ public class FriendRestController {
             List<FriendSuggestionsDto> friendSuggestions = users.stream()
                     .map(friendSuggestionsDtoMapper::convertToDto)
                     .map(el -> {
-                        el.setMutualFriends(defaultFriendService.getMutualFriends(user.getId(), el.getFriend().getId()));
+                        el.setMutualFriends(defaultFriendService.getMutualFriends(user.getId(), el.getFriend().getId())
+                                .stream()
+                                .map(fr -> userDtoMapper.convertToDto(fr))
+                                .toList());
                         return el;
                     })
                     .collect(Collectors.toList());
