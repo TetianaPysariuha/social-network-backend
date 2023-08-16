@@ -35,7 +35,7 @@ public class PostRestController {
     private final PostDtoMapper dtoMapper;
     private final DefaultUserService userService;
     private final AuditorAwareImpl auditorAwareImpl;
-    private final RabbitMQProducerServiceImpl RabbitMQProducerServiceImpl;
+    private final RabbitMQProducerServiceImpl rabbitMQProducerServiceImpl;
     private final FileUpload fileUpload;
 
 
@@ -63,9 +63,9 @@ public class PostRestController {
             commentedPost.getComments().add(newCommentPost);
             postService.save(newCommentPost);
             postService.save(commentedPost);
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            String postJson = objectMapper.writeValueAsString(newCommentPost);
-//            RabbitMQProducerServiceImpl.sendMessage(postJson, "commentRoutingKey");
+            //ObjectMapper objectMapper = new ObjectMapper();
+            //String postJson = objectMapper.writeValueAsString(newCommentPost);
+            //RabbitMQProducerServiceImpl.sendMessage(postJson, "commentRoutingKey");
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -161,9 +161,9 @@ public class PostRestController {
                 postService.save(post);
 
                 ObjectMapper objectMapper = new ObjectMapper();
-//
-//                String postJson = "{\"loggedUserId\":" + loggedUser.getId() + ", \"postId\":" + postId + "}";
-//                RabbitMQProducerServiceImpl.sendMessage(postJson, "commentRoutingKey");
+
+                //String postJson = "{\"loggedUserId\":" + loggedUser.getId() + ", \"postId\":" + postId + "}";
+                //RabbitMQProducerServiceImpl.sendMessage(postJson, "commentRoutingKey");
                 return true;
             } else {
                 return false;
