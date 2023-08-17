@@ -180,6 +180,7 @@ public class FriendRestController {
 
     @PutMapping
     public ResponseEntity<?> changeStatus(@RequestBody FriendChangeStatusRequestDto requestForChange) throws JsonProcessingException {
+        System.out.println(requestForChange);
         Friend result;
         try {
             result = defaultFriendService.changeStatus(requestForChange.getId(), requestForChange.getStatus());

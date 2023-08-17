@@ -39,8 +39,9 @@ public interface FriendJpaRepository extends RepositoryInterface<Friend>, JpaSpe
     List<Friend> getFriendByBothID(Long userId, Long friendId);
 
     @Query("select f from Friend f " +
-            "where :userId in (f.friend.id, f.user.id) " +
-            "and (upper(f.friend.fullName) like concat('%', upper(:namePart), '%') " +
-            "or upper(f.user.fullName) like concat('%', upper(:namePart), '%'))")
+            "where f.status = 'accepted' " +
+            "and :userId in (f.friend.id, f.user.id) " +
+            "and (upper(f.friend.fullName) like upper(concat('%', :namePart, '%')) " +
+            "or upper(f.user.fullName) like upper(concat('%', :namePart, '%')))")
     List<Friend> getFriendByUserIdFriendName(Long userId, String namePart);
 }
