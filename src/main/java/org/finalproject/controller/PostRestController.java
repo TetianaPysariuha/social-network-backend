@@ -189,6 +189,9 @@ public class PostRestController {
 
     @PostMapping
     public void create(@RequestBody PostRequestDto post) {
+
+        //fileUpload.uploadPostFile()
+        //Post newPost = new Post(fileUpload.uploadPostFile());
         postService.save(dtoMapper.convertToEntity(post));
     }
 
