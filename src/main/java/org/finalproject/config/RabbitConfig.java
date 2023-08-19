@@ -12,11 +12,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig {
 
-    @Value("{rabbitUserAndVHost}")
+    @Value("{rabbitUserAndVHost:user}")
     private String rabbitUserAndVHost;
-    @Value("{rabbitPass}")
+    @Value("{rabbitPass:password}")
     private String rabbitPass;
-    @Value("{cloudamqp_url}")
+    @Value("{cloudamqp_url:http://localhost:15672}")
     private String cloudamqpUrl;
 
     @Bean
