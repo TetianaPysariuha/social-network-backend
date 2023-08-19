@@ -1,7 +1,7 @@
 package org.finalproject.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.finalproject.dto.*;
+import org.finalproject.dto.UserDtoMapper;
 import org.finalproject.dto.chat.ChatDto;
 import org.finalproject.dto.chat.ChatDtoMapper;
 import org.finalproject.dto.chat.ChatDtoRequest;
@@ -161,6 +161,29 @@ public class ChatRestController {
             User user = userService.getByEmail(auth).get();
             List<ChatSpecDto> chatSpecDtoList = defaultChatService.getChatsForUserExceptUserId(user.getId());
             return ResponseEntity.ok().body(chatSpecDtoList);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<?> createNewChat(@PathVariable("id") Long userId) {
+
+        try {
+            String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+            User loggedUser = userService.getByEmail(auth).get();
+            List<ChatSpecDto> chats = defaultChatService.findChatsByParticipant(userId, loggedUser.getId());
+            if (chats.isEmpty()) {
+                User user = generalService.getOne(userId);
+                List<User> userList = new ArrayList<>();
+                userList.add(loggedUser);
+                userList.add(user);
+                Chat chat = new Chat(userList);
+                ChatDto chatDto = chatDtoMapper.decorateDto(chat);
+                return ResponseEntity.ok().body(chatDto);
+            } else {
+                return ResponseEntity.ok().body(chats);
+            }
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

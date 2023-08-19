@@ -66,9 +66,9 @@ public class MessageRestController {
             Message messageEntity = messageDtoMapper.convertToEntity(messageDtoRequest);
             messageEntity.setSender(user);
             messageService.save(messageEntity);
-            ObjectMapper objectMapper = new ObjectMapper();
-            String message = objectMapper.writeValueAsString(messageDtoRequest);
-            rabbit.sendMessage(message, "messageRoutingKey");
+            //            ObjectMapper objectMapper = new ObjectMapper();
+            //            String message = objectMapper.writeValueAsString(messageDtoRequest);
+            //            rabbit.sendMessage(message, "messageRoutingKey");
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
