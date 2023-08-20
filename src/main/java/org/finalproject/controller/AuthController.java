@@ -52,9 +52,12 @@ public class AuthController {
 
 
     @PostMapping("login")
-    public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest authRequest) {
+    public ResponseEntity<?> login(@RequestBody JwtRequest authRequest) {
+        try{
         final JwtResponse token = authService.login(authRequest);
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok(token);}catch (Exception e){
+            return ResponseEntity.badRequest().body("Incorrect login or password");
+        }
     }
 
     @PostMapping("registration")
