@@ -15,6 +15,7 @@ import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = {"id", "user"})
 @Getter
 @Setter
 @Entity
