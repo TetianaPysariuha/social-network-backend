@@ -10,9 +10,6 @@ import java.util.List;
 
 public interface FriendJpaRepository extends RepositoryInterface<Friend>, JpaSpecificationExecutor<Friend> {
 
-    @Query(value = "select f from Friend f where f.friend.id in (:id) or f.user.id in (:id) ")
-    List<Friend> findFriends(@Param("id")  Long id );
-
     @Query("select f from Friend f where :userId in (f.friend.id, f.user.id)")
     List<Friend> friendsOfUser(Long userId);
 
@@ -39,8 +36,9 @@ public interface FriendJpaRepository extends RepositoryInterface<Friend>, JpaSpe
     List<Friend> getFriendByBothID(Long userId, Long friendId);
 
     @Query("select f from Friend f " +
-            "where :userId in (f.friend.id, f.user.id) " +
-            "and (upper(f.friend.fullName) like concat('%', upper(:namePart), '%') " +
-            "or upper(f.user.fullName) like concat('%', upper(:namePart), '%'))")
+            "where f.status = 'accepted' " +
+            "and :userId in (f.friend.id, f.user.id) " +
+            "and (upper(f.friend.fullName) like upper(concat('%', :namePart, '%')) " +
+            "or upper(f.user.fullName) like upper(concat('%', :namePart, '%')))")
     List<Friend> getFriendByUserIdFriendName(Long userId, String namePart);
 }

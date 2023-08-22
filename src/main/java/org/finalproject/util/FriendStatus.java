@@ -1,4 +1,4 @@
-package org.finalproject.utilites;
+package org.finalproject.util;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
