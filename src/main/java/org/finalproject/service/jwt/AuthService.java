@@ -5,6 +5,7 @@ package org.finalproject.service.jwt;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.*;
 import org.finalproject.entity.User;
 import org.finalproject.exception.AuthException;
@@ -32,6 +33,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Getter
 @Setter
+@Transactional
 @AllArgsConstructor
 public class AuthService {
     @Autowired
@@ -57,8 +59,11 @@ public class AuthService {
 
             final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
-            refreshStorage.clear();
-            refreshStorage.put(authRequest.getEmail(), refreshToken);
+           if (refreshStorage.containsKey(authRequest.getEmail())) {
+               return new JwtResponse(accessToken, refreshStorage.get(authRequest.getEmail()));
+
+           }
+           refreshStorage.put(authRequest.getEmail(), refreshToken);
             return new JwtResponse(accessToken, refreshToken);
         } else {
             throw new AuthException("Password is incorrect");
@@ -139,7 +144,6 @@ public class AuthService {
                         .orElseThrow(() -> new AuthException("User not found"));
                 final String accessToken = jwtProvider.generateAccessToken(user);
                 final String newRefreshToken = jwtProvider.generateRefreshToken(user);
-                refreshStorage.clear();
                 refreshStorage.put(user.getEmail(), newRefreshToken);
                 return new JwtResponse(accessToken, newRefreshToken);
             }

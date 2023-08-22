@@ -13,7 +13,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @MappedSuperclass
 @Setter(AccessLevel.PUBLIC)
 @Getter(AccessLevel.PUBLIC)
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(of = {"id"})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
