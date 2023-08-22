@@ -162,16 +162,16 @@ public class PostRestController {
 
     @GetMapping
     public List<PostDto> getAll() {
-        List<Post> postList = postService.findAll();
+        List<Post> postList = postService.findAllPosts();
         List<PostDto> postDtoList = postList.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
         return postDtoList;
     }
 
     @GetMapping("/{page}/{size}")
     public ResponseEntity<?> findAll(@PathVariable Integer page, @PathVariable Integer size) {
-        Sort sort =  Sort.by(new Sort.Order(Sort.Direction.ASC,"id"));
+        Sort sort =  Sort.by(new Sort.Order(Sort.Direction.DESC,"id"));
         Pageable pageable = PageRequest.of(page,size,sort);
-        Page posts = postService.findAll(pageable);
+        Page posts = postService.findAllPosts(pageable);
         List<Post> postList =  posts.toList();
         List<PostDto> userDtoList = postList.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
 

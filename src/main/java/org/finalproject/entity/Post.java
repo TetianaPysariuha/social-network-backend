@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.annotations.Where;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,6 +22,7 @@ import java.util.Set;
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "posts")
+//@Where(clause = "post_type = 'post'")
 public class Post extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -34,6 +36,7 @@ public class Post extends BaseEntity{
     private Post parentId;
 
   @OneToMany(cascade = {CascadeType.REMOVE },fetch = FetchType.EAGER,mappedBy = "parentId")
+  @Where(clause = "post_type = 'comment'")
     private List<Post> comments = new ArrayList<>();
     @ManyToMany(fetch = FetchType.EAGER,mappedBy = "likedPosts")
     private List<User> likes;
