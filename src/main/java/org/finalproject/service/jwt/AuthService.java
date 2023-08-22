@@ -5,6 +5,7 @@ package org.finalproject.service.jwt;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import lombok.*;
 import org.finalproject.entity.User;
 import org.finalproject.exception.AuthException;
@@ -32,6 +33,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Getter
 @Setter
+@Transactional
 @AllArgsConstructor
 public class AuthService {
     @Autowired

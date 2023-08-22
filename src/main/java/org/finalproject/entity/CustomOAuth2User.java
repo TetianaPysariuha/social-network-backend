@@ -1,6 +1,7 @@
 package org.finalproject.entity;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
@@ -9,6 +10,7 @@ import java.util.Map;
 
 
 @Data
+@EqualsAndHashCode
 
 public class CustomOAuth2User implements OAuth2User{
 

@@ -80,9 +80,9 @@ public class PostRestController {
                 return false;
             }
             Post newPost = new Post(loggedUser, "post", content, repostedPost);
-            loggedUser.getReposts().add(newPost);
+            //  loggedUser.getReposts().add(newPost);
             postService.save(newPost);
-            userService.save(loggedUser);
+            //  userService.save(loggedUser);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
