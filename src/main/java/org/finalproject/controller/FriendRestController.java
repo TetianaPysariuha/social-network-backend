@@ -11,15 +11,19 @@ import org.finalproject.entity.Friend;
 import org.finalproject.entity.User;
 import org.finalproject.service.DefaultFriendService;
 import org.finalproject.service.jwt.UserService;
+import org.finalproject.util.FriendStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -47,14 +51,16 @@ public class FriendRestController {
     public ResponseEntity<?> findAll(@PathVariable Integer page, @PathVariable Integer size) {
         Sort sort =  Sort.by(new Sort.Order(Sort.Direction.ASC,"id"));
         Pageable pageable = PageRequest.of(page,size,sort);
-        Page friends = defaultFriendService.findAll(pageable);
-        List<Friend> friendList =  friends.toList();
-        List<FriendFullDto> friendDtoList = friendList.stream().map(friendFullDtoMapper::convertToDto).collect(Collectors.toList());
+        List<FriendFullDto> friendDtoList = defaultFriendService.findAll(pageable)
+                .toList()
+                .stream()
+                .map(friendFullDtoMapper::convertToDto)
+                .collect(Collectors.toList());
         return ResponseEntity.ok(friendDtoList);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?>  getById(@PathVariable("id")  Long  userId) {
+    public ResponseEntity<?> getById(@PathVariable("id")  Long  userId) {
         Friend friend = defaultFriendService.getOne(userId );
         if (friend   == null) {
             return ResponseEntity.badRequest().body("Employer not found");
@@ -63,99 +69,114 @@ public class FriendRestController {
     }
 
     @GetMapping("/{userId}/friends")
-    public ResponseEntity<?>  getFriends(@PathVariable("userId")  Long  userId) {
-        List<Friend> friends = defaultFriendService.friendsOfUser(userId);
-        List<FriendDto> usersFriends = friends.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
+    public ResponseEntity<?> getFriends(@PathVariable("userId")  Long  userId) {
+        List<FriendDto> usersFriends = defaultFriendService.friendsOfUser(userId)
+                .stream()
+                .map(dtoMapper::convertToDto)
+                .collect(Collectors.toList());
         return ResponseEntity.ok().body(usersFriends);
     }
 
     @PostMapping("/search")
     public ResponseEntity<?> getFriendsByName(@RequestBody String parametersJson) throws JsonProcessingException {
         String auth  = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        try {
-            User user = userService.getByEmail(auth).get();
+        Optional<User> user = userService.getByEmail(auth);
+        if (user.isPresent()) {
             ObjectMapper mapper = new ObjectMapper();
-
-            System.out.println(parametersJson);
 
             JsonNode nameNodeAccountNumber = mapper.readTree(parametersJson);
             String friendName = nameNodeAccountNumber.get("friendName").asText();
 
-            System.out.println(friendName);
-            System.out.println(user.getId());
-
-
-            List<Friend> friends = defaultFriendService.getFriendByName(user.getId(), friendName);
-            List<FriendDto> usersFriends = friends.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
+            List<FriendDto> usersFriends = defaultFriendService.getFriendByName(user.get().getId(), friendName)
+                    .stream()
+                    .map(dtoMapper::convertToDto)
+                    .collect(Collectors.toList());
             return ResponseEntity.ok().body(usersFriends);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
         }
+        return ResponseEntity.badRequest().body("Unauthorized user");
     }
 
     @GetMapping("/userFriends")
-    public ResponseEntity<?>  getUserFriends() {
+    public ResponseEntity<?> getUserFriends() {
         String auth  = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        User user = userService.getByEmail(auth).get();
-        List<Friend> friends = defaultFriendService.friendsOfUser(user.getId());
-        List<FriendDto> usersFriends = friends.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
-        return ResponseEntity.ok().body(usersFriends);
+        Optional<User> user = userService.getByEmail(auth);
+        if (user.isPresent()) {
+            List<FriendDto> usersFriends = defaultFriendService.friendsOfUser(user.get().getId())
+                    .stream()
+                    .map(dtoMapper::convertToDto)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok().body(usersFriends);
+        }
+        return ResponseEntity.badRequest().body("Unauthorized user");
     }
 
     @GetMapping("/requests")
-    public ResponseEntity<?>  getRequests() {
+    public ResponseEntity<?> getRequests() {
         String auth  = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        try {
-            User user = userService.getByEmail(auth).get();
-            List<Friend> friends = defaultFriendService.friendshipRequests(user.getId());
-            List<FriendFullDto> friendRequests = friends.stream().map(friendFullDtoMapper::convertToDto).toList();
+        Optional<User> user = userService.getByEmail(auth);
+        if (user.isPresent()) {
+            List<FriendFullDto> friendRequests = defaultFriendService.friendshipRequests(user.get().getId())
+                    .stream()
+                    .map(friendFullDtoMapper::convertToDto)
+                    .toList();
             return ResponseEntity.ok().body(friendRequests);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
         }
+        return ResponseEntity.badRequest().body("Unauthorized user");
+
     }
 
     @GetMapping("/suggestions")
-    public ResponseEntity<?>  getSuggestions() {
+    public ResponseEntity<?> getSuggestions() {
         String auth  = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        try {
-            User user = userService.getByEmail(auth).get();
-            List<User> users = defaultFriendService.suggestedUsersForFriendship(user.getId());
-            List<FriendSuggestionsDto> friendSuggestions = users.stream()
+        Optional<User> user = userService.getByEmail(auth);
+        if (user.isPresent()) {
+            List<FriendSuggestionsDto> friendSuggestions = defaultFriendService.suggestedUsersForFriendship(user.get().getId())
+                    .stream()
                     .map(friendSuggestionsDtoMapper::convertToDto)
                     .map(el -> {
-                        el.setMutualFriends(defaultFriendService.getMutualFriends(user.getId(), el.getFriend().getId())
+                        el.setMutualFriends(defaultFriendService.getMutualFriends(user.get().getId(), el.getFriend().getId())
                                 .stream()
-                                .map(fr -> userDtoMapper.convertToDto(fr))
+                                .map(userDtoMapper::convertToDto)
                                 .toList());
                         return el;
                     })
                     .collect(Collectors.toList());
             return ResponseEntity.ok().body(friendSuggestions);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
         }
+        return ResponseEntity.badRequest().body("Unauthorized user");
     }
 
-    /*@PostMapping
-    public ResponseEntity<?> create(@RequestBody FriendRequestDto friend ) {
-        Friend newFriend = defaultFriendService.save(dtoMapper.convertToEntity(friend) );
-        return ResponseEntity.ok().body(newFriend);
-    }*/
+    @GetMapping("/birthdays")
+    public ResponseEntity<?> getBirthdays() {
+        String auth  = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        Optional<User> user = userService.getByEmail(auth);
+        if (user.isPresent()) {
+            List<List<FriendFullDto>> birthdays = new ArrayList<>();
+            for (int i = 0; i < 12; i++) {
+                int finalI = (i + (new Date()).getMonth()) % 12;
+                birthdays.add(defaultFriendService.friendsOfUser(user.get().getId())
+                        .stream()
+                        .filter(fr -> fr.getFriend().getBirthDate() != null && fr.getFriend().getBirthDate().getMonth() == finalI
+                                && fr.getStatus() == FriendStatus.accepted)
+                        .map(friendFullDtoMapper::convertToDto).toList());
+            }
+            return ResponseEntity.ok().body(birthdays);
+        }
+        return ResponseEntity.badRequest().body("Unauthorized user");
+    }
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody String parametersJson ) throws JsonProcessingException {
         String auth  = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        try {
-            User user = userService.getByEmail(auth).get();
+        Optional<User> user = userService.getByEmail(auth);
+        if (user.isPresent()) {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode nameNodeAccountNumber = mapper.readTree(parametersJson);
             Long friendId = Long.parseLong(nameNodeAccountNumber.get("friendId").asText());
-            Friend newFriend = defaultFriendService.saveNewById(user.getId(), friendId);
+            Friend newFriend = defaultFriendService.saveNewById(user.get().getId(), friendId);
             return ResponseEntity.ok().body(friendFullDtoMapper.convertToDto(newFriend));
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
         }
+        return ResponseEntity.badRequest().body("Unauthorized user");
     }
 
     @DeleteMapping("/{id}")
@@ -180,7 +201,6 @@ public class FriendRestController {
 
     @PutMapping
     public ResponseEntity<?> changeStatus(@RequestBody FriendChangeStatusRequestDto requestForChange) throws JsonProcessingException {
-        System.out.println(requestForChange);
         Friend result;
         try {
             result = defaultFriendService.changeStatus(requestForChange.getId(), requestForChange.getStatus());
