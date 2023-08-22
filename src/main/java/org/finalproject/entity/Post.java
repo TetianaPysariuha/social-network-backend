@@ -22,7 +22,6 @@ import java.util.Set;
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "posts")
-//@Where(clause = "post_type = 'post'")
 public class Post extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "user_id")
