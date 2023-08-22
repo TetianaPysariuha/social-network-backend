@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/friends")
 @CrossOrigin(origins = {"http://127.0.0.1:5173"})
 public class FriendRestController {
-    //private final GeneralService<Friend> friendService;
     @Autowired
     private DefaultFriendService defaultFriendService;
     private final FriendDtoMapper dtoMapper;
@@ -122,7 +121,6 @@ public class FriendRestController {
             return ResponseEntity.ok().body(friendRequests);
         }
         return ResponseEntity.badRequest().body("Unauthorized user");
-
     }
 
     @GetMapping("/suggestions")
