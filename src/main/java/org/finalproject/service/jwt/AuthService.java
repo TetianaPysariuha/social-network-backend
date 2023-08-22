@@ -62,9 +62,10 @@ public class AuthService {
            if (refreshStorage.containsKey(authRequest.getEmail())) {
                return new JwtResponse(accessToken, refreshStorage.get(authRequest.getEmail()));
 
-           }
+           } else {
            refreshStorage.put(authRequest.getEmail(), refreshToken);
             return new JwtResponse(accessToken, refreshToken);
+           }
         } else {
             throw new AuthException("Password is incorrect");
         }
