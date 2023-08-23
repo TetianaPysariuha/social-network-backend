@@ -57,14 +57,13 @@ public class AuthService {
                 .orElseThrow(() -> new AuthException("User not found"));
         if (passwordEncoder.matches(authRequest.getPassword(), user.getPassword())) {
 
-            final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
            if (refreshStorage.containsKey(authRequest.getEmail())) {
-               return new JwtResponse(accessToken, refreshStorage.get(authRequest.getEmail()));
+               return new JwtResponse(jwtProvider.generateAccessToken(user), refreshStorage.get(authRequest.getEmail()));
 
            } else {
            refreshStorage.put(authRequest.getEmail(), refreshToken);
-            return new JwtResponse(accessToken, refreshToken);
+            return new JwtResponse(jwtProvider.generateAccessToken(user), refreshToken);
            }
         } else {
             throw new AuthException("Password is incorrect");
