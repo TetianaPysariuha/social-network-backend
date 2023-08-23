@@ -4,7 +4,6 @@ import org.finalproject.entity.Friend;
 import org.finalproject.entity.User;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -38,7 +37,7 @@ public interface FriendJpaRepository extends RepositoryInterface<Friend>, JpaSpe
     @Query("select f from Friend f " +
             "where f.status = 'accepted' " +
             "and :userId in (f.friend.id, f.user.id) " +
-            "and (upper(f.friend.fullName) like upper(concat('%', :namePart, '%')) " +
-            "or upper(f.user.fullName) like upper(concat('%', :namePart, '%')))")
+            "and ((upper(f.friend.fullName) like upper(concat('%', :namePart, '%')) and f.friend.id <> :userId) " +
+            "or (upper(f.user.fullName) like upper(concat('%', :namePart, '%')) and f.user.id <> :userId))")
     List<Friend> getFriendByUserIdFriendName(Long userId, String namePart);
 }
