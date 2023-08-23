@@ -45,6 +45,8 @@ public class UserRestController {
 
     private final DefaultUserService defaultUserService;
 
+    private final GeneralService<UserImage> imageService;
+
     private final UserDtoMapper dtoMapper;
 
     private final PostDtoMapper postMapper;
@@ -200,6 +202,9 @@ public class UserRestController {
      userImages.add(newImage);
      user.setUserImages(userImages);
         userService.save(user );
+        newImage.setUser(user);
+        newImage.setUserId(user.getId());
+              imageService.save(newImage);
     }
 
     @PostMapping("/{id}/avatar")
