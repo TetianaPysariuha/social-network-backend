@@ -63,7 +63,9 @@ public class AuthService {
 
            } else {
            refreshStorage.put(authRequest.getEmail(), refreshToken);
+
             return new JwtResponse(jwtProvider.generateAccessToken(user), refreshToken);
+
            }
         } else {
             throw new AuthException("Password is incorrect");
