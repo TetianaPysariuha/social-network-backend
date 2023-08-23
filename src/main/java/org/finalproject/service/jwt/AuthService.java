@@ -136,7 +136,7 @@ public class AuthService {
     }
 
     public JwtResponse refresh(@NonNull String refreshToken) {
-        if (jwtProvider.validateRefreshToken(refreshToken)) {
+
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             final String email = claims.getSubject();
             final String saveRefreshToken = refreshStorage.get(email);
@@ -147,9 +147,11 @@ public class AuthService {
                 final String newRefreshToken = jwtProvider.generateRefreshToken(user);
                 refreshStorage.put(user.getEmail(), newRefreshToken);
                 return new JwtResponse(accessToken, newRefreshToken);
+            } else {
+                return new JwtResponse(null, null);
             }
-        }
-        return new JwtResponse(null, null);
+
+
     }
 
     public JwtAuthentication getAuthInfo() {
