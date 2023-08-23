@@ -1,8 +1,10 @@
 package org.finalproject.dto;
 
 import lombok.*;
+import org.finalproject.entity.UserImage;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,5 +34,7 @@ public class UserDto {
     private String about;
 
     private String profileBackgroundPicture;
+
+    private List<UserImage> userImages;
 
 }
