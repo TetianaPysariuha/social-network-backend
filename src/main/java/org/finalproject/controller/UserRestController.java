@@ -61,7 +61,6 @@ public class UserRestController {
 
 
 
-
     @GetMapping
     public List<UserDto> getAll() {
 
