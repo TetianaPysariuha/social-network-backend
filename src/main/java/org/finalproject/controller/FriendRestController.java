@@ -82,10 +82,8 @@ public class FriendRestController {
         Optional<User> user = userService.getByEmail(auth);
         if (user.isPresent()) {
             ObjectMapper mapper = new ObjectMapper();
-
             JsonNode nameNodeAccountNumber = mapper.readTree(parametersJson);
             String friendName = nameNodeAccountNumber.get("friendName").asText();
-
             List<FriendDto> usersFriends = defaultFriendService.getFriendByName(user.get().getId(), friendName)
                     .stream()
                     .map(dtoMapper::convertToDto)
