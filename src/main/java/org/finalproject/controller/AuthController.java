@@ -61,6 +61,21 @@ public class AuthController {
         }
     }
 
+@PostMapping("renew")
+
+public ResponseEntity<?> returnRefresh(@RequestParam String refresh) {
+
+
+    try {
+     String token =   authService.returnRefresh(refresh);
+        return ResponseEntity.ok(token);
+    } catch (Exception e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+}
+
+
+
     @PostMapping("registration")
     public ResponseEntity<?> register(@RequestBody RegisterRequest authRequest) {
         Optional<User> existingUser = service.getByEmail(authRequest.getEmail());

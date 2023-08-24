@@ -155,6 +155,15 @@ public class AuthService {
 
     }
 
+    public String returnRefresh( String refresh) {
+
+        final Claims claims = jwtProvider.getRefreshClaims(refresh);
+        final String email = claims.getSubject();
+        refreshStorage.put(email,refresh);
+        return refreshStorage.get(email);
+
+    }
+
     public JwtAuthentication getAuthInfo() {
         return (JwtAuthentication) SecurityContextHolder.getContext().getAuthentication();
     }
