@@ -26,4 +26,12 @@ public class DefaultChatService extends GeneralService<Chat> {
                 .collect(Collectors.toList());
     }
 
+    public List<ChatSpecDto> findChatsByParticipant(Long userId, Long loggedUserId) {
+
+        List<ChatSpecProjection> projections = chatRepository.findChatsByParticipant(userId, loggedUserId);
+        return projections.stream()
+                .map(ChatSpecDto::fromProjection)
+                .collect(Collectors.toList());
+    }
+
 }

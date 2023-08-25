@@ -1,7 +1,7 @@
 package org.finalproject.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.finalproject.dto.*;
+import org.finalproject.dto.UserDtoMapper;
 import org.finalproject.dto.chat.ChatDto;
 import org.finalproject.dto.chat.ChatDtoMapper;
 import org.finalproject.dto.chat.ChatDtoRequest;
@@ -30,6 +30,7 @@ public class ChatRestController {
 
     private final GeneralService<Chat> chatService;
     private final DefaultChatService defaultChatService;
+    private final GeneralService<User> userGeneralService;
 
     private final UserService userService;
     private final GeneralService<User> generalService;
@@ -133,20 +134,36 @@ public class ChatRestController {
         }
     }
 
-    @PutMapping("/{id}/participants")
-    public ResponseEntity<?> addUsers(@PathVariable Long id) {
+    //    @PutMapping("/{id}/participants")
+    //    public ResponseEntity<?> addUsers(@PathVariable Long id) {
+    //
+    //        String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+    //        User user = userService.getByEmail(auth).get();
+    //        try {
+    //            Chat chat = chatService.getOne(id);
+    //            List<User> userList = chat.getUsers();
+    //            userList.add(user);
+    //            chat.setUsers(userList);
+    //            List<Chat> userChats = user.getChats();
+    //            userChats.add(chat);
+    //            user.setChats(userChats);
+    //            generalService.save(user);
+    //            return ResponseEntity.ok().build();
+    //        } catch (RuntimeException e) {
+    //            return ResponseEntity.badRequest().body(e.getMessage());
+    //        }
+    //    }
 
-        String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        User user = userService.getByEmail(auth).get();
+    @PutMapping("/{id}/participants/{userId}")
+    public ResponseEntity<?> addUsers(@PathVariable("id") Long chatId, @PathVariable("userId") Long userId) {
+
         try {
-            Chat chat = chatService.getOne(id);
+            Chat chat = chatService.getOne(chatId);
+            User user = userGeneralService.getOne(userId);
             List<User> userList = chat.getUsers();
             userList.add(user);
             chat.setUsers(userList);
-            List<Chat> userChats = user.getChats();
-            userChats.add(chat);
-            user.setChats(userChats);
-            generalService.save(user);
+            chatService.save(chat);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -161,6 +178,29 @@ public class ChatRestController {
             User user = userService.getByEmail(auth).get();
             List<ChatSpecDto> chatSpecDtoList = defaultChatService.getChatsForUserExceptUserId(user.getId());
             return ResponseEntity.ok().body(chatSpecDtoList);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/search/{id}")
+    public ResponseEntity<?> createNewChat(@PathVariable("id") Long userId) {
+
+        try {
+            String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+            User loggedUser = userService.getByEmail(auth).get();
+            List<ChatSpecDto> chats = defaultChatService.findChatsByParticipant(userId, loggedUser.getId());
+            if (chats.isEmpty()) {
+                User user = generalService.getOne(userId);
+                List<User> userList = new ArrayList<>();
+                userList.add(loggedUser);
+                userList.add(user);
+                Chat chat = new Chat(userList);
+                ChatDto chatDto = chatDtoMapper.decorateDto(chat);
+                return ResponseEntity.ok().body(chatDto);
+            } else {
+                return ResponseEntity.ok().body(chats);
+            }
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
