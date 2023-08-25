@@ -23,6 +23,7 @@ public class User extends BaseEntity {
     private String fullName;
 
     private String email;
+    @JsonIgnore
     private String password;
     @Column(name = "birth_date")
     private Date birthDate;

@@ -24,7 +24,7 @@ import java.util.Date;
 @Component
 public class JwtProvider {
 
-    public static final int ACCESS_LEAVE_MINUTES = 20;
+    public static final int ACCESS_LEAVE_MINUTES = 30;
     public static final int REFRESH_LEAVE_DAYS = 30;
     private final SecretKey jwtAccessSecret;
     private final SecretKey jwtRefreshSecret;
