@@ -24,7 +24,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -124,7 +126,12 @@ public class SecurityConfig {
                 .and()
 
 
-                .exceptionHandling().accessDeniedPage("/403")
+                .exceptionHandling().authenticationEntryPoint(new AuthenticationEntryPoint() {
+                    @Override
+                    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+                        response.setStatus(401);
+                    }
+                })
                 .and()
                 .authorizeHttpRequests(
                         authz -> authz

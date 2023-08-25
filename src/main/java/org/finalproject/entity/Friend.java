@@ -3,7 +3,7 @@ package org.finalproject.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-import org.finalproject.utilites.FriendStatus;
+import org.finalproject.util.FriendStatus;
 
 @AllArgsConstructor
 @NoArgsConstructor
