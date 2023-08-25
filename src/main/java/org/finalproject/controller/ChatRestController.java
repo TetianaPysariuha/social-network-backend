@@ -30,6 +30,7 @@ public class ChatRestController {
 
     private final GeneralService<Chat> chatService;
     private final DefaultChatService defaultChatService;
+    private final GeneralService<User> userGeneralService;
 
     private final UserService userService;
     private final GeneralService<User> generalService;
@@ -133,20 +134,36 @@ public class ChatRestController {
         }
     }
 
-    @PutMapping("/{id}/participants")
-    public ResponseEntity<?> addUsers(@PathVariable Long id) {
+    //    @PutMapping("/{id}/participants")
+    //    public ResponseEntity<?> addUsers(@PathVariable Long id) {
+    //
+    //        String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+    //        User user = userService.getByEmail(auth).get();
+    //        try {
+    //            Chat chat = chatService.getOne(id);
+    //            List<User> userList = chat.getUsers();
+    //            userList.add(user);
+    //            chat.setUsers(userList);
+    //            List<Chat> userChats = user.getChats();
+    //            userChats.add(chat);
+    //            user.setChats(userChats);
+    //            generalService.save(user);
+    //            return ResponseEntity.ok().build();
+    //        } catch (RuntimeException e) {
+    //            return ResponseEntity.badRequest().body(e.getMessage());
+    //        }
+    //    }
 
-        String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        User user = userService.getByEmail(auth).get();
+    @PutMapping("/{id}/participants/{userId}")
+    public ResponseEntity<?> addUsers(@PathVariable("id") Long chatId, @PathVariable("userId") Long userId) {
+
         try {
-            Chat chat = chatService.getOne(id);
+            Chat chat = chatService.getOne(chatId);
+            User user = userGeneralService.getOne(userId);
             List<User> userList = chat.getUsers();
             userList.add(user);
             chat.setUsers(userList);
-            List<Chat> userChats = user.getChats();
-            userChats.add(chat);
-            user.setChats(userChats);
-            generalService.save(user);
+            chatService.save(chat);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -166,7 +183,7 @@ public class ChatRestController {
         }
     }
 
-    @PostMapping("/{id}")
+    @GetMapping("/search/{id}")
     public ResponseEntity<?> createNewChat(@PathVariable("id") Long userId) {
 
         try {

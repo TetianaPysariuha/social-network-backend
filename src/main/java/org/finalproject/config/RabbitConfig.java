@@ -1,10 +1,14 @@
 package org.finalproject.config;
 
-import org.springframework.amqp.core.*;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,11 +16,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitConfig {
 
-    @Value("{rabbitUserAndVHost:user}")
+    @Value("${rabbitUserAndVHost:a}")
     private String rabbitUserAndVHost;
-    @Value("{rabbitPass:password}")
+    @Value("${rabbitPass:a}")
     private String rabbitPass;
-    @Value("{cloudamqp_url:http://localhost:15672}")
+    @Value("${cloudamqp_url:localhost}")
     private String cloudamqpUrl;
 
     @Bean
@@ -30,68 +34,118 @@ public class RabbitConfig {
     }
 
     @Bean
-    public AmqpAdmin amqpAdmin() {
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
 
-        return new RabbitAdmin(connectionFactory());
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        rabbitTemplate.setMessageConverter(converter());
+        return rabbitTemplate;
     }
 
     @Bean
-    public RabbitTemplate rabbitTemplate() {
+    public Queue messageQueue() {
 
-        return new RabbitTemplate(connectionFactory());
+        return new Queue("user-messages"); // Создание очереди
     }
 
     @Bean
-    public Queue queue1() {
+    public Queue notificationQueue() {
 
-        return new Queue("queueForMessage");
+        return new Queue("user-notification"); // Создание очереди
     }
 
     @Bean
-    public Queue queue2() {
+    public MessageConverter converter() {
 
-        return new Queue("queueForLike");
+        return new Jackson2JsonMessageConverter();
     }
 
     @Bean
-    public Queue queue3() {
+    public TopicExchange messagesExchange() {
 
-        return new Queue("queueForPost");
+        return new TopicExchange("messages-exchange"); // Создание обменника
     }
 
     @Bean
-    public Queue queue4() {
+    public TopicExchange notificationExchange() {
 
-        return new Queue("queueForComment");
+        return new TopicExchange("notification-exchange"); // Создание обменника
     }
 
     @Bean
-    DirectExchange exchange() {
+    public Binding messageBinding(Queue messageQueue, TopicExchange messagesExchange) {
 
-        return new DirectExchange("ExchangeRabbit", true, false);
+        return BindingBuilder.bind(messageQueue).to(messagesExchange).with("user.#");
     }
 
     @Bean
-    Binding binding1(Queue queue1, DirectExchange exchange) {
+    public Binding notificationBinding(Queue notificationQueue, TopicExchange notificationExchange) {
 
-        return BindingBuilder.bind(queue1).to(exchange).with("messageRoutingKey");
+        return BindingBuilder.bind(notificationQueue).to(notificationExchange).with("user.#");
     }
 
-    @Bean
-    Binding binding2(Queue queue2, DirectExchange exchange) {
-
-        return BindingBuilder.bind(queue2).to(exchange).with("likeRoutingKey");
-    }
-
-    @Bean
-    Binding binding3(Queue queue3, DirectExchange exchange) {
-
-        return BindingBuilder.bind(queue3).to(exchange).with("postRoutingKey");
-    }
-
-    @Bean
-    Binding binding4(Queue queue4, DirectExchange exchange) {
-
-        return BindingBuilder.bind(queue4).to(exchange).with("commentRoutingKey");
-    }
+//    @Bean
+//    public AmqpAdmin amqpAdmin() {
+//
+//        return new RabbitAdmin(connectionFactory());
+//    }
+//
+//    @Bean
+//    public RabbitTemplate rabbitTemplate() {
+//
+//        return new RabbitTemplate(connectionFactory());
+//    }
+//
+//    @Bean
+//    public Queue queue1() {
+//
+//        return new Queue("queueForMessage");
+//    }
+//
+//    @Bean
+//    public Queue queue2() {
+//
+//        return new Queue("queueForLike");
+//    }
+//
+//    @Bean
+//    public Queue queue3() {
+//
+//        return new Queue("queueForPost");
+//    }
+//
+//    @Bean
+//    public Queue queue4() {
+//
+//        return new Queue("queueForComment");
+//    }
+//
+//    @Bean
+//    DirectExchange exchange() {
+//
+//        return new DirectExchange("ExchangeRabbit", true, false);
+//    }
+//
+//    @Bean
+//    Binding binding1(Queue queue1, DirectExchange exchange) {
+//
+//        return BindingBuilder.bind(queue1).to(exchange).with("messageRoutingKey");
+//    }
+//
+//    @Bean
+//    Binding binding2(Queue queue2, DirectExchange exchange) {
+//
+//        return BindingBuilder.bind(queue2).to(exchange).with("likeRoutingKey");
+//    }
+//
+//    @Bean
+//    Binding binding3(Queue queue3, DirectExchange exchange) {
+//
+//        return BindingBuilder.bind(queue3).to(exchange).with("postRoutingKey");
+//    }
+//
+//    @Bean
+//    Binding binding4(Queue queue4, DirectExchange exchange) {
+//
+//        return BindingBuilder.bind(queue4).to(exchange).with("commentRoutingKey");
+//    }
 }

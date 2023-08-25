@@ -2,6 +2,7 @@ package org.finalproject.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.finalproject.dto.UserDto;
 import org.finalproject.dto.chat.MessageDto;
 import org.finalproject.dto.chat.MessageDtoMapper;
 import org.finalproject.dto.chat.MessageDtoRequest;
@@ -11,11 +12,13 @@ import org.finalproject.service.DefaultMessageService;
 import org.finalproject.service.GeneralService;
 import org.finalproject.service.RabbitMQProducerServiceImpl;
 import org.finalproject.service.jwt.UserService;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +33,8 @@ public class MessageRestController {
 
     private final GeneralService<Message> messageService;
     private final MessageDtoMapper messageDtoMapper;
-    private final RabbitMQProducerServiceImpl rabbit;
+
+    private final RabbitTemplate rabbitTemplate;
     private final UserService userService;
     private final DefaultMessageService defaultMessageService;
 
@@ -66,9 +70,11 @@ public class MessageRestController {
             Message messageEntity = messageDtoMapper.convertToEntity(messageDtoRequest);
             messageEntity.setSender(user);
             messageService.save(messageEntity);
-            //            ObjectMapper objectMapper = new ObjectMapper();
-            //            String message = objectMapper.writeValueAsString(messageDtoRequest);
-            //            rabbit.sendMessage(message, "messageRoutingKey");
+            //need to refactor for group chats
+            List<UserDto> users = messageDtoRequest.getChat().getUsers();
+            Long toUserId = users.get(0).getId();
+            rabbitTemplate.convertAndSend("messages-exchange", "user." + toUserId, messageDtoRequest.getContent());
+            rabbitTemplate.convertAndSend("notification-exchange", "user." + toUserId, messageDtoRequest);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -111,6 +117,7 @@ public class MessageRestController {
     }
 
     @PutMapping
+    @MessageMapping("/send")
     public ResponseEntity<?> update(@RequestBody MessageDtoRequest messageDtoRequest) throws IOException {
 
         try {
@@ -121,9 +128,11 @@ public class MessageRestController {
             messageEntity.setCreatedDate(messageService.getOne(messageEntity.getId()).getCreatedDate());
             messageEntity.setCreatedBy(messageService.getOne(messageEntity.getId()).getCreatedBy());
             messageService.save(messageEntity);
-            //            ObjectMapper objectMapper = new ObjectMapper();
-            //            String message = objectMapper.writeValueAsString(messageDtoRequest);
-            //            rabbit.sendMessage(message, "messageRoutingKey");
+            //need to refactor for group chats
+            List<UserDto> users = messageDtoRequest.getChat().getUsers();
+            Long toUserId = users.get(0).getId();
+            rabbitTemplate.convertAndSend("messages-exchange", "user." + toUserId, messageDtoRequest.getContent());
+            rabbitTemplate.convertAndSend("notification-exchange", "user." + toUserId, messageDtoRequest);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
