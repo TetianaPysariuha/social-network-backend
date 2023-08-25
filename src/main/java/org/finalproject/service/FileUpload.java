@@ -14,7 +14,6 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class FileUpload {
 
     private final Cloudinary cloudinary;
