@@ -27,9 +27,9 @@ public class RabbitConfig {
     public ConnectionFactory connectionFactory() {
 
         CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(cloudamqpUrl);
-        cachingConnectionFactory.setUsername(rabbitUserAndVHost);
-        cachingConnectionFactory.setPassword(rabbitPass);
-        cachingConnectionFactory.setVirtualHost(rabbitUserAndVHost);
+        // cachingConnectionFactory.setUsername(rabbitUserAndVHost);
+        // cachingConnectionFactory.setPassword(rabbitPass);
+        // cachingConnectionFactory.setVirtualHost(rabbitUserAndVHost);
         return cachingConnectionFactory;
     }
 
