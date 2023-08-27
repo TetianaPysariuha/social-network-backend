@@ -50,12 +50,10 @@ public class PostRestController {
         String content = requestBody.get("content");
         try {
             Post commentedPost = postService.getOne(postId);
-            System.out.println(content);
             if (commentedPost == null) {
                 log.warn("post is null");
                 return false;
             }
-            System.out.println(auditorAwareImpl.getCurrentAuditor().get());
             User loggedUser = userService.getByEmail(auditorAwareImpl.getCurrentAuditor().get()).orElse(null);
             if (loggedUser == null) {
                 log.warn("loggedUser is null");
@@ -122,9 +120,7 @@ public class PostRestController {
                 return false;
             }
 
-            System.out.println(loggedUser.getLikedPosts());
             if (post.removeLike(loggedUser)) {
-                System.out.println(loggedUser.getLikedPosts());
                 postService.save(post);
                 return true;
             } else {
