@@ -26,4 +26,9 @@ public class DefaultChatService extends GeneralService<Chat> {
                 .collect(Collectors.toList());
     }
 
+    public List<Chat> findChatsByParticipant(Long userId, Long loggedUserId) {
+
+        return chatRepository.findChatsByParticipant(userId, loggedUserId);
+    }
+
 }

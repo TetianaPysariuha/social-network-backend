@@ -57,14 +57,16 @@ public class AuthService {
                 .orElseThrow(() -> new AuthException("User not found"));
         if (passwordEncoder.matches(authRequest.getPassword(), user.getPassword())) {
 
-            final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
            if (refreshStorage.containsKey(authRequest.getEmail())) {
-               return new JwtResponse(accessToken, refreshStorage.get(authRequest.getEmail()));
+               return new JwtResponse(jwtProvider.generateAccessToken(user), refreshStorage.get(authRequest.getEmail()));
+
+           } else {
+           refreshStorage.put(authRequest.getEmail(), refreshToken);
+
+            return new JwtResponse(jwtProvider.generateAccessToken(user), refreshToken);
 
            }
-           refreshStorage.put(authRequest.getEmail(), refreshToken);
-            return new JwtResponse(accessToken, refreshToken);
         } else {
             throw new AuthException("Password is incorrect");
         }
@@ -135,7 +137,7 @@ public class AuthService {
     }
 
     public JwtResponse refresh(@NonNull String refreshToken) {
-        if (jwtProvider.validateRefreshToken(refreshToken)) {
+
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             final String email = claims.getSubject();
             final String saveRefreshToken = refreshStorage.get(email);
@@ -146,9 +148,20 @@ public class AuthService {
                 final String newRefreshToken = jwtProvider.generateRefreshToken(user);
                 refreshStorage.put(user.getEmail(), newRefreshToken);
                 return new JwtResponse(accessToken, newRefreshToken);
+            } else {
+                return new JwtResponse(null, null);
             }
-        }
-        return new JwtResponse(null, null);
+
+
+    }
+
+    public String returnRefresh( String refresh) {
+
+        final Claims claims = jwtProvider.getRefreshClaims(refresh);
+        final String email = claims.getSubject();
+        refreshStorage.put(email,refresh);
+        return refreshStorage.get(email);
+
     }
 
     public JwtAuthentication getAuthInfo() {

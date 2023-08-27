@@ -5,7 +5,7 @@ import org.finalproject.entity.Friend;
 import org.finalproject.facade.GeneralFacade;
 import org.finalproject.repository.UserJpaRepository;
 import org.finalproject.service.DefaultFriendService;
-import org.finalproject.utilites.FriendStatus;
+import org.finalproject.util.FriendStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

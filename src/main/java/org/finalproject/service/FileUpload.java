@@ -1,7 +1,7 @@
 package org.finalproject.service;
 
 import com.cloudinary.Cloudinary;
-import jakarta.transaction.Transactional;
+import com.cloudinary.utils.ObjectUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,17 +14,16 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class FileUpload {
 
     private final Cloudinary cloudinary;
 
     public String uploadUserFile(MultipartFile multipartFile, Long userId) throws IOException {
 
-        String folder = userId.toString().concat("/user images");
+        String folder = "/user_images/".concat(userId.toString());
         return cloudinary.uploader()
                 .upload(multipartFile.getBytes(),
-                        Map.of(folder, UUID.randomUUID().toString()))
+                        ObjectUtils.asMap("folder", folder))
                 .get("url")
                 .toString();
 
@@ -32,12 +31,12 @@ public class FileUpload {
 
     public List<String> uploadUseListOfrFiles(List<MultipartFile> multipartFiles, Long userId) throws IOException {
 
-        String folder = userId.toString().concat("/user images");
+        String folder = "/user_images/".concat(userId.toString());
         List<String> filesUrl = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {
             filesUrl.add(cloudinary.uploader()
                     .upload(multipartFile.getBytes(),
-                            Map.of(folder, UUID.randomUUID().toString()))
+                            ObjectUtils.asMap("folder", folder))
                     .get("url")
                     .toString());
         }
@@ -46,12 +45,12 @@ public class FileUpload {
 
     public List<String> uploadPostFile(List<MultipartFile> multipartFiles, Long postId) throws IOException {
 
-        String folder = postId.toString().concat("/post images");
+        String folder = "/post_images/".concat(postId.toString());
         List<String> filesUrl = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {
             filesUrl.add(cloudinary.uploader()
                     .upload(multipartFile.getBytes(),
-                            Map.of(folder, UUID.randomUUID().toString()))
+                            ObjectUtils.asMap("folder", folder))
                     .get("url")
                     .toString());
         }
@@ -61,12 +60,12 @@ public class FileUpload {
 
     public List<String> uploadMessageFile(List<MultipartFile> multipartFiles, Long messageId) throws IOException {
 
-        String folder = messageId.toString().concat("/message images");
+        String folder = "/message_images/".concat(messageId.toString());
         List<String> filesUrl = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {
             filesUrl.add(cloudinary.uploader()
                     .upload(multipartFile.getBytes(),
-                            Map.of(folder, UUID.randomUUID().toString()))
+                            ObjectUtils.asMap("folder", folder))
                     .get("url")
                     .toString());
         }
