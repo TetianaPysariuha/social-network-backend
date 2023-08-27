@@ -23,14 +23,20 @@ public class RabbitConfig {
     @Value("${cloudamqp_url:localhost}")
     private String cloudamqpUrl;
 
-    @Bean
-    public ConnectionFactory connectionFactory() {
+    // @Bean
+    // public ConnectionFactory connectionFactory() {
 
-        CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(cloudamqpUrl);
-        // cachingConnectionFactory.setUsername(rabbitUserAndVHost);
-        // cachingConnectionFactory.setPassword(rabbitPass);
-        // cachingConnectionFactory.setVirtualHost(rabbitUserAndVHost);
-        return cachingConnectionFactory;
+    //     CachingConnectionFactory cachingConnectionFactory = new CachingConnectionFactory(cloudamqpUrl);
+    //     // cachingConnectionFactory.setUsername(rabbitUserAndVHost);
+    //     // cachingConnectionFactory.setPassword(rabbitPass);
+    //     // cachingConnectionFactory.setVirtualHost(rabbitUserAndVHost);
+    //     return cachingConnectionFactory;
+    // }
+    @Bean
+    public CachingConnectionFactory connectionFactory() {
+        CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
+        connectionFactory.setUri("amqps://tnjaskux:CwZKUs5tzAcTPPlLIhT9vLxTWH7km98o@whale.rmq.cloudamqp.com/tnjaskux");
+        return connectionFactory;
     }
 
     @Bean
