@@ -35,6 +35,7 @@ public class PostDtoMapper extends GeneralFacade<Post, PostRequestDto, PostDto> 
         dto.setComments(entity.getComments().stream().map(this::decorateDtoComment).collect(Collectors.toList()));
         return dto;
     }
+
     protected UserDto decorateDtoUser(User entity) {
         UserDto dto = new UserDto();
         dto.setId(entity.getId());
