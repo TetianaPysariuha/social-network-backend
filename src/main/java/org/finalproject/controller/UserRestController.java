@@ -168,7 +168,7 @@ public class UserRestController {
         }
 
         List<Post> userPosts = user.getPosts();
-        List<PostDto> userPostsDto = userPosts.stream().map(postMapper::convertToDto).collect(Collectors.toList());
+        List<PostDto> userPostsDto = userPosts.stream().map(postMapper::decorateDto).collect(Collectors.toList());
         return ResponseEntity.ok().body(userPostsDto );
     }
 

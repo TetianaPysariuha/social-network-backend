@@ -75,6 +75,11 @@ public class PostDtoMapper extends GeneralFacade<Post, PostRequestDto, PostDto> 
         dto.setPostType(entity.getPostType());
         dto.setContent(entity.getContent());
         dto.setParentId(decorateDtoPost(entity.getParentId()));
+        dto.setPostImages(entity.getPostImages());
+        dto.setCreatedBy(entity.getCreatedBy());
+        dto.setCreatedDate(entity.getCreatedDate());
+        dto.setUpdatedBy(entity.getUpdatedBy());
+        dto.setUpdatedDate(entity.getUpdatedDate());
         return dto;
     }
 }
