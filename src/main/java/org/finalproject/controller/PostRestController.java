@@ -32,6 +32,7 @@ public class PostRestController {
     private final PostDtoMapper dtoMapper;
     private final DefaultUserService userService;
     private final AuditorAwareImpl auditorAwareImpl;
+    private final PostDtoMapper postDtoMapper;
 
 
     @PostMapping("/comment/{id}")
@@ -163,7 +164,7 @@ public class PostRestController {
     @GetMapping
     public List<PostDto> getAll() {
         List<Post> postList = postService.findAllPosts();
-        List<PostDto> postDtoList = postList.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
+        List<PostDto> postDtoList = postList.stream().map(postDtoMapper::decorateDto).collect(Collectors.toList());
         return postDtoList;
     }
 
@@ -173,9 +174,9 @@ public class PostRestController {
         Pageable pageable = PageRequest.of(page,size,sort);
         Page posts = postService.findAllPosts(pageable);
         List<Post> postList =  posts.toList();
-        List<PostDto> userDtoList = postList.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
+        List<PostDto> postDtoList = postList.stream().map(postDtoMapper::decorateDto).collect(Collectors.toList());
 
-        return ResponseEntity.ok(userDtoList);
+        return ResponseEntity.ok(postDtoList);
     }
 
     @GetMapping("/{id}")
@@ -190,7 +191,7 @@ public class PostRestController {
     @PostMapping
     public void create(@RequestBody PostRequestDto post) {
 
-        //fileUpload.uploadPostFile()
+//        fileUpload.uploadPostFile()
         //Post newPost = new Post(fileUpload.uploadPostFile());
         postService.save(dtoMapper.convertToEntity(post));
     }
