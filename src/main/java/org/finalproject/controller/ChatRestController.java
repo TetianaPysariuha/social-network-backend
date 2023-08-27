@@ -7,6 +7,8 @@ import org.finalproject.dto.chat.ChatDtoMapper;
 import org.finalproject.dto.chat.ChatDtoRequest;
 import org.finalproject.dto.chat.ChatSpecDto;
 import org.finalproject.entity.Chat;
+import org.finalproject.entity.Message;
+import org.finalproject.entity.MessageImage;
 import org.finalproject.entity.User;
 import org.finalproject.service.DefaultChatService;
 import org.finalproject.service.GeneralService;
@@ -91,11 +93,11 @@ public class ChatRestController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable("id") Long id) {
 
-        Chat chat = chatService.getOne(id);
+        Chat chat = chatService.findEntityById(id);
         if (chat == null) {
             return ResponseEntity.badRequest().body("Chat not found");
         }
-        return ResponseEntity.ok().body(chatDtoMapper.convertToDto(chat));
+        return ResponseEntity.ok().body(chatDtoMapper.decorateDto(chat));
     }
 
     @DeleteMapping
@@ -158,12 +160,14 @@ public class ChatRestController {
     public ResponseEntity<?> addUsers(@PathVariable("id") Long chatId, @PathVariable("userId") Long userId) {
 
         try {
-            Chat chat = chatService.getOne(chatId);
-            User user = userGeneralService.getOne(userId);
+            Chat chat = chatService.findEntityById(chatId);
+            User user = userGeneralService.findEntityById(userId);
             List<User> userList = chat.getUsers();
             userList.add(user);
             chat.setUsers(userList);
-            chatService.save(chat);
+            Chat chatFromDb = chatService.save(chat);
+            user.getChats().add(chatFromDb);
+            userGeneralService.save(user);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -189,17 +193,21 @@ public class ChatRestController {
         try {
             String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
             User loggedUser = userService.getByEmail(auth).get();
-            List<ChatSpecDto> chats = defaultChatService.findChatsByParticipant(userId, loggedUser.getId());
+            List<Chat> chats = defaultChatService.findChatsByParticipant(userId, loggedUser.getId());
+            List<ChatDto> chatDtoList = chats.stream()
+                    .map(chatDtoMapper::decorateDto)
+                    .collect(Collectors.toList());
             if (chats.isEmpty()) {
                 User user = generalService.getOne(userId);
-                List<User> userList = new ArrayList<>();
-                userList.add(loggedUser);
-                userList.add(user);
-                Chat chat = new Chat(userList);
-                ChatDto chatDto = chatDtoMapper.decorateDto(chat);
+                List<User> userList = List.of(user, loggedUser);
+                List<Message> messageList = new ArrayList<>();
+                List<MessageImage> messageImageList = new ArrayList<>();
+                Chat chat = new Chat(messageList, messageImageList, userList);
+                Chat newChat = chatService.save(chat);
+                ChatDto chatDto = chatDtoMapper.decorateDto(newChat);
                 return ResponseEntity.ok().body(chatDto);
             } else {
-                return ResponseEntity.ok().body(chats);
+                return ResponseEntity.ok().body(chatDtoList);
             }
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

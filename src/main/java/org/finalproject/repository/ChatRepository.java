@@ -36,12 +36,7 @@ public interface ChatRepository extends RepositoryInterface<Chat>, JpaSpecificat
     List<ChatSpecProjection> getChatsForUserExceptUserId(@Param("id") Long userId);
 
     @Query(value = "SELECT DISTINCT " +
-            "c.id AS id, " +
-            "uc.user_id AS userId, " +
-            "u.full_name AS fullName, " +
-            "u.profile_picture AS profilePicture, " +
-            "m.content AS content, " +
-            "m.created_date AS lastMessageDate " +
+            "c.* " +
             "FROM " +
             "chats c " +
             "JOIN " +
@@ -58,6 +53,6 @@ public interface ChatRepository extends RepositoryInterface<Chat>, JpaSpecificat
             "FROM messages m2 " +
             "WHERE m2.chat_id = c.id " +
             ")", nativeQuery = true)
-    List<ChatSpecProjection> findChatsByParticipant(@Param("userId") Long userId, @Param("loggedUserId") Long loggedUserId);
+    List<Chat> findChatsByParticipant(@Param("userId") Long userId, @Param("loggedUserId") Long loggedUserId);
 
 }
