@@ -27,8 +27,9 @@ public class Chat extends BaseEntity {
     @ManyToMany(cascade = CascadeType.PERSIST, mappedBy = "chats", fetch = FetchType.EAGER)
     private List<User> users;
 
-    public Chat(List<User> user) {
+    public Chat(List<User> userList, List<Message> messageList) {
 
-        this.users = user;
+        this.users = userList;
+        this.messages = messageList;
     }
 }

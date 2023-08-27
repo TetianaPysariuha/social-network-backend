@@ -20,8 +20,8 @@ public class RmqListener {
     public void processMessage(@Payload Message message) {
         // Обработка полученного сообщения и выполнение нужных действий
         // message содержит данные, которые были отправлены через RabbitMQ
+        System.out.println("from messages: ");
         System.out.println(new String(message.getBody()));
-
         String userIdentity = message.getMessageProperties().getReceivedRoutingKey();
         simpMessagingTemplate.convertAndSend("/topic/messages/" + userIdentity, new String(message.getBody()));
 
@@ -31,6 +31,7 @@ public class RmqListener {
     public void processNotification(@Payload Message message) {
         // Обработка полученного сообщения и выполнение нужных действий
         // message содержит данные, которые были отправлены через RabbitMQ
+        System.out.println("from notification: ");
         System.out.println(new String(message.getBody()));
 
         String userIdentity = message.getMessageProperties().getReceivedRoutingKey();

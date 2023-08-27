@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 public class ChatDtoMapper extends GeneralFacade<Chat, ChatDtoRequest, ChatDto> {
 
     private final UserDtoMapper userDtoMapper;
+    private final MessageImageDtoMapper messageImageDtoMapper;
     @Autowired
     private ChatRepository chatRepository;
     @Autowired
@@ -37,6 +38,8 @@ public class ChatDtoMapper extends GeneralFacade<Chat, ChatDtoRequest, ChatDto> 
         ChatDto dto = new ChatDto();
         dto.setId(entity.getId());
         dto.setMessages(entity.getMessages().stream().map(this::decorateDtoM).collect(Collectors.toList()));
+        dto.setMessageImages(entity.getMessageImages().stream().map(messageImageDtoMapper::convertToDto).collect(Collectors.toList()));
+        dto.setUsers(entity.getUsers().stream().map(userDtoMapper::convertToDto).collect(Collectors.toList()));
         return dto;
     }
 
