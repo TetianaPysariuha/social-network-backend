@@ -49,6 +49,11 @@ public class ChatDtoMapper extends GeneralFacade<Chat, ChatDtoRequest, ChatDto> 
         dto.setId(entity.getId());
         dto.setContent(entity.getContent());
         dto.setSender(userDtoMapper.convertToDto(entity.getSender()));
+        dto.setChatId(entity.getChatId());
+        dto.setUpdatedDate(entity.getUpdatedDate());
+        dto.setCreatedBy(entity.getCreatedBy());
+        dto.setCreatedDate(entity.getCreatedDate());
+        dto.setUpdatedBy(entity.getUpdatedBy());
         return dto;
     }
 }
