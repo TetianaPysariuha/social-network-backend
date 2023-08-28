@@ -35,24 +35,13 @@ public interface ChatRepository extends RepositoryInterface<Chat>, JpaSpecificat
             ")", nativeQuery = true)
     List<ChatSpecProjection> getChatsForUserExceptUserId(@Param("id") Long userId);
 
-    @Query(value = "SELECT DISTINCT " +
-            "c.* " +
-            "FROM " +
-            "chats c " +
-            "JOIN " +
-            "users_chats uc ON c.id = uc.chat_id " +
-            "JOIN " +
-            "users u ON uc.user_id = u.id " +
-            "LEFT JOIN " +
-            "messages m ON c.id = m.chat_id " +
-            "WHERE " +
-            "u.id = :userId " +
-            "AND c.id IN (SELECT cc.chat_id FROM users_chats cc WHERE cc.user_id = :loggedUserId) " +
-            "AND m.id = ( " +
-            "SELECT MAX(m2.id) " +
-            "FROM messages m2 " +
-            "WHERE m2.chat_id = c.id " +
-            ")", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT c.* " +
+            "FROM chats c " +
+            "JOIN users_chats uc ON c.id = uc.chat_id " +
+            "JOIN users u ON uc.user_id = u.id " +
+            "WHERE u.id = :userId " +
+            "AND c.id IN (SELECT cc.chat_id FROM users_chats cc WHERE cc.user_id = :loggedUserId)",
+            nativeQuery = true)
     List<Chat> findChatsByParticipant(@Param("userId") Long userId, @Param("loggedUserId") Long loggedUserId);
 
 }
