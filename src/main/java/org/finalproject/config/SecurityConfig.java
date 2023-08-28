@@ -135,7 +135,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/api/auth/login","/api/auth/**", "/api/auth/token","/api/auth","/api/auth/passwordLetter","/api/auth/refresh","/swagger-ui/**","api/oauth2/authorization/google","/posts").permitAll()
+                                .requestMatchers("/api/auth/login","/api/auth/**", "/api/auth/token","/api/auth","/api/auth/passwordLetter","/api/auth/refresh","/swagger-ui/**","api/oauth2/authorization/google","/posts", "/websocket-endpoint/**", "/topic/messages").permitAll()
                                 .anyRequest().authenticated()
 
                                 .and()
