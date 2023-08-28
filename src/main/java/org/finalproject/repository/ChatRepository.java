@@ -28,7 +28,7 @@ public interface ChatRepository extends RepositoryInterface<Chat>, JpaSpecificat
             "WHERE " +
             "u.id <> :id " +
             "AND c.id IN (SELECT cc.chat_id FROM users_chats cc WHERE cc.user_id = :id) " +
-            "AND m.id = ( " +
+            "AND m.id IS NULL OR m.id  = ( " +
             "SELECT MAX(m2.id) " +
             "FROM messages m2 " +
             "WHERE m2.chat_id = c.id " +
