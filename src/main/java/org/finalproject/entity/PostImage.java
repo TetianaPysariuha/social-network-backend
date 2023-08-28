@@ -18,4 +18,12 @@ public class PostImage extends BaseEntity {
     private Post postId;
     @Column(name = "img_url")
     private String imgUrl;
+
+    @Override
+    public String toString() {
+        return "PostImage{" +
+                "postId=" + postId +
+                ", imgUrl='" + imgUrl + '\'' +
+                '}';
+    }
 }
