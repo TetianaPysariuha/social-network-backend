@@ -204,8 +204,13 @@ public class ChatRestController {
                 List<MessageImage> messageImageList = new ArrayList<>();
                 Chat chat = new Chat(messageList, messageImageList, userList);
                 Chat newChat = chatService.save(chat);
+                loggedUser.getChats().add(newChat);
+                generalService.save(loggedUser);
+                user.getChats().add(newChat);
+                generalService.save(user);
                 ChatDto chatDto = chatDtoMapper.decorateDto(newChat);
-                return ResponseEntity.ok().body(chatDto);
+                chatDtoList.add(chatDto);
+                return ResponseEntity.ok().body(chatDtoList);
             } else {
                 return ResponseEntity.ok().body(chatDtoList);
             }
