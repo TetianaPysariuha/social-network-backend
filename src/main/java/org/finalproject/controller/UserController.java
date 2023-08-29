@@ -102,7 +102,7 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<?> getProfile() {
+    public ResponseEntity<UserDto> getProfile() {
 
         String auth = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> profile = defaultUserService.getByFullName(auth);
@@ -124,7 +124,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/chats")
-    public ResponseEntity<List<ChatDto>> getChats(@PathVariable("id") Long userId) {
+    public ResponseEntity<?> getChats(@PathVariable("id") Long userId) {
         User user = userService.getOne(userId);
 
         if (user == null) {
@@ -138,7 +138,7 @@ public class UserController {
     }
 
     @GetMapping("/chats")
-    public ResponseEntity<List<ChatDto>> getAuthorizedUserChats() {
+    public ResponseEntity<?> getAuthorizedUserChats() {
         String auth = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> profile = defaultUserService.getByFullName(auth);
 
@@ -154,18 +154,16 @@ public class UserController {
 
     @GetMapping("/{id}/posts")
 
-    public ResponseEntity<List<PostDto>> getPosts(@PathVariable("id") Long userId) {
-        User user = userService.getOne(userId);
+    public ResponseEntity<?> getPosts(@PathVariable("id") Long userId) {
+        User user = userService.getOne(userId );
 
-        if (user == null) {
-            throw new EntityNotFoundException();
+        if (user   == null) {
+           throw new EntityNotFoundException();
         }
 
-        List<PostDto> userPostsDto = user.getPosts()
-                .stream()
-                .map(postMapper::convertToDto)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok().body(userPostsDto);
+        List<Post> userPosts = user.getPosts();
+        List<PostDto> userPostsDto = userPosts.stream().map(postMapper::decorateDto).collect(Collectors.toList());
+        return ResponseEntity.ok().body(userPostsDto );
     }
 
     @PostMapping
