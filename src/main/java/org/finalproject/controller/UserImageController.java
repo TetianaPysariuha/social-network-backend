@@ -3,8 +3,6 @@ package org.finalproject.controller;
 import lombok.RequiredArgsConstructor;
 import org.finalproject.dto.UserImageDtoMapper;
 import org.finalproject.dto.UserImageDtoRequest;
-import org.finalproject.dto.UserRequestDto;
-import org.finalproject.entity.User;
 import org.finalproject.entity.UserImage;
 import org.finalproject.service.GeneralService;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +14,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/userImages")
-public class UserImageRestController {
+public class UserImageController {
 
     private final GeneralService<UserImage> userImageService;
 
