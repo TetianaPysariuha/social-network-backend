@@ -2,6 +2,7 @@ package org.finalproject.controller;
 
 
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +29,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Getter
 @Setter
-@CrossOrigin(origins = {"http://localhost:3000"})
 public class AuthController {
 
     private final AuthService authService;
@@ -73,8 +72,6 @@ public ResponseEntity<?> returnRefresh(@RequestParam String refresh) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 }
-
-
 
     @PostMapping("registration")
     public ResponseEntity<?> register(@RequestBody RegisterRequest authRequest) {
@@ -125,14 +122,9 @@ public ResponseEntity<?> returnRefresh(@RequestParam String refresh) {
     public ResponseEntity<?> sendChangePasswordMessage(@RequestBody Email email) {
         Optional<User> userOptional =  userService.findAll().stream().filter(el -> el.getEmail().equals(email.getEmail())).findAny();
         if (userOptional.isEmpty()) {
-            return ResponseEntity.badRequest().body("User not found");
+            throw new EntityNotFoundException();
         }
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setTo(email.getEmail());
-        simpleMailMessage.setSubject(" Use this code to restore your password");
-        simpleMailMessage.setText(" Code:"  + userOptional.get().getActivationCode());
-
-        javaMailSender.send(simpleMailMessage);
+        authService.sendChangePasswordMessage(userOptional,email);
 
         return ResponseEntity.ok().body("Ok");
 
@@ -140,10 +132,10 @@ public ResponseEntity<?> returnRefresh(@RequestParam String refresh) {
 
     @PutMapping
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
-        try {
+
          Optional<User> userOptional = userService.findAll().stream().filter(el -> el.getActivationCode().equals(changePasswordRequest.getCode())).findAny();
           if (userOptional.isEmpty()) {
-              return ResponseEntity.badRequest().body("User not found");
+              throw new EntityNotFoundException();
           }
 
           User user = userOptional.get();
@@ -151,9 +143,7 @@ public ResponseEntity<?> returnRefresh(@RequestParam String refresh) {
           user.setPassword(passwordEncoder.encode(password));
             userService.save(user);
             return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+
 
     }
 }

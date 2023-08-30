@@ -13,16 +13,12 @@ import org.finalproject.dto.UserDto;
 @ToString(of = "id")
 public class MessageDtoRequest {
 
-    @NotNull
     private Long id;
     @NotNull
     @Size(min = 1, message = "message content should have at least 1 characters")
     private String content;
 
     @NotNull
-    private UserDto sender;
-
-    @NotNull
-    private ChatDto chat;
+    private Long chatId;
 
 }
