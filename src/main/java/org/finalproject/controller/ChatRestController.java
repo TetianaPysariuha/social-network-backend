@@ -115,6 +115,11 @@ public class ChatRestController {
     public ResponseEntity<?> deleteById(@PathVariable("id") Long chatId) {
 
         try {
+            Chat chat = chatService.findEntityById(chatId);
+            List<User> users = chat.getUsers();
+            for (User user : users) {
+                user.getChats().removeIf(userChat -> userChat.getId().equals(chatId));
+            }
             chatService.deleteById(chatId);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {

@@ -25,6 +25,12 @@ spring:
       enabled: truelogging
       settings:
         trace: false
+
+#logging:
+#  level:
+#    org:
+#      hibernate: debug
+
 ---
 spring:
   profiles:

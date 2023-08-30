@@ -46,4 +46,11 @@ public class Message extends BaseEntity {
             inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private List<User> user;
 
+    public Message(String content, User user, Chat chat) {
+        this.content = content;
+        this.sender = user;
+        this.chat = chat;
+
+
+    }
 }
