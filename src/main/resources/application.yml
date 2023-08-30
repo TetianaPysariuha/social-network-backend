@@ -22,15 +22,13 @@ spring:
 
   h2:
     console:
-      enabled: truelogging
+      enabled: true
       settings:
         trace: false
-
-#logging:
-#  level:
-#    org:
+logging:
+  level:
+    org:
 #      hibernate: debug
-
 ---
 spring:
   profiles:
@@ -61,12 +59,6 @@ spring:
   #init:
   #mode: always
   #schema-locations: classpath:hr_schema_postgres.sql
-  flyway:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/facebook}
-    user: postgres
-    password: postgres
-    locations: classpath:db/migration
-#    baseline-on-migrate: true
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/facebook}
     driver-class-name: org.postgresql.Driver
@@ -86,34 +78,13 @@ spring:
     activate:
       on-profile: prod
         
-#        Налаштування для Flyway
-#      spring:
-#        flyway:
-#          url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/facebook}
-#          user: postgres
-#          password: postgres
-#          locations: classpath:db/migration
-#---
-#spring:
-#  datasource:
-#    url: jdbc:postgresql://localhost:5432/facebook
-#    driver-class-name: org.postgresql.Driver
-#    username: postgres
-#    password: postgres
-#  jpa:
-#    defer-datasource-initialization: true
-#    hibernate:
-#      ddl-auto: none
-#    properties:
-#      hibernate:
-#        generate_statistics: false
-#    show-sql: true
-#  config:
-#    activate:
-#      on-profile: test
-#
-#
-#
+        Налаштування для Flyway
+      spring:
+        flyway:
+          url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/facebook}
+          user: postgres
+          password: postgres
+          locations: classpath:db/migration
 
 welcome:
   message: welcome
