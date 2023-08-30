@@ -17,7 +17,8 @@ public class UserSpecDto {
 
     private String profilePicture;
 
-    public static UserSpecDto fromProjection (UserSpecProjection projection){
+    public static UserSpecDto fromProjection(UserSpecProjection projection) {
+
         return new UserSpecDto(
                 projection.getId(), projection.getFullName(), projection.getProfilePicture());
     }

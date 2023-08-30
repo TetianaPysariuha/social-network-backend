@@ -72,19 +72,19 @@ public class MessageRestController {
         return ResponseEntity.ok().body(messageDtoMapper.decorateDto(message));
     }
 
-//    @DeleteMapping
-//    public ResponseEntity<?> deleteMessage(@RequestBody MessageDtoRequest messageDtoRequest) {
-//
-//        String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-//        try {
-//            User user = userService.getByEmail(auth).get();
-//            messageDtoRequest.setId(user.getId());
-//            messageService.delete(messageDtoMapper.convertToEntity(messageDtoRequest));
-//            return ResponseEntity.ok().build();
-//        } catch (RuntimeException e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
+    //    @DeleteMapping
+    //    public ResponseEntity<?> deleteMessage(@RequestBody MessageDtoRequest messageDtoRequest) {
+    //
+    //        String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+    //        try {
+    //            User user = userService.getByEmail(auth).get();
+    //            messageDtoRequest.setId(user.getId());
+    //            messageService.delete(messageDtoMapper.convertToEntity(messageDtoRequest));
+    //            return ResponseEntity.ok().build();
+    //        } catch (RuntimeException e) {
+    //            return ResponseEntity.badRequest().body(e.getMessage());
+    //        }
+    //    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long chatId) {

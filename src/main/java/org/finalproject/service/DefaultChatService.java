@@ -25,7 +25,7 @@ public class DefaultChatService extends GeneralService<Chat> {
         List<ChatSpecProjection> projections = chatRepository.getChatsForUser(userId);
         List<ChatSpecDto> chatSpecDtoList = projections.stream()
                 .map(ChatSpecDto::fromProjection).toList();
-        for (ChatSpecDto chat : chatSpecDtoList ){
+        for (ChatSpecDto chat : chatSpecDtoList) {
             chat.setChatParticipant(findUsersFromChat(chat.getId()));
         }
         return chatSpecDtoList;
@@ -36,7 +36,8 @@ public class DefaultChatService extends GeneralService<Chat> {
         return chatRepository.findChatsByParticipant(userId, loggedUserId);
     }
 
-    public List<UserSpecDto> findUsersFromChat(Long chatId){
+    public List<UserSpecDto> findUsersFromChat(Long chatId) {
+
         List<UserSpecProjection> projections = chatRepository.findUsersFromChat(chatId);
         return projections.stream()
                 .map(UserSpecDto::fromProjection)
