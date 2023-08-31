@@ -26,6 +26,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -172,23 +173,30 @@ public class UserController {
     }
 
     @PostMapping("/{id}/image")
-    public void uploadImage(@PathVariable Long id, @RequestBody MultipartFile multipartFile) {
-        String imgUrl = null;
+    public void uploadImage(@PathVariable Long id, @RequestParam("multipartFiles") List<MultipartFile> multipartFiles) {
+        List<String> imgStringList;
         try {
-            imgUrl = fileUpload.uploadUserFile(multipartFile, id);
+            imgStringList  = fileUpload.uploadUseListOfrFiles(multipartFiles, id);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         User user = userService.getOne(id);
         List<UserImage> userImages = user.getUserImages();
-        UserImage newImage = new UserImage();
-        newImage.setImageUrl(imgUrl);
-        userImages.add(newImage);
+        List<UserImage> userImgList = new ArrayList<>();
+        imgStringList.forEach(el->{
+            UserImage img = new UserImage();
+            img.setImageUrl(el);
+            img.setUser(user);
+            img.setUserId(user.getId());
+            imageService.save(img);
+            userImgList.add(img);
+        });
+
+        userImages.addAll(userImgList);
         user.setUserImages(userImages);
         userService.save(user);
-        newImage.setUser(user);
-        newImage.setUserId(user.getId());
-        imageService.save(newImage);
+
+
     }
 
     @PostMapping("/{id}/avatar")
