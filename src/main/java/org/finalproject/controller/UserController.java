@@ -183,7 +183,7 @@ public class UserController {
         User user = userService.getOne(id);
         List<UserImage> userImages = user.getUserImages();
         List<UserImage> userImgList = new ArrayList<>();
-        imgStringList.forEach(el->{
+        imgStringList.forEach(el-> {
             UserImage img = new UserImage();
             img.setImageUrl(el);
             img.setUser(user);

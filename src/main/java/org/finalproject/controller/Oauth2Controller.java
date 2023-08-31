@@ -51,7 +51,7 @@ class Oauth2Controller {
 
         final Claims claims = jwtProvider.getAccessClaims(access);
         final String email = claims.getSubject();
-        if (authService.getRefreshStorage().containsKey(email)){
+        if (authService.getRefreshStorage().containsKey(email)) {
             return ResponseEntity.ok(new JwtResponse(access,authService.getRefreshStorage().get(email)));
 
         }
