@@ -139,5 +139,4 @@ public class SecurityConfig {
         return (web) -> web.ignoring().requestMatchers("v3/api-docs/**");
     }
 
-
 }
