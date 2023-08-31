@@ -1,6 +1,9 @@
 package org.finalproject.entity;
 
+import org.finalproject.dto.chat.UserSpecDto;
+
 import java.util.Date;
+import java.util.List;
 
 public interface ChatSpecProjection {
 
@@ -15,5 +18,7 @@ public interface ChatSpecProjection {
     Date getLastMessageDate();
 
     String getProfilePicture();
+
+    List<UserSpecDto> getChatParticipant();
 
 }

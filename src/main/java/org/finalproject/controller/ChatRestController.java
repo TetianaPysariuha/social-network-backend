@@ -1,14 +1,11 @@
 package org.finalproject.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.finalproject.dto.UserDtoMapper;
 import org.finalproject.dto.chat.ChatDto;
 import org.finalproject.dto.chat.ChatDtoMapper;
 import org.finalproject.dto.chat.ChatDtoRequest;
 import org.finalproject.dto.chat.ChatSpecDto;
 import org.finalproject.entity.Chat;
-import org.finalproject.entity.Message;
-import org.finalproject.entity.MessageImage;
 import org.finalproject.entity.User;
 import org.finalproject.service.DefaultChatService;
 import org.finalproject.service.GeneralService;
@@ -35,9 +32,8 @@ public class ChatRestController {
     private final GeneralService<User> userGeneralService;
 
     private final UserService userService;
-    private final GeneralService<User> generalService;
+    private final GeneralService<User> generalUserService;
     private final ChatDtoMapper chatDtoMapper;
-    private final UserDtoMapper userDtoMapper;
 
     @GetMapping
     public List<ChatDto> getAll() {
@@ -73,7 +69,7 @@ public class ChatRestController {
         chat.setUsers(userList);
         userChats.add(chat);
         user.setChats(userChats);
-        generalService.save(user);
+        generalUserService.save(user);
     }
 
     /*@GetMapping("/{content}")
@@ -115,6 +111,11 @@ public class ChatRestController {
     public ResponseEntity<?> deleteById(@PathVariable("id") Long chatId) {
 
         try {
+            Chat chat = chatService.findEntityById(chatId);
+            List<User> users = chat.getUsers();
+            for (User user : users) {
+                user.getChats().removeIf(userChat -> userChat.getId().equals(chatId));
+            }
             chatService.deleteById(chatId);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
@@ -177,10 +178,8 @@ public class ChatRestController {
     @GetMapping("/participants")
     public ResponseEntity<?> getChatsForUserExceptUserId() {
 
-        String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         try {
-            User user = userService.getByEmail(auth).get();
-            List<ChatSpecDto> chatSpecDtoList = defaultChatService.getChatsForUserExceptUserId(user.getId());
+            List<ChatSpecDto> chatSpecDtoList = defaultChatService.getChatsForUserExceptUserId();
             return ResponseEntity.ok().body(chatSpecDtoList);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -191,29 +190,10 @@ public class ChatRestController {
     public ResponseEntity<?> createNewChat(@PathVariable("id") Long userId) {
 
         try {
-            String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-            User loggedUser = userService.getByEmail(auth).get();
-            List<Chat> chats = defaultChatService.findChatsByParticipant(userId, loggedUser.getId());
-            List<ChatDto> chatDtoList = chats.stream()
-                    .map(chatDtoMapper::decorateDto)
-                    .collect(Collectors.toList());
-            if (chats.isEmpty()) {
-                User user = generalService.getOne(userId);
-                List<User> userList = List.of(user, loggedUser);
-                List<Message> messageList = new ArrayList<>();
-                List<MessageImage> messageImageList = new ArrayList<>();
-                Chat chat = new Chat(messageList, messageImageList, userList);
-                Chat newChat = chatService.save(chat);
-                loggedUser.getChats().add(newChat);
-                generalService.save(loggedUser);
-                user.getChats().add(newChat);
-                generalService.save(user);
-                ChatDto chatDto = chatDtoMapper.decorateDto(newChat);
-                chatDtoList.add(chatDto);
-                return ResponseEntity.ok().body(chatDtoList);
-            } else {
-                return ResponseEntity.ok().body(chatDtoList);
-            }
+            List<Chat> chatList = defaultChatService.createNewChat(userId);
+            List<ChatDto> chatDtoList = chatList.stream()
+                    .map(chatDtoMapper::decorateDto).toList();
+            return ResponseEntity.ok().body(chatDtoList);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
