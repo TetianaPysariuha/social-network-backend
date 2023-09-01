@@ -58,6 +58,8 @@ public class UserController {
 
     private final FileUpload fileUpload;
 
+    private  final UserImageDtoMapper imageMapper;
+
 
     @GetMapping
     public List<UserDto> getAll() {
@@ -151,6 +153,21 @@ public class UserController {
                 .map(chatMapper::convertToDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok().body(userChatsDto);
+    }
+
+    @GetMapping("/images")
+    public ResponseEntity<?> getAuthorizedUserImages() {
+        String auth = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> profile = defaultUserService.getByFullName(auth);
+
+        if (profile.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
+        List<UserImageDto> userImageDto = profile.get().getUserImages()
+                .stream()
+                .map(imageMapper::convertToDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(userImageDto);
     }
 
     @GetMapping("/{id}/posts")
