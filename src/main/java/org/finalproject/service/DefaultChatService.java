@@ -1,7 +1,7 @@
 package org.finalproject.service;
 
 import org.finalproject.dto.chat.ChatSpecDto;
-import org.finalproject.dto.chat.UserSpecDto;
+import org.finalproject.dto.chat.UserForChatDto;
 import org.finalproject.entity.*;
 import org.finalproject.repository.ChatRepository;
 import org.finalproject.service.jwt.UserService;
@@ -27,6 +27,8 @@ public class DefaultChatService extends GeneralService<Chat> {
     private GeneralService<User> generalUserService;
     @Autowired
     private GeneralService<Chat> chatService;
+    @Autowired
+    private GeneralService<User> userGeneralService;
 
     public List<ChatSpecDto> getChatsForUserExceptUserId() {
 
@@ -36,7 +38,7 @@ public class DefaultChatService extends GeneralService<Chat> {
         List<ChatSpecDto> chatSpecDtoList = projections.stream()
                 .map(ChatSpecDto::fromProjection).toList();
         for (ChatSpecDto chat : chatSpecDtoList) {
-            List<UserSpecDto> userSpecDtos = findUsersFromChat(chat.getId());
+            List<UserForChatDto> userSpecDtos = findUsersFromChat(chat.getId());
             userSpecDtos.removeIf(userDto -> userDto.getId().equals(user.getId()));
             chat.setChatParticipant(userSpecDtos);
         }
@@ -48,11 +50,11 @@ public class DefaultChatService extends GeneralService<Chat> {
         return chatRepository.findChatsByParticipant(userId, loggedUserId);
     }
 
-    public List<UserSpecDto> findUsersFromChat(Long chatId) {
+    public List<UserForChatDto> findUsersFromChat(Long chatId) {
 
         List<UserSpecProjection> projections = chatRepository.findUsersFromChat(chatId);
         return projections.stream()
-                .map(UserSpecDto::fromProjection)
+                .map(UserForChatDto::fromProjection)
                 .collect(Collectors.toList());
     }
 
@@ -77,6 +79,28 @@ public class DefaultChatService extends GeneralService<Chat> {
         } else {
             return chats;
         }
+    }
+
+    public void deleteChatById(Long chatId) {
+
+        Chat chat = chatService.findEntityById(chatId);
+        List<User> users = chat.getUsers();
+        for (User user : users) {
+            user.getChats().removeIf(userChat -> userChat.getId().equals(chatId));
+        }
+        chatService.deleteById(chatId);
+    }
+
+    public void addUserForChat(Long chatId, Long userId) {
+
+        Chat chat = chatService.findEntityById(chatId);
+        User user = userGeneralService.findEntityById(userId);
+        List<User> userList = chat.getUsers();
+        userList.add(user);
+        chat.setUsers(userList);
+        Chat chatFromDb = chatService.save(chat);
+        user.getChats().add(chatFromDb);
+        userGeneralService.save(user);
     }
 
 }

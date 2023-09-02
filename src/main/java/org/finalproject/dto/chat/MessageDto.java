@@ -16,7 +16,7 @@ public class MessageDto {
     // @JsonProperty("message_id")
     private Long id;
     private String content;
-    private UserDto sender;
+    private UserForChatDto sender;
 
     //    @JsonManagedReference
     // private ChatDto chat;

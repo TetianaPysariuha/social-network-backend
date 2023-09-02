@@ -1,7 +1,6 @@
 package org.finalproject.dto.chat;
 
 import lombok.*;
-import org.finalproject.dto.UserDto;
 
 import java.util.List;
 
@@ -18,6 +17,6 @@ public class ChatDto {
     //    @JsonBackReference
     private List<MessageDto> messages;
     private List<MessageImageDto> messageImages;
-    private List<UserDto> users;
+    private List<UserForChatDto> users;
 
 }

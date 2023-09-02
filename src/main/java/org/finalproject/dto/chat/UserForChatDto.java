@@ -9,7 +9,7 @@ import org.finalproject.entity.UserSpecProjection;
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
-public class UserSpecDto {
+public class UserForChatDto {
 
     private Long id;
 
@@ -17,9 +17,9 @@ public class UserSpecDto {
 
     private String profilePicture;
 
-    public static UserSpecDto fromProjection(UserSpecProjection projection) {
+    public static UserForChatDto fromProjection(UserSpecProjection projection) {
 
-        return new UserSpecDto(
+        return new UserForChatDto(
                 projection.getId(), projection.getFullName(), projection.getProfilePicture());
     }
 

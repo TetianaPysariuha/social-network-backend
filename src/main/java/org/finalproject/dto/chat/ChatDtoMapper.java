@@ -4,19 +4,21 @@ import lombok.RequiredArgsConstructor;
 import org.finalproject.dto.UserDtoMapper;
 import org.finalproject.entity.Chat;
 import org.finalproject.entity.Message;
+import org.finalproject.entity.UserSpecProjection;
 import org.finalproject.facade.GeneralFacade;
 import org.finalproject.repository.ChatRepository;
 import org.finalproject.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ChatDtoMapper extends GeneralFacade<Chat, ChatDtoRequest, ChatDto> {
 
-    private final UserDtoMapper userDtoMapper;
+    private final UserForChatDtoMapper userDtoMapper;
     private final MessageImageDtoMapper messageImageDtoMapper;
     @Autowired
     private ChatRepository chatRepository;
