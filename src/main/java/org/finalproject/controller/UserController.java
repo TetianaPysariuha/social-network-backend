@@ -245,7 +245,7 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
 
-        userService.deleteById(id);
+        defaultUserService.deleteUserById(id);
         return ResponseEntity.ok().build();
 
     }
@@ -253,7 +253,7 @@ public class UserController {
     @DeleteMapping
     public ResponseEntity<?> deleteUser(@RequestBody UserRequestDto user) {
 
-        userService.delete(dtoMapper.convertToEntity(user));
+        defaultUserService.deleteUserById(user.getId());
         return ResponseEntity.ok().build();
 
     }

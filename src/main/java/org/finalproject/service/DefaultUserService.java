@@ -3,9 +3,12 @@ package org.finalproject.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.finalproject.entity.Chat;
+import org.finalproject.entity.Friend;
 import org.finalproject.entity.Post;
 import org.finalproject.entity.User;
 import org.finalproject.exception.AlreadyExistException;
+import org.finalproject.repository.FriendJpaRepository;
 import org.finalproject.repository.PostJpaRepository;
 import org.finalproject.repository.UserJpaRepository;
 
@@ -25,6 +28,10 @@ public class DefaultUserService extends GeneralService<User> {
     private final UserJpaRepository userRepository;
 
     public final PostJpaRepository postRepository;
+
+    public final FriendJpaRepository friendRepository;
+
+
 
 
     public Optional<User> getByEmail(String email) {
@@ -123,5 +130,47 @@ public class DefaultUserService extends GeneralService<User> {
         postRepository.save(post);
 
     }
+
+    public void deleteUserById(Long userId) {
+
+            User user = userRepository.getOne(userId);
+            List<Chat> chats = user.getChats();
+            for (Chat chat : chats) {
+                chat.getUsers().removeIf(el -> el.getId().equals(userId));
+            }
+            List<Friend> friends = user.getFriends();
+            for (Friend friend : friends) {
+               friendRepository.delete(friend);
+            }
+            List<Friend> users = user.getUsers();
+            for (Friend friend : users) {
+                friendRepository.delete(friend);
+            }
+        List<Post> posts = user.getPosts();
+        for (Post post : posts) {
+           post.setUser(null);
+
+         User deletedUser = new User();
+         deletedUser.setFullName("Deleted User");
+         deletedUser.setEmail("deleted@gmail.com");
+
+            userRepository.save(deletedUser);
+
+         post.setUser(deletedUser);
+
+        }
+            List<Post> likedPosts = user.getLikedPosts();
+            for (Post post : likedPosts) {
+                post.getLikes().removeIf(el -> el.getId().equals(userId));
+            }
+
+            Set<Post> repostedPosts = user.getReposts();
+            for (Post post : repostedPosts) {
+                post.getReposts().removeIf(el -> el.getId().equals(userId));
+            }
+            userRepository.deleteById(userId);
+        }
+
+
 
 }
