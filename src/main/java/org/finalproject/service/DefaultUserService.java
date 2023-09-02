@@ -150,11 +150,17 @@ public class DefaultUserService extends GeneralService<User> {
         for (Post post : posts) {
            post.setUser(null);
 
-         User deletedUser = new User();
+            User deletedUser;
+           if (userRepository.getByFullName("Deleted User").isEmpty()) {
+
+          deletedUser = new User();
          deletedUser.setFullName("Deleted User");
          deletedUser.setEmail("deleted@gmail.com");
 
             userRepository.save(deletedUser);
+           } else {
+               deletedUser = userRepository.getByFullName("Deleted User").get();
+           }
 
          post.setUser(deletedUser);
 
