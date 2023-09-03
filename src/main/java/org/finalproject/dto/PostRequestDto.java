@@ -23,6 +23,7 @@ public class PostRequestDto {
     private String content;
     private Post parentId;
     private List<User> likes;
-    private Set<User> reposts;
+    private Set<User> repostsUsers;
+    private List<Post> reposts;
     private List<PostImage> postImages;
 }

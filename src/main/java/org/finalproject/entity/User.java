@@ -12,7 +12,6 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id", "email", "fullName"})
-
 @Getter
 @Setter
 @Entity
@@ -92,6 +91,7 @@ public class User extends BaseEntity {
 
     @ManyToMany(fetch = FetchType.EAGER,mappedBy = "user")
     private List<Message> readMessages;
+
 
     @Override
     public String toString() {

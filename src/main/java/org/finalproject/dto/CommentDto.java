@@ -14,10 +14,10 @@ import java.util.Date;
 public class CommentDto {
 
     private Long id;
-    private User user;
+    private UserDto user;
     private String postType;
     private String content;
-    private CommentDto parentId;
+    private PostDto parentId;
     private String createdBy;
     private Date createdDate;
     private String updatedBy;

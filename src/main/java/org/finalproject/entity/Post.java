@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.Where;
 
 import java.util.ArrayList;
@@ -16,7 +14,7 @@ import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id", "user"})
+@EqualsAndHashCode(of = {"id", "user", "content"})
 @Getter
 @Setter
 @Entity
@@ -35,8 +33,8 @@ public class Post extends BaseEntity{
     @JsonIgnore
     private Post parentId;
 
-  @OneToMany(cascade = {CascadeType.REMOVE },fetch = FetchType.EAGER,mappedBy = "parentId")
-  @Where(clause = "post_type = 'comment'")
+    @OneToMany(cascade = {CascadeType.REMOVE },fetch = FetchType.EAGER,mappedBy = "parentId")
+    @Where(clause = "post_type = 'comment'")
     private List<Post> comments = new ArrayList<>();
     @ManyToMany(fetch = FetchType.EAGER,mappedBy = "likedPosts")
     private List<User> likes;
@@ -44,10 +42,15 @@ public class Post extends BaseEntity{
     @ManyToMany(fetch = FetchType.EAGER,mappedBy = "reposts")
     @JsonIgnore
 
-    private Set<User> reposts = new HashSet<>();
+    private Set<User> repostsUsers = new HashSet<>();
     @OneToMany
     @JoinColumn(name = "post_id")
-    private List<PostImage> postImages ;
+    private List<PostImage> postImages;
+
+    @OneToMany(cascade = {CascadeType.REMOVE },fetch = FetchType.EAGER,mappedBy = "parentId")
+    @Where(clause = "post_type = 'post'")
+    private List<Post> reposts = new ArrayList<>();
+
 
     public Post(User user, String postType, String content, Post parentId) {
         this.user = user;
@@ -76,6 +79,20 @@ public class Post extends BaseEntity{
         try {
             this.likes.remove(user);
             user.getLikedPosts().remove(this);
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
+    }
+
+    public boolean addRepost(User user, Post parentPost) {
+        if (user == null) {
+            return false;
+        }
+        try {
+            this.repostsUsers.add(user);
+            parentPost.reposts.add(this);
+            user.getReposts().add(parentPost);
             return true;
         } catch (RuntimeException e) {
             return false;
