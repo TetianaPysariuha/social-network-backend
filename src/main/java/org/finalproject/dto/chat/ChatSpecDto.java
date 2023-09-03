@@ -1,9 +1,7 @@
 package org.finalproject.dto.chat;
 
 import lombok.*;
-import org.finalproject.dto.UserDto;
 import org.finalproject.entity.ChatSpecProjection;
-import org.finalproject.entity.User;
 
 import java.util.Date;
 import java.util.List;
@@ -23,7 +21,7 @@ public class ChatSpecDto {
     private String content;
     private Date lastMessageDate;
     private String profilePicture;
-    private List<UserSpecDto> chatParticipant; //del autorized user and create new DTO
+    private List<UserForChatDto> chatParticipant; //del autorized user and create new DTO
 
     public static ChatSpecDto fromProjection(ChatSpecProjection projection) {
 

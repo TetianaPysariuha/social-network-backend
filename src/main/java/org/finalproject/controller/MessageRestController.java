@@ -1,13 +1,11 @@
 package org.finalproject.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.finalproject.dto.UserDto;
 import org.finalproject.dto.chat.MessageDto;
 import org.finalproject.dto.chat.MessageDtoMapper;
 import org.finalproject.dto.chat.MessageDtoRequest;
 import org.finalproject.entity.Chat;
 import org.finalproject.entity.Message;
-import org.finalproject.entity.User;
 import org.finalproject.service.DefaultMessageService;
 import org.finalproject.service.GeneralService;
 import org.finalproject.service.jwt.UserService;
@@ -18,11 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -99,24 +95,10 @@ public class MessageRestController {
 
     @PostMapping
     @MessageMapping("/send")
-    public ResponseEntity<?> createMessage(@RequestBody MessageDtoRequest messageDtoRequest) throws IOException {
+    public ResponseEntity<?> createNewMessage(@RequestBody MessageDtoRequest messageDtoRequest) throws IOException {
 
         try {
-            String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-            User user = userService.getByEmail(auth).get();
-            Chat chat = chatService.findEntityById(messageDtoRequest.getChatId());
-            Message message = new Message(messageDtoRequest.getContent(), user, chat);
-            messageService.save(message);
-            List<User> users = chat.getUsers();
-            List<Long> usersId = new ArrayList<>();
-            for (int i = 0; i < users.size(); i++) {
-                usersId.add(users.get(i).getId());
-            }
-            usersId.removeIf(id -> id.equals(user.getId()));
-            for (Long toUserId : usersId) {
-                rabbitTemplate.convertAndSend("messages-exchange", "user." + toUserId, messageDtoRequest.getContent());
-                rabbitTemplate.convertAndSend("notification-exchange", "user." + toUserId, messageDtoRequest);
-            }
+            defaultMessageService.createNewMessage(messageDtoRequest);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -125,27 +107,10 @@ public class MessageRestController {
 
     @PutMapping
     @MessageMapping("/update")
-    public ResponseEntity<?> update(@RequestBody MessageDtoRequest messageDtoRequest) throws IOException {
+    public ResponseEntity<?> editMessage(@RequestBody MessageDtoRequest messageDtoRequest) throws IOException {
 
         try {
-            String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-            User user = userService.getByEmail(auth).get();
-            Message messageEntity = messageDtoMapper.convertToEntity(messageDtoRequest);
-            messageEntity.setSender(user);
-            messageEntity.setCreatedDate(messageService.getOne(messageEntity.getId()).getCreatedDate());
-            messageEntity.setCreatedBy(messageService.getOne(messageEntity.getId()).getCreatedBy());
-            messageService.save(messageEntity);
-            Chat chat = chatService.findEntityById(messageDtoRequest.getChatId());
-            List<User> users = chat.getUsers();
-            List<Long> usersId = new ArrayList<>();
-            for (int i = 0; i < users.size(); i++) {
-                usersId.add(users.get(i).getId());
-            }
-            usersId.removeIf(id -> id.equals(user.getId()));
-            for (Long toUserId : usersId) {
-                rabbitTemplate.convertAndSend("messages-exchange", "user." + toUserId, messageDtoRequest.getContent());
-                rabbitTemplate.convertAndSend("notification-exchange", "user." + toUserId, messageDtoRequest);
-            }
+            defaultMessageService.editMessage(messageDtoRequest);
             return ResponseEntity.ok().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -153,12 +118,10 @@ public class MessageRestController {
     }
 
     @GetMapping("/findByContent")
-    public ResponseEntity<?> findByContent(@RequestParam String partOfMsg) {
+    public ResponseEntity<?> findByContent(@RequestBody MessageDtoRequest messageDtoRequest) {
 
         try {
-            String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-            User user = userService.getByEmail(auth).get();
-            return ResponseEntity.ok(defaultMessageService.findByContent(partOfMsg, user.getId()));
+            return ResponseEntity.ok(defaultMessageService.findByContent(messageDtoRequest.getContent()));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
