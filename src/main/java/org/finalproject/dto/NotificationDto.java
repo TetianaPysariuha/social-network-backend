@@ -27,5 +27,5 @@ public class NotificationDto {
     private String content;
 
 
-    private User receiver;
+
 }
