@@ -92,8 +92,8 @@ public class NotificationController {
     public ResponseEntity<?> update(@RequestBody NotificationRequestDto notification) {
         try {
 
-            Notification notificationEntity = notificationService.getOne(notification.getId());
-            notificationEntity.getCreatedDate();
+            Notification notificationEntity = dtoMapper.convertToEntity(notification);
+            notificationEntity.setCreatedDate(notificationService.getOne(notification.getId()).getCreatedDate());
             notificationService.save(notificationEntity);
 
             return ResponseEntity.ok().build();
