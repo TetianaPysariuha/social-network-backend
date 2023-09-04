@@ -24,7 +24,7 @@ public class Notification extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private NotificationStatus status;
 
-
+    @Column(name="sender_full_name")
     private String senderFullName;
 
 
