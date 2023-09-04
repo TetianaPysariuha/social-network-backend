@@ -53,7 +53,7 @@ public class User extends BaseEntity {
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
     List<Friend> friends;
-    @OneToMany (cascade = CascadeType.REMOVE ,fetch = FetchType.EAGER ,mappedBy = "user")
+    @OneToMany (fetch = FetchType.EAGER ,mappedBy = "user")
     @JsonIgnore
     private List<Post> posts ;
     @OneToMany (cascade = CascadeType.REMOVE ,fetch = FetchType.EAGER ,mappedBy = "sender")
