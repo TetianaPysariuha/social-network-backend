@@ -12,7 +12,6 @@ import org.apache.commons.lang3.EnumUtils;
         newMessage("newMessage"),
         friendsBirthday("friendsBirthday");
 
-
         private final String val;
 
         NotificationType(String val) {
