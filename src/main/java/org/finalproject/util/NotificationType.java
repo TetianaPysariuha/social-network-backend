@@ -8,8 +8,10 @@ import org.apache.commons.lang3.EnumUtils;
 
     public enum NotificationType {
         newLike("newLike"),
+        newComment("newComment"),
         newRepost("newRepost"),
         newMessage("newMessage"),
+        editMessage("editMessage"),
         friendsBirthday("friendsBirthday");
 
         private final String val;
