@@ -26,5 +26,5 @@ public class NotificationRequestDto {
     private String content;
 
 
-    private User receiver;
+
 }

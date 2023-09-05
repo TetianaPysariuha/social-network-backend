@@ -8,6 +8,8 @@ import org.finalproject.util.FriendStatus;
 import org.finalproject.util.NotificationStatus;
 import org.finalproject.util.NotificationType;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"})
@@ -31,10 +33,9 @@ public class Notification extends BaseEntity {
     private String content;
 
 
-    @ManyToOne(fetch = FetchType.EAGER )
-    @JoinColumn(name = "receiver_id")
+    @ManyToMany(fetch = FetchType.EAGER,mappedBy = "notifications")
 
-    private User receiver;
+    private List<User> receiver;
 
 
 
