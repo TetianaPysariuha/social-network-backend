@@ -24,5 +24,4 @@ public abstract class BaseEntity extends Auditable<String> implements Serializab
     @Column(name = "id", nullable = false)
     private Long id;
 
-
 }

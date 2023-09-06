@@ -12,7 +12,6 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id", "email", "fullName"})
-
 @Getter
 @Setter
 @Entity
@@ -54,7 +53,7 @@ public class User extends BaseEntity {
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
     List<Friend> friends;
-    @OneToMany (cascade = CascadeType.REMOVE ,fetch = FetchType.EAGER ,mappedBy = "user")
+    @OneToMany (fetch = FetchType.EAGER ,mappedBy = "user")
     @JsonIgnore
     private List<Post> posts ;
     @OneToMany (cascade = CascadeType.REMOVE ,fetch = FetchType.EAGER ,mappedBy = "sender")
@@ -92,6 +91,14 @@ public class User extends BaseEntity {
 
     @ManyToMany(fetch = FetchType.EAGER,mappedBy = "user")
     private List<Message> readMessages;
+
+    @ManyToMany(fetch = FetchType.EAGER )
+    @JsonIgnore
+    @JoinTable(
+            name = "users_notifications",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "notification_id") })
+    List<Notification> notifications;
 
     @Override
     public String toString() {

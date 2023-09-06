@@ -9,10 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.*;
 import org.finalproject.entity.User;
 import org.finalproject.exception.AuthException;
-import org.finalproject.jwt.JwtAuthentication;
-import org.finalproject.jwt.JwtRequest;
-import org.finalproject.jwt.JwtResponse;
-import org.finalproject.jwt.RegisterRequest;
+import org.finalproject.jwt.*;
 import org.finalproject.service.GeneralService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -24,10 +21,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -163,6 +157,17 @@ public class AuthService {
         return refreshStorage.get(email);
 
     }
+
+   public void sendChangePasswordMessage(Optional<User> userOptional, Email email) {
+
+       SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+       simpleMailMessage.setTo(email.getEmail());
+       simpleMailMessage.setSubject(" Use this code to restore your password");
+       simpleMailMessage.setText(" Code:"  + userOptional.get().getActivationCode());
+
+       javaMailSender.send(simpleMailMessage);
+
+   }
 
     public JwtAuthentication getAuthInfo() {
         return (JwtAuthentication) SecurityContextHolder.getContext().getAuthentication();

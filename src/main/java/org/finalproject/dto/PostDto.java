@@ -20,12 +20,12 @@ import java.util.Set;
 public class PostDto {
 
     private Long id;
-    private User user;
+    private UserDto user;
     private String postType;
     private String content;
-    private Post parentId;
-    private List<User> likes;
-    private Set<User> reposts;
+    private PostDto parentId;
+    private List<UserDto> likes;
+    private Set<UserDto> reposts;
     private List<PostImage> postImages;
     private String createdBy;
     private Date createdDate;

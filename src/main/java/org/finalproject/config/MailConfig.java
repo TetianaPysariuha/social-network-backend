@@ -1,4 +1,4 @@
-package org.finalproject.service;
+package org.finalproject.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

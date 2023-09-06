@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MessageDtoMapper extends GeneralFacade<Message, MessageDtoRequest, MessageDto> {
 
-    private final UserDtoMapper userDtoMapper;
+    private final UserForChatDtoMapper userDtoMapper;
     private final ChatDtoMapper chatDtoMapper;
     private final ModelMapper modelMapper;
 

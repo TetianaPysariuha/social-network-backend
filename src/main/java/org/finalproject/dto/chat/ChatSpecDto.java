@@ -4,6 +4,7 @@ import lombok.*;
 import org.finalproject.entity.ChatSpecProjection;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,13 +21,14 @@ public class ChatSpecDto {
     private String content;
     private Date lastMessageDate;
     private String profilePicture;
+    private List<UserForChatDto> chatParticipant; //del autorized user and create new DTO
 
     public static ChatSpecDto fromProjection(ChatSpecProjection projection) {
 
         return new ChatSpecDto(
                 projection.getId(), projection.getUserId(),
                 projection.getFullName(), projection.getContent(),
-                projection.getLastMessageDate(), projection.getProfilePicture()
+                projection.getLastMessageDate(), projection.getProfilePicture(), projection.getChatParticipant()
         );
     }
 

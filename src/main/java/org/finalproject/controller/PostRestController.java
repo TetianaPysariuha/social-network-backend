@@ -7,9 +7,12 @@ import org.finalproject.dto.PostDto;
 import org.finalproject.dto.PostDtoMapper;
 import org.finalproject.dto.PostRequestDto;
 import org.finalproject.entity.Post;
+import org.finalproject.entity.PostImage;
 import org.finalproject.entity.User;
+import org.finalproject.service.DefaultPostImageService;
 import org.finalproject.service.DefaultPostService;
 import org.finalproject.service.DefaultUserService;
+import org.finalproject.service.FileUpload;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,8 +20,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,18 +40,21 @@ public class PostRestController {
     private final DefaultUserService userService;
     private final AuditorAwareImpl auditorAwareImpl;
 
+    private final PostDtoMapper postDtoMapper;
+
+    private final FileUpload fileUpload;
+    private final DefaultPostImageService postImageService;
+
 
     @PostMapping("/comment/{id}")
     public Boolean commentPost(@PathVariable("id") Long postId, @RequestBody Map<String, String> requestBody) {
         String content = requestBody.get("content");
         try {
             Post commentedPost = postService.getOne(postId);
-            System.out.println(content);
             if (commentedPost == null) {
                 log.warn("post is null");
                 return false;
             }
-            System.out.println(auditorAwareImpl.getCurrentAuditor().get());
             User loggedUser = userService.getByEmail(auditorAwareImpl.getCurrentAuditor().get()).orElse(null);
             if (loggedUser == null) {
                 log.warn("loggedUser is null");
@@ -111,9 +121,7 @@ public class PostRestController {
                 return false;
             }
 
-            System.out.println(loggedUser.getLikedPosts());
             if (post.removeLike(loggedUser)) {
-                System.out.println(loggedUser.getLikedPosts());
                 postService.save(post);
                 return true;
             } else {
@@ -163,7 +171,8 @@ public class PostRestController {
     @GetMapping
     public List<PostDto> getAll() {
         List<Post> postList = postService.findAllPosts();
-        List<PostDto> postDtoList = postList.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
+
+        List<PostDto> postDtoList = postList.stream().map(postDtoMapper::decorateDto).collect(Collectors.toList());
         return postDtoList;
     }
 
@@ -173,9 +182,9 @@ public class PostRestController {
         Pageable pageable = PageRequest.of(page,size,sort);
         Page posts = postService.findAllPosts(pageable);
         List<Post> postList =  posts.toList();
-        List<PostDto> userDtoList = postList.stream().map(dtoMapper::convertToDto).collect(Collectors.toList());
+        List<PostDto> postDtoList = postList.stream().map(postDtoMapper::decorateDto).collect(Collectors.toList());
 
-        return ResponseEntity.ok(userDtoList);
+        return ResponseEntity.ok(postDtoList);
     }
 
     @GetMapping("/{id}")
@@ -188,12 +197,39 @@ public class PostRestController {
     }
 
     @PostMapping
-    public void create(@RequestBody PostRequestDto post) {
 
-        //fileUpload.uploadPostFile()
-        //Post newPost = new Post(fileUpload.uploadPostFile());
-        postService.save(dtoMapper.convertToEntity(post));
+    public boolean create(@RequestParam("content") String content, @RequestParam("files") List<MultipartFile> files) {
+        User loggedUser = userService.getByEmail(auditorAwareImpl.getCurrentAuditor().get()).orElse(null);
+        if (loggedUser == null) {
+            return false;
+        }
+
+        Post newPost = new Post(loggedUser, "post", content, null);
+        newPost = postService.save(newPost);
+
+        if (!files.isEmpty()) {
+            List<String> imgStringList;
+            try {
+                imgStringList = fileUpload.uploadPostFile(files, newPost.getId());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            Post finalNewPost = newPost;
+            List<PostImage> imgUrlList = imgStringList.stream()
+                    .map(img -> new PostImage(finalNewPost, img))
+                    .collect(Collectors.toList());
+
+            imgUrlList.forEach(postImage -> postImageService.save(postImage));
+
+            newPost.setPostImages(imgUrlList);
+            postService.save(newPost);
+        }
+
+        return true;
     }
+
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long postId) {
