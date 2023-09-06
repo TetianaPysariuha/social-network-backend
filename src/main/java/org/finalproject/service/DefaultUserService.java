@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.finalproject.entity.Post;
 import org.finalproject.entity.User;
 import org.finalproject.exception.AlreadyExistException;
+import org.finalproject.entity.Chat;
+import org.finalproject.entity.Friend;
+import org.finalproject.repository.FriendJpaRepository;
 import org.finalproject.repository.PostJpaRepository;
 import org.finalproject.repository.UserJpaRepository;
 
@@ -25,6 +28,9 @@ public class DefaultUserService extends GeneralService<User> {
     private final UserJpaRepository userRepository;
 
     public final PostJpaRepository postRepository;
+
+    public final FriendJpaRepository friendRepository;
+
 
 
 
@@ -114,6 +120,7 @@ public class DefaultUserService extends GeneralService<User> {
     public void addRepost(Long id, Post post) {
 
         Set<User> reposts = post.getRepostsUsers();
+
         User newRepost = userRepository.getOne(id);
         reposts.add(newRepost);
         Set<Post> repostedPosts = newRepost.getReposts();
@@ -121,8 +128,58 @@ public class DefaultUserService extends GeneralService<User> {
         newRepost.setReposts(repostedPosts);
         userRepository.save(newRepost);
         post.setRepostsUsers(reposts);
+
         postRepository.save(post);
 
     }
+
+
+    public void deleteUserById(Long userId) {
+
+            User user = userRepository.getOne(userId);
+            List<Chat> chats = user.getChats();
+            for (Chat chat : chats) {
+                chat.getUsers().removeIf(el -> el.getId().equals(userId));
+            }
+            List<Friend> friends = user.getFriends();
+            for (Friend friend : friends) {
+               friendRepository.delete(friend);
+            }
+            List<Friend> users = user.getUsers();
+            for (Friend friend : users) {
+                friendRepository.delete(friend);
+            }
+        List<Post> posts = user.getPosts();
+        for (Post post : posts) {
+           post.setUser(null);
+
+            User deletedUser;
+           if (userRepository.getByFullName("Deleted User").isEmpty()) {
+
+          deletedUser = new User();
+         deletedUser.setFullName("Deleted User");
+         deletedUser.setEmail("deleted@gmail.com");
+
+            userRepository.save(deletedUser);
+           } else {
+               deletedUser = userRepository.getByFullName("Deleted User").get();
+           }
+
+         post.setUser(deletedUser);
+
+        }
+            List<Post> likedPosts = user.getLikedPosts();
+            for (Post post : likedPosts) {
+                post.getLikes().removeIf(el -> el.getId().equals(userId));
+            }
+
+            Set<Post> repostedPosts = user.getReposts();
+            for (Post post : repostedPosts) {
+                post.getReposts().removeIf(el -> el.getId().equals(userId));
+            }
+            userRepository.deleteById(userId);
+        }
+
+
 
 }

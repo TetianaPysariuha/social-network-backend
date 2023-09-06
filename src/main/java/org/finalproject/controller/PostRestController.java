@@ -10,8 +10,6 @@ import org.finalproject.service.DefaultPostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,9 +21,7 @@ import java.util.stream.Collectors;
 public class PostRestController {
     private final DefaultPostService postService;
     private final PostDtoMapper dtoMapper;
-
     private final PostDtoMapper postDtoMapper;
-
 
 
     @PostMapping("/comment/{id}")

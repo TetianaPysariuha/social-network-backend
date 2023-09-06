@@ -125,7 +125,8 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(
                         authz -> authz
-                                .requestMatchers("/api/auth/**", "/api/auth/token","/api/auth","/swagger-ui/**","api/oauth2/authorization/google","/posts/**", "/websocket-endpoint/**", "/topic/messages").permitAll()
+
+                                .requestMatchers("/api/auth/**", "/api/auth/token","/api/auth","/swagger-ui/**","api/oauth2/authorization/google","/posts/**", "/websocket-endpoint/**", "/topic/messages","/ws/**").permitAll()
                                 .anyRequest().authenticated()
                                 .and()
                                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -138,6 +139,5 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers("v3/api-docs/**");
     }
-
 
 }

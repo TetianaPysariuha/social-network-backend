@@ -24,6 +24,7 @@ public class PostDto {
     private List<UserDto> likes;
     private Set<UserDto> repostsUsers;
     private List<RepostDto> reposts;
+
     private List<PostImage> postImages;
     private String createdBy;
     private Date createdDate;

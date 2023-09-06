@@ -13,6 +13,7 @@ import org.finalproject.dto.friend.FriendDtoMapper;
 import org.finalproject.dto.post.PostDto;
 import org.finalproject.dto.post.PostDtoMapper;
 import org.finalproject.dto.post.PostRequestDto;
+
 import org.finalproject.entity.*;
 import org.finalproject.filter.JwtFilter;
 import org.finalproject.jwt.Email;
@@ -60,6 +61,8 @@ public class UserController {
     private final FriendDtoMapper friendMapper;
 
     private final FileUpload fileUpload;
+
+    private  final UserImageDtoMapper imageMapper;
 
 
     @GetMapping
@@ -156,6 +159,22 @@ public class UserController {
         return ResponseEntity.ok().body(userChatsDto);
     }
 
+
+    @GetMapping("/images")
+    public ResponseEntity<?> getAuthorizedUserImages() {
+        String auth = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> profile = defaultUserService.getByFullName(auth);
+
+        if (profile.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
+        List<UserImageDto> userImageDto = profile.get().getUserImages()
+                .stream()
+                .map(imageMapper::convertToDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(userImageDto);
+    }
+
     @GetMapping("/{id}/posts")
 
     public ResponseEntity<?> getPosts(@PathVariable("id") Long userId) {
@@ -231,7 +250,8 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
 
-        userService.deleteById(id);
+
+        defaultUserService.deleteUserById(id);
         return ResponseEntity.ok().build();
 
     }
@@ -239,7 +259,7 @@ public class UserController {
     @DeleteMapping
     public ResponseEntity<?> deleteUser(@RequestBody UserRequestDto user) {
 
-        userService.delete(dtoMapper.convertToEntity(user));
+        defaultUserService.deleteUserById(user.getId());
         return ResponseEntity.ok().build();
 
     }
