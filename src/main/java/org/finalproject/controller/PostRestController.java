@@ -92,8 +92,8 @@ public class PostRestController {
                 return false;
             }
             Post newPost = new Post(loggedUser, "post", content, repostedPost);
-
-            repostedPost.addRepost(loggedUser, repostedPost);
+            repostedPost.getReposts().add(newPost);
+            postService.save(repostedPost);
             postService.save(newPost);
             return true;
         } catch (Exception e) {

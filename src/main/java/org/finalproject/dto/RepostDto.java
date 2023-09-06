@@ -3,6 +3,7 @@ package org.finalproject.dto;
 import lombok.*;
 import org.finalproject.entity.PostImage;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -18,12 +19,12 @@ public class RepostDto {
     private UserDto user;
     private String postType;
     private String content;
-    private List<UserDto> likes;
-    private List<RepostDto> reposts;
-    private List<PostImage> postImages;
+    private PostDto parentId;
+    private List<UserDto> likes = new ArrayList<>();
+    private List<RepostDto> reposts = new ArrayList<>();
     private String createdBy;
     private Date createdDate;
     private String updatedBy;
     private Date updatedDate;
-    private List<CommentDto> comments;
+    private List<CommentDto> comments = new ArrayList<>();
 }

@@ -37,7 +37,7 @@ public class Post extends BaseEntity{
     @Where(clause = "post_type = 'comment'")
     private List<Post> comments = new ArrayList<>();
     @ManyToMany(fetch = FetchType.EAGER,mappedBy = "likedPosts")
-    private List<User> likes;
+    private List<User> likes = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER,mappedBy = "reposts")
     @JsonIgnore
@@ -85,17 +85,17 @@ public class Post extends BaseEntity{
         }
     }
 
-    public boolean addRepost(User user, Post parentPost) {
-        if (user == null) {
-            return false;
-        }
-        try {
-            this.repostsUsers.add(user);
-            parentPost.reposts.add(this);
-            user.getReposts().add(parentPost);
-            return true;
-        } catch (RuntimeException e) {
-            return false;
-        }
-    }
+//    public boolean addRepost(User user, Post parentPost) {
+//        if (user == null) {
+//            return false;
+//        }
+//        try {
+//            parentPost.repostsUsers.add(user);
+//            parentPost.reposts.add(this);
+//            user.getReposts().add(parentPost);
+//            return true;
+//        } catch (RuntimeException e) {
+//            return false;
+//        }
+//    }
 }
