@@ -1,4 +1,4 @@
-package org.finalproject.dto;
+package org.finalproject.dto.post;
 
 import lombok.*;
 import org.finalproject.entity.Post;
@@ -6,8 +6,6 @@ import org.finalproject.entity.PostImage;
 import org.finalproject.entity.PostTypes;
 import org.finalproject.entity.User;
 
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -17,20 +15,15 @@ import java.util.Set;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class PostDto {
+public class PostRequestDto {
 
     private Long id;
-    private UserDto user;
+    private User user;
     private String postType;
     private String content;
-    private PostDto parentId;
-    private List<UserDto> likes;
-    private Set<UserDto> repostsUsers;
-    private List<RepostDto> reposts;
+    private Post parentId;
+    private List<User> likes;
+    private Set<User> repostsUsers;
+    private List<Post> reposts;
     private List<PostImage> postImages;
-    private String createdBy;
-    private Date createdDate;
-    private String updatedBy;
-    private Date updatedDate;
-    private List<CommentDto> comments;
 }

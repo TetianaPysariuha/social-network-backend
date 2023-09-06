@@ -1,4 +1,4 @@
-package org.finalproject.dto;
+package org.finalproject.dto.post;
 
 import org.finalproject.entity.Post;
 import org.finalproject.facade.GeneralFacade;

@@ -1,5 +1,7 @@
-package org.finalproject.dto;
+package org.finalproject.dto.post;
 
+import org.finalproject.dto.UserDto;
+import org.finalproject.dto.UserDtoMapper;
 import org.finalproject.entity.Post;
 import org.finalproject.entity.User;
 import org.finalproject.facade.GeneralFacade;

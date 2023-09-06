@@ -4,11 +4,7 @@ package org.finalproject.facade;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import org.finalproject.dto.PostRequestDto;
-import org.finalproject.dto.chat.ChatDtoRequest;
 import org.finalproject.entity.BaseEntity;
-import org.finalproject.entity.Chat;
-import org.finalproject.entity.Post;
 import org.finalproject.service.GeneralService;
 
 import org.modelmapper.ModelMapper;

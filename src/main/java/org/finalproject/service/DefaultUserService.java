@@ -27,6 +27,7 @@ public class DefaultUserService extends GeneralService<User> {
     public final PostJpaRepository postRepository;
 
 
+
     public Optional<User> getByEmail(String email) {
         if (userRepository.getByEmail(email).isEmpty()) {
             throw new EntityNotFoundException();
