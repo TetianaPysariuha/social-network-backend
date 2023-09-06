@@ -92,6 +92,7 @@ public class User extends BaseEntity {
     @ManyToMany(fetch = FetchType.EAGER,mappedBy = "user")
     private List<Message> readMessages;
 
+
     @ManyToMany(fetch = FetchType.EAGER )
     @JsonIgnore
     @JoinTable(

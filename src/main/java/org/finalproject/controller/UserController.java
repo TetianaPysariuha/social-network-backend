@@ -10,6 +10,10 @@ import org.finalproject.dto.chat.ChatDto;
 import org.finalproject.dto.chat.ChatDtoMapper;
 import org.finalproject.dto.friend.FriendDto;
 import org.finalproject.dto.friend.FriendDtoMapper;
+import org.finalproject.dto.post.PostDto;
+import org.finalproject.dto.post.PostDtoMapper;
+import org.finalproject.dto.post.PostRequestDto;
+
 import org.finalproject.entity.*;
 import org.finalproject.filter.JwtFilter;
 import org.finalproject.jwt.Email;
@@ -155,6 +159,7 @@ public class UserController {
         return ResponseEntity.ok().body(userChatsDto);
     }
 
+
     @GetMapping("/images")
     public ResponseEntity<?> getAuthorizedUserImages() {
         String auth = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -244,6 +249,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
+
 
         defaultUserService.deleteUserById(id);
         return ResponseEntity.ok().build();
