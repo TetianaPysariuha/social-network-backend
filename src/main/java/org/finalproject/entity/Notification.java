@@ -1,6 +1,7 @@
 package org.finalproject.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,6 +16,7 @@ import java.util.List;
 @EqualsAndHashCode(of = {"id"})
 @Getter
 @Setter
+@ToString
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "notifications")
@@ -34,6 +36,7 @@ public class Notification extends BaseEntity {
 
 
     @ManyToMany(fetch = FetchType.EAGER,mappedBy = "notifications")
+    @JsonIgnore
 
     private List<User> receiver;
 
