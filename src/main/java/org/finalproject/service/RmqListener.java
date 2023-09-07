@@ -27,6 +27,14 @@ public class RmqListener {
 
     }
 
+    @RabbitListener(queues = "user-posts")
+    public void processPostUpdate(@Payload Message message) {
+
+        String userIdentity = message.getMessageProperties().getReceivedRoutingKey();
+        simpMessagingTemplate.convertAndSend("/topic/posts/" + userIdentity, new String(message.getBody()));
+
+    }
+
     @RabbitListener(queues = "user-notification")
     public void processNotification(@Payload Message message) {
         // Обработка полученного сообщения и выполнение нужных действий

@@ -60,6 +60,12 @@ public class RabbitConfig {
     }
 
     @Bean
+    public Queue postQueue() {
+
+        return new Queue("user-posts"); // Создание очереди
+    }
+
+    @Bean
     public MessageConverter converter() {
 
         return new Jackson2JsonMessageConverter();
@@ -78,6 +84,12 @@ public class RabbitConfig {
     }
 
     @Bean
+    public TopicExchange postExchange() {
+
+        return new TopicExchange("post-exchange"); // Создание обменника
+    }
+
+    @Bean
     public Binding messageBinding(Queue messageQueue, TopicExchange messagesExchange) {
 
         return BindingBuilder.bind(messageQueue).to(messagesExchange).with("user.#");
@@ -87,6 +99,12 @@ public class RabbitConfig {
     public Binding notificationBinding(Queue notificationQueue, TopicExchange notificationExchange) {
 
         return BindingBuilder.bind(notificationQueue).to(notificationExchange).with("user.#");
+    }
+
+    @Bean
+    public Binding postBinding(Queue postQueue, TopicExchange postExchange) {
+
+        return BindingBuilder.bind(postQueue).to(postExchange).with("user.#");
     }
 
 //    @Bean
