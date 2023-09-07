@@ -3,11 +3,11 @@ package org.finalproject.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.finalproject.entity.Chat;
-import org.finalproject.entity.Friend;
 import org.finalproject.entity.Post;
 import org.finalproject.entity.User;
 import org.finalproject.exception.AlreadyExistException;
+import org.finalproject.entity.Chat;
+import org.finalproject.entity.Friend;
 import org.finalproject.repository.FriendJpaRepository;
 import org.finalproject.repository.PostJpaRepository;
 import org.finalproject.repository.UserJpaRepository;
@@ -119,17 +119,20 @@ public class DefaultUserService extends GeneralService<User> {
 
     public void addRepost(Long id, Post post) {
 
-        Set<User> reposts = post.getReposts();
+        Set<User> reposts = post.getRepostsUsers();
+
         User newRepost = userRepository.getOne(id);
         reposts.add(newRepost);
         Set<Post> repostedPosts = newRepost.getReposts();
         repostedPosts.add(post);
         newRepost.setReposts(repostedPosts);
         userRepository.save(newRepost);
-        post.setReposts(reposts);
+        post.setRepostsUsers(reposts);
+
         postRepository.save(post);
 
     }
+
 
     public void deleteUserById(Long userId) {
 

@@ -1,4 +1,4 @@
-package org.finalproject.dto;
+package org.finalproject.dto.post;
 
 import lombok.*;
 import org.finalproject.entity.Post;
