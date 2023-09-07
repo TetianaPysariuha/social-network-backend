@@ -100,13 +100,7 @@ public class User extends BaseEntity {
             inverseJoinColumns = { @JoinColumn(name = "notification_id") })
     List<Notification> notifications;
 
-    @ManyToMany(fetch = FetchType.EAGER )
-    @JsonIgnore
-    @JoinTable(
-            name = "users_notifications",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "notification_id") })
-    List<Notification> notifications;
+
 
     @Override
     public String toString() {
