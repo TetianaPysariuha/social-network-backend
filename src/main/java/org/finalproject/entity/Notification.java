@@ -34,6 +34,9 @@ public class Notification extends BaseEntity {
 
     private String content;
 
+    @Column(name = "updated_entity_id")
+    private Long updatedEntityId;
+
 
     @ManyToMany(fetch = FetchType.EAGER,mappedBy = "notifications")
     @JsonIgnore
