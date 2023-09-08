@@ -62,7 +62,7 @@ public class RabbitConfig {
     @Bean
     public Queue postQueue() {
 
-        return new Queue("user-posts"); // Создание очереди
+        return new Queue("topic-posts"); // Создание очереди
     }
 
     @Bean
@@ -104,7 +104,7 @@ public class RabbitConfig {
     @Bean
     public Binding postBinding(Queue postQueue, TopicExchange postExchange) {
 
-        return BindingBuilder.bind(postQueue).to(postExchange).with("user.#");
+        return BindingBuilder.bind(postQueue).to(postExchange).with("post");
     }
 
 //    @Bean

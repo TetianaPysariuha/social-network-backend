@@ -27,11 +27,11 @@ public class RmqListener {
 
     }
 
-    @RabbitListener(queues = "user-posts")
+    @RabbitListener(queues = "topic-posts")
     public void processPostUpdate(@Payload Message message) {
 
-        String userIdentity = message.getMessageProperties().getReceivedRoutingKey();
-        simpMessagingTemplate.convertAndSend("/topic/posts/" + userIdentity, new String(message.getBody()));
+
+        simpMessagingTemplate.convertAndSend("/topic/posts/post" , new String(message.getBody()));
 
     }
 
