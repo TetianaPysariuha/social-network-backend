@@ -77,6 +77,7 @@ public class RabbitConfig {
         return new TopicExchange("notification-exchange"); // Создание обменника
     }
 
+
     @Bean
     public Binding messageBinding(Queue messageQueue, TopicExchange messagesExchange) {
 
@@ -88,6 +89,8 @@ public class RabbitConfig {
 
         return BindingBuilder.bind(notificationQueue).to(notificationExchange).with("user.#");
     }
+
+
 
 //    @Bean
 //    public AmqpAdmin amqpAdmin() {

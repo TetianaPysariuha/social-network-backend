@@ -100,6 +100,8 @@ public class User extends BaseEntity {
             inverseJoinColumns = { @JoinColumn(name = "notification_id") })
     List<Notification> notifications;
 
+
+
     @Override
     public String toString() {
         return "User{" +
