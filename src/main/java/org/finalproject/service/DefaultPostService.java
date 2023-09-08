@@ -162,7 +162,7 @@ public class DefaultPostService extends GeneralService<Post> {
         Post newPost = new Post(loggedUser, "post", content, null);
         newPost = postRepository.save(newPost);
 
-        if (!files.isEmpty()) {
+        if (files != null) {
             List<String> imgStringList;
             try {
                 imgStringList = fileUpload.uploadPostFile(files, newPost.getId());
