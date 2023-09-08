@@ -27,5 +27,7 @@ public class NotificationDto {
     private String content;
 
 
+    private Long updatedEntityId;
+
 
 }
