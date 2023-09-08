@@ -175,6 +175,19 @@ public class UserController {
         return ResponseEntity.ok().body(userImageDto);
     }
 
+    @GetMapping("/{id}/images")
+    public ResponseEntity<?> getUserImages(@PathVariable Long id) {
+      User user = userService.getOne(id);
+        if (user == null ) {
+            throw new EntityNotFoundException();
+        }
+        List<UserImageDto> userImageDto = user.getUserImages()
+                .stream()
+                .map(imageMapper::convertToDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(userImageDto);
+    }
+
     @GetMapping("/{id}/posts")
 
     public ResponseEntity<?> getPosts(@PathVariable("id") Long userId) {
