@@ -9,6 +9,7 @@ import org.finalproject.entity.User;
 import org.finalproject.entity.UserImage;
 import org.finalproject.service.DefaultUserService;
 import org.finalproject.service.GeneralService;
+import org.finalproject.util.NotificationStatus;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -94,6 +95,21 @@ public class NotificationController {
 
             Notification notificationEntity = dtoMapper.convertToEntity(notification);
             notificationEntity.setCreatedDate(notificationService.getOne(notification.getId()).getCreatedDate());
+            notificationService.save(notificationEntity);
+
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateStatus(@PathVariable Long id) {
+        try {
+
+            Notification notificationEntity = notificationService.getOne(id);
+            notificationEntity.setStatus(NotificationStatus.viewed);
             notificationService.save(notificationEntity);
 
             return ResponseEntity.ok().build();

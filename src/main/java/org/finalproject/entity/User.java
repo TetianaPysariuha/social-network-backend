@@ -92,7 +92,6 @@ public class User extends BaseEntity {
     @ManyToMany(fetch = FetchType.EAGER,mappedBy = "user")
     private List<Message> readMessages;
 
-
     @ManyToMany(fetch = FetchType.EAGER )
     @JsonIgnore
     @JoinTable(
@@ -100,6 +99,8 @@ public class User extends BaseEntity {
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "notification_id") })
     List<Notification> notifications;
+
+
 
     @Override
     public String toString() {
