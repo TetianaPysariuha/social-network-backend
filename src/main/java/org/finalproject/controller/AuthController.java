@@ -141,7 +141,7 @@ public ResponseEntity<?> returnRefresh(@RequestParam String refresh) {
           User user = userOptional.get();
           String password = changePasswordRequest.getNewPassword();
           user.setPassword(passwordEncoder.encode(password));
-          if(user.isActivated() == false){
+          if ( user.isActivated() == false ) {
               user.setActivated(true);
           }
             userService.save(user);

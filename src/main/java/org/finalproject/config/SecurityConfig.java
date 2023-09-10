@@ -99,7 +99,7 @@ public class SecurityConfig {
                             authUser.setFullName(fullName);
                             authUser.setActivated(true);
                             userService.save(authUser);
-                        }else{
+                        } else {
                             fullName = existingUser.get().getFullName();
                         }
 
