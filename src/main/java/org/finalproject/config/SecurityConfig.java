@@ -130,7 +130,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authz -> authz
 
-                                .requestMatchers("/api/auth/**", "/api/auth/token","/api/auth","/swagger-ui/**","api/oauth2/authorization/google","/posts/**", "/websocket-endpoint/**", "/topic/messages","/ws/**","*/**").permitAll()
+                                .requestMatchers("/api/auth/**", "/api/auth/token","/api/auth","/swagger-ui/**","api/oauth2/authorization/google","/posts/**", "/websocket-endpoint/**", "/topic/messages","/ws/**").permitAll()
                                 .anyRequest().authenticated()
                                 .and()
                                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
