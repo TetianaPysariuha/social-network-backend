@@ -19,11 +19,11 @@ public class RepostDto {
     private String postType;
     private String content;
     private PostDto parentId;
-    private List<UserDto> likes = new ArrayList<>();
-    private List<RepostDto> reposts = new ArrayList<>();
+    private List<UserDto> likes;
+    private List<RepostDto> reposts;
     private String createdBy;
     private Date createdDate;
     private String updatedBy;
     private Date updatedDate;
-    private List<CommentDto> comments = new ArrayList<>();
+    private List<CommentDto> comments;
 }

@@ -92,10 +92,13 @@ public class PostDtoMapper extends GeneralFacade<Post, PostRequestDto, PostDto> 
         dto.setPostType(entity.getPostType());
         dto.setContent(entity.getContent());
         dto.setParentId(decorateDtoPost(entity.getParentId()));
+        dto.setLikes(entity.getLikes().stream().map(this::decorateDtoUser).collect(Collectors.toList()));
+        dto.setReposts(entity.getReposts().stream().map(this::decorateDtoRepost).collect(Collectors.toList()));
         dto.setCreatedBy(entity.getCreatedBy());
         dto.setCreatedDate(entity.getCreatedDate());
         dto.setUpdatedBy(entity.getUpdatedBy());
         dto.setUpdatedDate(entity.getUpdatedDate());
+        dto.setComments(entity.getComments().stream().map(this::decorateDtoComment).collect(Collectors.toList()));
         return dto;
     }
 }

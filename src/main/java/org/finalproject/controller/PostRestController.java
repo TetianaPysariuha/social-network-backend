@@ -49,6 +49,7 @@ public class PostRestController {
     @GetMapping
     public List<PostDto> getAll() {
         List<Post> postList = postService.findAllPosts();
+
         List<PostDto> postDtoList = postList.stream().map(postDtoMapper::decorateDto).collect(Collectors.toList());
         return postDtoList;
     }
@@ -70,7 +71,7 @@ public class PostRestController {
     }
 
     @PostMapping
-    public boolean create(@RequestParam("content") String content, @RequestParam("files") List<MultipartFile> files) {
+    public boolean create(@RequestParam("content") String content, @RequestParam(name = "files", required = false) List<MultipartFile> files) {
         return postService.create(content, files);
     }
 
