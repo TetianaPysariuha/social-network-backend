@@ -21,12 +21,16 @@ public class NotificationDtoMapper extends GeneralFacade<Notification, Notificat
     @Autowired
     private NotificationRepository notificationRepository;
 
+    @Autowired
+    private UserDtoMapper dtoMapper;
+
 
     @Override
     protected void decorateDto(NotificationDto dto, Notification entity) {
 
         dto.setType(entity.getType().getValue());
         dto.setStatus(entity.getStatus().getValue());
+        dto.setSender(dtoMapper.convertToDto(entity.getSender()));
 
     }
 }
