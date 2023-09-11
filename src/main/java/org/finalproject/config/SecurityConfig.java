@@ -91,12 +91,16 @@ public class SecurityConfig {
                         String email = oauthUser.getClaims().get("email").toString();
                         String fullName = oauthUser.getClaims().get("name").toString();
 
-                        User authUser = new User();
-                        authUser.setEmail(email);
-                        authUser.setFullName(fullName);
                         Optional<User> existingUser = userService.findAll().stream().filter(el ->el.getEmail().equals(email)).findAny();
                         if (existingUser.isEmpty()) {
+
+                            User authUser = new User();
+                            authUser.setEmail(email);
+                            authUser.setFullName(fullName);
+                            authUser.setActivated(true);
                             userService.save(authUser);
+                        } else {
+                            fullName = existingUser.get().getFullName();
                         }
 
                         Long id = repository.getByEmail(email).get().getId();
