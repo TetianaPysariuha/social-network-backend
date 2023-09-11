@@ -27,6 +27,7 @@ public class PostRestController {
 
 
     @PostMapping("/comment/{id}")
+    @MessageMapping("/comment")
     public Boolean commentPost(@PathVariable("id") Long postId, @RequestBody Map<String, String> requestBody) {
         String content = requestBody.get("content");
         return postService.commentPost(postId, content);
@@ -45,6 +46,7 @@ public class PostRestController {
     }
 
     @PutMapping("/like-post/{id}")
+    @MessageMapping("/add-like")
     public Boolean likePost(@PathVariable("id") Long postId) {
         return postService.likePost(postId);
     }

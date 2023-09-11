@@ -52,6 +52,8 @@ public class UserController {
 
     private final UserDtoMapper dtoMapper;
 
+    private final NotificationDtoMapper notificationDtoMapper;
+
     private final PostDtoMapper postMapper;
 
     private final ChatDtoMapper chatMapper;
@@ -301,5 +303,15 @@ public class UserController {
         defaultUserService.addRepost(id, postEntity);
         return ResponseEntity.ok().build();
 
+    }
+
+    @GetMapping("/{id}/notifications")
+    public ResponseEntity<List<NotificationDto>> getNotifications(@PathVariable("id") Long userId) {
+        User user = userService.getOne(userId);
+        List<Notification> notifications = user.getNotifications();
+        List<NotificationDto> notificationsDto = notifications.stream()
+                .map(notificationDtoMapper::convertToDto)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(notificationsDto);
     }
 }
