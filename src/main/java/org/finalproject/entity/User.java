@@ -92,7 +92,7 @@ public class User extends BaseEntity {
     @ManyToMany(fetch = FetchType.EAGER,mappedBy = "user")
     private List<Message> readMessages;
 
-    @OneToMany (cascade = CascadeType.REMOVE ,fetch = FetchType.EAGER ,mappedBy = "sender")
+    @OneToMany (fetch = FetchType.EAGER ,mappedBy = "sender")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
     private List<Notification> sentNotifications;
