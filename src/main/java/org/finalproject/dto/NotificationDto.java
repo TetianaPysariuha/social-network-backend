@@ -21,7 +21,7 @@ public class NotificationDto {
     private String status;
 
 
-    private String senderFullName;
+    private UserDto sender;
 
 
     private String content;
