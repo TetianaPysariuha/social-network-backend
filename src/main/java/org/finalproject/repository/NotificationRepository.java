@@ -11,6 +11,9 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface NotificationRepository extends RepositoryInterface<Notification>, JpaSpecificationExecutor<Notification> {
+
+    Page<Notification> findAllByReceiverContains( User user, Pageable pageable );
+
     @Query(value = "SELECT n.id as id,n.sender_id as sender,n.content as content,n.type as type,n.status"
             + " as status,n.updated_entity_id as updatedEntityId ,n.created_date as createdDate,"
             + " n.updated_date AS updatedDate,n.created_by AS createdBy, n.updated_by AS updatedBy"
