@@ -4,10 +4,14 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.finalproject.config.AuditorAwareImpl;
+import org.finalproject.entity.Notification;
 import org.finalproject.entity.Post;
 import org.finalproject.entity.PostImage;
 import org.finalproject.entity.User;
 import org.finalproject.repository.PostJpaRepository;
+import org.finalproject.util.NotificationStatus;
+import org.finalproject.util.NotificationType;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +34,10 @@ public class DefaultPostService extends GeneralService<Post> {
     private final AuditorAwareImpl auditorAwareImpl;
     private final FileUpload fileUpload;
     private final DefaultPostImageService postImageService;
+    private final GeneralService<Notification> notificationService;
+    private final RabbitTemplate rabbitTemplate;
+
+
 
     public Boolean commentPost(Long postId, String content) {
         try {
@@ -74,6 +82,11 @@ public class DefaultPostService extends GeneralService<Post> {
             repostedPost.getReposts().add(newPost);
             postRepository.save(repostedPost);
             postRepository.save(newPost);
+//            if (!repostedPost.getUser().equals(loggedUser)) {
+/*                Notification notification = new Notification(NotificationType.newRepost, NotificationStatus.pending, loggedUser.getFullName(), "repost", repostedPost.getId(), List.of(repostedPost.getUser()));
+                rabbitTemplate.convertAndSend("notification-exchange", "user." + repostedPost.getUser().getId(), notification);*/
+//            }
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();

@@ -7,7 +7,9 @@ import org.finalproject.dto.post.PostDtoMapper;
 import org.finalproject.dto.post.PostRequestDto;
 import org.finalproject.entity.Post;
 import org.finalproject.service.DefaultPostService;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
@@ -31,6 +33,7 @@ public class PostRestController {
     }
 
     @PostMapping("/repost/{id}")
+    @MessageMapping("/repost")
     public Boolean repostPost(@PathVariable("id") Long postId, @RequestBody Map<String, String> requestBody) {
         String content = requestBody.get("content");
         return postService.repostPost(postId, content);
