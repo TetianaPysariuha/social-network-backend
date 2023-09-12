@@ -1,14 +1,10 @@
 package org.finalproject.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import org.finalproject.dto.chat.MessageDtoMapper;
 import org.finalproject.dto.chat.MessageDtoRequest;
 import org.finalproject.dto.chat.MessageSearchDto;
-import org.finalproject.entity.Chat;
-import org.finalproject.entity.Message;
-import org.finalproject.entity.MessageSearchProjection;
-import org.finalproject.entity.User;
+import org.finalproject.entity.*;
 import org.finalproject.repository.MessageRepository;
 import org.finalproject.service.jwt.UserService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -16,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +25,7 @@ import java.util.stream.Collectors;
 public class DefaultMessageService extends GeneralService<Message> {
 
     private final MessageRepository messageRepository;
+    private final DefaultMessageImageService defaultMessageImageService;
     @Autowired
     private UserService userService;
     @Autowired
@@ -48,13 +47,28 @@ public class DefaultMessageService extends GeneralService<Message> {
                 .collect(Collectors.toList());
     }
 
-    public void createNewMessage(MessageDtoRequest messageDtoRequest) {
+    public void createNewMessage(MessageDtoRequest messageDtoRequest, List<MultipartFile> multipartFiles) {
 
         String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         User user = userService.getByEmail(auth).get();
         Chat chat = chatService.findEntityById(messageDtoRequest.getChatId());
         Message message = new Message(messageDtoRequest.getContent(), user, chat, chat.getId());
-        messageService.save(message);
+        Message savedMessage = messageService.save(message);
+        if (!multipartFiles.isEmpty()) {
+            List<String> imageUrl;
+            try {
+                imageUrl = defaultMessageImageService.uploadImage(multipartFiles, savedMessage.getId());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Message finalMessage = savedMessage;
+            List<MessageImage> messageImages = imageUrl.stream()
+                    .map(img -> new MessageImage(img, finalMessage, finalMessage.getChat()))
+                    .toList();
+            messageImages.forEach(defaultMessageImageService::save);
+            finalMessage.setImages(messageImages);
+            messageService.save(finalMessage);
+        }
         List<User> users = chat.getUsers();
         List<Long> usersId = new ArrayList<>();
         for (int i = 0; i < users.size(); i++) {
@@ -62,8 +76,8 @@ public class DefaultMessageService extends GeneralService<Message> {
         }
         usersId.removeIf(id -> id.equals(user.getId()));
         for (Long toUserId : usersId) {
-            rabbitTemplate.convertAndSend("messages-exchange", "user." + toUserId, messageDtoRequest.getContent());
-            rabbitTemplate.convertAndSend("notification-exchange", "user." + toUserId, messageDtoRequest);
+            rabbitTemplate.convertAndSend("messages-exchange", "user." + toUserId, messageDtoMapper.decorateDto(savedMessage));
+            rabbitTemplate.convertAndSend("notification-exchange", "user." + toUserId, messageDtoMapper.decorateDto(savedMessage));
         }
     }
 
@@ -77,7 +91,7 @@ public class DefaultMessageService extends GeneralService<Message> {
         messageEntity.setChat(chat);
         messageEntity.setCreatedDate(messageService.getOne(messageEntity.getId()).getCreatedDate());
         messageEntity.setCreatedBy(messageService.getOne(messageEntity.getId()).getCreatedBy());
-        messageService.save(messageEntity);
+        Message savedMessage = messageService.save(messageEntity);
         List<User> users = chat.getUsers();
         List<Long> usersId = new ArrayList<>();
         for (int i = 0; i < users.size(); i++) {
@@ -85,8 +99,20 @@ public class DefaultMessageService extends GeneralService<Message> {
         }
         usersId.removeIf(id -> id.equals(user.getId()));
         for (Long toUserId : usersId) {
-            rabbitTemplate.convertAndSend("messages-exchange", "user." + toUserId, messageDtoRequest.getContent());
-            rabbitTemplate.convertAndSend("notification-exchange", "user." + toUserId, messageDtoRequest);
+            rabbitTemplate.convertAndSend("messages-exchange", "user." + toUserId, messageDtoMapper.decorateDto(savedMessage));
+            rabbitTemplate.convertAndSend("notification-exchange", "user." + toUserId, messageDtoMapper.decorateDto(savedMessage));
         }
     }
+
+    public Message getById(Long messageId) {
+
+        return messageService.findEntityById(messageId);
+    }
+
+    public void deleteById(Long messageId) {
+
+        messageService.deleteById(messageId);
+    }
+
+
 }
