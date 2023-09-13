@@ -103,7 +103,7 @@ public class FriendRestController {
         return ResponseEntity.ok().body(friendSuggestions);
     }
 
-    /*@PostMapping
+    /*@PostMapping search_for_friends
     public ResponseEntity<?> create(@RequestBody FriendRequestDto friend ) {
         Friend newFriend = defaultFriendService.save(dtoMapper.convertToEntity(friend) );
         return ResponseEntity.ok().body(newFriend);

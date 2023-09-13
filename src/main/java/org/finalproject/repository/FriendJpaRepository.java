@@ -23,6 +23,30 @@ public interface FriendJpaRepository extends RepositoryInterface<Friend>, JpaSpe
             " and u.id != :userId")
     List<User> suggestedUsersForFriendship(Long userId);
 
+    @Query(value ="with userfriends as (select CASE WHEN friend_id = :id THEN user_id" +
+           " END friendID,status " +
+                  "  from friends ff" +
+            " where 1 in (ff.user_id, ff.friend_id))" +
+            " select * from users u" +
+            " left join userfriends s on u.id = s.friendID" +
+            " where u.id in (" +
+            " select fr.friend_id notfriend" +
+            " from friends fr" +
+            "join userfriends s on fr.user_id = s.friendID" +
+            " where s.status in ('accepted')" +
+            "and 1 not in (fr.user_id, fr.friend_id)" +
+            " and fr.status = 'accepted'" +
+            "union" +
+            " select fr.user_id notfriend" +
+            "from friends fr" +
+            " join userfriends s on fr.friend_id = s.friendID" +
+            " where s.status in ('accepted')" +
+            " and 1 not in (fr.user_id, fr.friend_id)" +
+            "and fr.status = 'accepted')" +
+            " and s.friendID is null" +
+            " LIMIT 100)", nativeQuery = true)
+    List<User> FriendsForFriendship(Long userId);
+
     @Query("select u from User u where u.id in (" +
                     "select t.friendID from (" +
                     "select CASE WHEN f.friend.id in (:userId, :friendId) THEN f.user.id " +
