@@ -1,58 +1,46 @@
 package org.finalproject.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.finalproject.dto.chat.ChatDto;
 import org.finalproject.dto.chat.ChatDtoMapper;
 import org.finalproject.dto.chat.ChatSpecDto;
 import org.finalproject.entity.Chat;
-import org.finalproject.entity.User;
 import org.finalproject.service.DefaultChatService;
-import org.finalproject.service.GeneralService;
-import org.finalproject.service.jwt.UserService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/chats")
 public class ChatRestController {
 
-    private final GeneralService<Chat> chatService;
     private final DefaultChatService defaultChatService;
-    private final GeneralService<User> userGeneralService;
-
-    private final UserService userService;
-    private final GeneralService<User> generalUserService;
     private final ChatDtoMapper chatDtoMapper;
 
-    @GetMapping
-    public List<ChatDto> getAll() {
-
-        List<Chat> chatList = chatService.findAll();
-        return chatList.stream()
-                .map(chatDtoMapper::decorateDto)
-                .collect(Collectors.toList());
-    }
-
-    @GetMapping("/{page}/{size}")
-    public ResponseEntity<?> findAll(@PathVariable Integer page, @PathVariable Integer size) {
-
-        Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "updatedDate"));
-        Pageable pageable = PageRequest.of(page, size, sort);
-        Page chats = chatService.findAll(pageable);
-        List<Chat> chatList = chats.toList();
-        List<ChatDto> chatDtoList = chatList.stream()
-                .map(chatDtoMapper::decorateDto)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(chatDtoList);
-    }
+    //    @GetMapping
+    //    public List<ChatDto> getAll() {
+    //
+    //        List<Chat> chatList = chatService.findAll();
+    //        return chatList.stream()
+    //                .map(chatDtoMapper::decorateDto)
+    //                .collect(Collectors.toList());
+    //    }
+    //
+    //    @GetMapping("/{page}/{size}")
+    //    public ResponseEntity<?> findAll(@PathVariable Integer page, @PathVariable Integer size) {
+    //
+    //        Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "updatedDate"));
+    //        Pageable pageable = PageRequest.of(page, size, sort);
+    //        Page chats = chatService.findAll(pageable);
+    //        List<Chat> chatList = chats.toList();
+    //        List<ChatDto> chatDtoList = chatList.stream()
+    //                .map(chatDtoMapper::decorateDto)
+    //                .collect(Collectors.toList());
+    //        return ResponseEntity.ok(chatDtoList);
+    //    }
 
     //    @PostMapping
     //    public void createChat() {
@@ -84,13 +72,13 @@ public class ChatRestController {
     }*/
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable("id") Long id) {
+    public ResponseEntity<ChatDto> getById(@PathVariable("id") Long id) {
 
-        Chat chat = chatService.findEntityById(id);
+        ChatDto chat = chatDtoMapper.decorateDto(defaultChatService.findEntityById(id));
         if (chat == null) {
-            return ResponseEntity.badRequest().body("Chat not found");
+            throw new EntityNotFoundException();
         }
-        return ResponseEntity.ok().body(chatDtoMapper.decorateDto(chat));
+        return ResponseEntity.ok().body(chat);
     }
 
     //    @DeleteMapping
@@ -105,14 +93,10 @@ public class ChatRestController {
     //    }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable("id") Long chatId) {
+    public ResponseEntity<Void> deleteById(@PathVariable("id") Long chatId) {
 
-        try {
-            defaultChatService.deleteChatById(chatId);
-            return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        defaultChatService.deleteChatById(chatId);
+        return ResponseEntity.ok().build();
     }
 
     //    @PutMapping
@@ -150,37 +134,23 @@ public class ChatRestController {
     //    }
 
     @PutMapping("/{id}/participants/{userId}")
-    public ResponseEntity<?> addUser(@PathVariable("id") Long chatId, @PathVariable("userId") Long userId) {
+    public ResponseEntity<Void> addUser(@PathVariable("id") Long chatId, @PathVariable("userId") Long userId) {
 
-        try {
-            defaultChatService.addUserForChat(chatId, userId);
-            return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        defaultChatService.addUserForChat(chatId, userId);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/participants")
-    public ResponseEntity<?> getChatsForUserExceptUserId() {
+    public ResponseEntity<List<ChatSpecDto>> getChatsForUserExceptUserId() {
 
-        try {
-            List<ChatSpecDto> chatSpecDtoList = defaultChatService.getChatsForUserExceptUserId();
-            return ResponseEntity.ok().body(chatSpecDtoList);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        List<ChatSpecDto> chatSpecDtoList = defaultChatService.getChatsForUserExceptUserId();
+        return ResponseEntity.ok().body(chatSpecDtoList);
     }
 
     @GetMapping("/search/{id}")
-    public ResponseEntity<?> createNewChat(@PathVariable("id") Long userId) {
+    public ResponseEntity<ChatDto> createNewChat(@PathVariable("id") Long userId) {
 
-        try {
-            List<Chat> chatList = defaultChatService.createNewChat(userId);
-            List<ChatDto> chatDtoList = chatList.stream()
-                    .map(chatDtoMapper::decorateDto).toList();
-            return ResponseEntity.ok().body(chatDtoList);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        Chat chat = defaultChatService.createNewChat(userId);
+        return ResponseEntity.ok().body(chatDtoMapper.decorateDto(chat));
     }
 }

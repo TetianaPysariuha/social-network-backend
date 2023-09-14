@@ -15,5 +15,4 @@ public class MessageImageDto {
     private String imgUrl;
     private MessageDto messageId;
 
-
 }

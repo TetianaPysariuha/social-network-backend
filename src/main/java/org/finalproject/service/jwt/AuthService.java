@@ -49,7 +49,7 @@ public class AuthService {
     public JwtResponse login(@NonNull JwtRequest authRequest) {
         final User user = userService.getByEmail(authRequest.getEmail())
                 .orElseThrow(() -> new AuthException("User not found"));
-        if (passwordEncoder.matches(authRequest.getPassword(), user.getPassword())) {
+        if (passwordEncoder.matches(authRequest.getPassword(), user.getPassword()) && user.isActivated() == true) {
 
             final String refreshToken = jwtProvider.generateRefreshToken(user);
            if (refreshStorage.containsKey(authRequest.getEmail())) {
@@ -84,7 +84,7 @@ public class AuthService {
         newUser.setActivated(false);
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setTo(authRequest.getEmail());
-        simpleMailMessage.setSubject("test");
+        simpleMailMessage.setSubject("Visit this page to activate you account");
         simpleMailMessage.setText("https://social-network-backend-2782464b9c31.herokuapp.com/api/auth/activate/" + newUser.getActivationCode());
 
         javaMailSender.send(simpleMailMessage);
