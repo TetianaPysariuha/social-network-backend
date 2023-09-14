@@ -24,18 +24,22 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DefaultMessageService extends GeneralService<Message> {
 
-    private final MessageRepository messageRepository;
-    private final DefaultMessageImageService defaultMessageImageService;
     @Autowired
-    private UserService userService;
+    private  MessageRepository messageRepository;
+    @Autowired
+    private  DefaultMessageImageService defaultMessageImageService;
+    @Autowired
+    private  UserService userService;
     @Autowired
     private GeneralService<Chat> chatService;
     @Autowired
     private GeneralService<Message> messageService;
+
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
     @Autowired
-    private MessageDtoMapper messageDtoMapper;
+    private  MessageDtoMapper messageDtoMapper;
 
     public List<MessageSearchDto> findByContent(String content) {
 
@@ -54,7 +58,7 @@ public class DefaultMessageService extends GeneralService<Message> {
         Chat chat = chatService.findEntityById(messageDtoRequest.getChatId());
         Message message = new Message(messageDtoRequest.getContent(), user, chat, chat.getId());
         Message savedMessage = messageService.save(message);
-        if (!multipartFiles.isEmpty()) {
+        if (multipartFiles != null) {
             List<String> imageUrl;
             try {
                 imageUrl = defaultMessageImageService.uploadImage(multipartFiles, savedMessage.getId());
@@ -111,7 +115,14 @@ public class DefaultMessageService extends GeneralService<Message> {
 
     public void deleteById(Long messageId) {
 
-        messageService.deleteById(messageId);
+        /*Message message = messageService.findEntityById(messageId);*/
+        /*List<User> users = message.getUser();
+        for (User user : users) {
+            user.getReadMessages().removeIf(msg -> msg.getId().equals(messageId));
+        }*/
+        /*List<Message> messages = message.getSender().getMessages();
+        messages.removeIf(msg -> msg.getId().equals(messageId));*/
+
     }
 
 
