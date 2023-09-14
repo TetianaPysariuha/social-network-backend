@@ -28,8 +28,10 @@ public class Notification extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private NotificationStatus status;
 
-    @Column(name = "sender_full_name")
-    private String senderFullName;
+   @ManyToOne(fetch = FetchType.EAGER )
+   @JoinColumn(name = "sender_id")
+
+    private User sender;
 
 
     private String content;

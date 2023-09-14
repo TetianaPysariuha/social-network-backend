@@ -111,8 +111,8 @@ public class UserController {
     @GetMapping("/profile")
     public ResponseEntity<UserDto> getProfile() {
 
-        String auth = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<User> profile = defaultUserService.getByFullName(auth);
+        String auth  = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        Optional<User> profile = defaultUserService.getByEmail(auth);
 
         if (profile.isEmpty()) {
             throw new EntityNotFoundException();
