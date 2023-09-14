@@ -58,7 +58,7 @@ public class DefaultMessageService extends GeneralService<Message> {
         Chat chat = chatService.findEntityById(messageDtoRequest.getChatId());
         Message message = new Message(messageDtoRequest.getContent(), user, chat, chat.getId());
         Message savedMessage = messageService.save(message);
-        if (!multipartFiles.isEmpty()) {
+        if (multipartFiles != null) {
             List<String> imageUrl;
             try {
                 imageUrl = defaultMessageImageService.uploadImage(multipartFiles, savedMessage.getId());
