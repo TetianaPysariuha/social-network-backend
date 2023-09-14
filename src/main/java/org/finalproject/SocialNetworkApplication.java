@@ -2,7 +2,6 @@ package org.finalproject;
 
 
 import org.finalproject.config.AuditorAwareImpl;
-
 import org.modelmapper.ModelMapper;
 import org.modelmapper.config.Configuration;
 
@@ -13,10 +12,12 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
+@Import({AuditorAwareImpl.class})
 public class SocialNetworkApplication implements ApplicationRunner {
 
 
