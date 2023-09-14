@@ -58,27 +58,31 @@ public class DefaultChatService extends GeneralService<Chat> {
                 .collect(Collectors.toList());
     }
 
-    public List<Chat> createNewChat(Long userId) {
+    public Chat createNewChat(Long userId) {
 
         String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         User loggedUser = userService.getByEmail(auth).get();
         List<Chat> chats = findChatsByParticipant(userId, loggedUser.getId());
-        if (chats.isEmpty()) {
+        Chat newChat = new Chat();
+        for (Chat chat : chats) {
+            List<User> users = chat.getUsers();
+            if (users.size() == 2) {
+                newChat = chat;
+            }
+        }
+        if (newChat.getUsers() == null) {
             User user = generalUserService.getOne(userId);
             List<User> userList = List.of(user, loggedUser);
             List<Message> messageList = new ArrayList<>();
             List<MessageImage> messageImageList = new ArrayList<>();
             Chat chat = new Chat(messageList, messageImageList, userList);
-            Chat newChat = chatService.save(chat);
+            newChat = chatService.save(chat);
             loggedUser.getChats().add(newChat);
             generalUserService.save(loggedUser);
             user.getChats().add(newChat);
             generalUserService.save(user);
-            chats.add(newChat);
-            return chats;
-        } else {
-            return chats;
         }
+        return newChat;
     }
 
     public void deleteChatById(Long chatId) {
@@ -101,6 +105,11 @@ public class DefaultChatService extends GeneralService<Chat> {
         Chat chatFromDb = chatService.save(chat);
         user.getChats().add(chatFromDb);
         userGeneralService.save(user);
+    }
+
+    public Chat getById(Long chatId) {
+
+        return chatService.findEntityById(chatId);
     }
 
 }

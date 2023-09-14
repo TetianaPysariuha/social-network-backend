@@ -1,16 +1,15 @@
 package org.finalproject.dto.chat;
 
 import lombok.RequiredArgsConstructor;
-import org.finalproject.dto.UserDtoMapper;
 import org.finalproject.entity.Chat;
 import org.finalproject.entity.Message;
-import org.finalproject.entity.UserSpecProjection;
 import org.finalproject.facade.GeneralFacade;
 import org.finalproject.repository.ChatRepository;
 import org.finalproject.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,6 +50,10 @@ public class ChatDtoMapper extends GeneralFacade<Chat, ChatDtoRequest, ChatDto> 
         dto.setId(entity.getId());
         dto.setContent(entity.getContent());
         dto.setSender(userDtoMapper.convertToDto(entity.getSender()));
+        List<MessageImageDto> messageImageDtos = (entity.getImages() == null)
+                ? entity.getImages().stream().map(messageImageDtoMapper::convertToDto).toList()
+                : new ArrayList<>();
+        dto.setImageUrls(messageImageDtos);
         dto.setChatId(entity.getChatId());
         dto.setUpdatedDate(entity.getUpdatedDate());
         dto.setCreatedBy(entity.getCreatedBy());
