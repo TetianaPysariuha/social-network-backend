@@ -68,7 +68,7 @@ public class DefaultMessageService extends GeneralService<Message> {
             Message finalMessage = savedMessage;
             List<MessageImage> messageImages = imageUrl.stream()
                     .map(img -> new MessageImage(img, finalMessage, finalMessage.getChat()))
-                    .toList();
+                    .collect(Collectors.toList());
             messageImages.forEach(defaultMessageImageService::save);
             finalMessage.setImages(messageImages);
             messageService.save(finalMessage);
