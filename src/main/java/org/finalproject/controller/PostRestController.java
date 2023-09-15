@@ -71,8 +71,8 @@ public class PostRestController {
     }
 
     @PostMapping
-    public boolean create(@RequestParam("content") String content, @RequestParam(name = "files", required = false) List<MultipartFile> files) {
-        return postService.create(content, files);
+    public ResponseEntity<PostDto> create(@RequestParam("content") String content, @RequestParam(name = "files", required = false) List<MultipartFile> files) {
+        return ResponseEntity.ok().body(postDtoMapper.convertToDto(postService.create(content, files)));
     }
 
 

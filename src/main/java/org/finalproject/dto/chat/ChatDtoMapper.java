@@ -39,7 +39,7 @@ public class ChatDtoMapper extends GeneralFacade<Chat, ChatDtoRequest, ChatDto> 
         ChatDto dto = new ChatDto();
         dto.setId(entity.getId());
         dto.setMessages(entity.getMessages().stream().map(this::decorateDtoM).collect(Collectors.toList()));
-        dto.setMessageImages(entity.getMessageImages().stream().map(messageImageDtoMapper::convertToDto).collect(Collectors.toList()));
+        //dto.setMessageImages(entity.getMessageImages().stream().map(messageImageDtoMapper::convertToDto).collect(Collectors.toList()));
         dto.setUsers(entity.getUsers().stream().map(userDtoMapper::convertToDto).collect(Collectors.toList()));
         return dto;
     }
@@ -51,8 +51,8 @@ public class ChatDtoMapper extends GeneralFacade<Chat, ChatDtoRequest, ChatDto> 
         dto.setContent(entity.getContent());
         dto.setSender(userDtoMapper.convertToDto(entity.getSender()));
         List<MessageImageDto> messageImageDtos = (entity.getImages() == null)
-                ? entity.getImages().stream().map(messageImageDtoMapper::convertToDto).toList()
-                : new ArrayList<>();
+                ? new ArrayList<>()
+                : entity.getImages().stream().map(messageImageDtoMapper::convertToDto).toList();
         dto.setImageUrls(messageImageDtos);
         dto.setChatId(entity.getChatId());
         dto.setUpdatedDate(entity.getUpdatedDate());
