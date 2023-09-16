@@ -32,7 +32,7 @@ public class FriendFullDtoMapper extends GeneralFacade<Friend, FriendRequestDto,
         dto.setId(entity.getId());
         dto.setStatus(entity.getStatus().getValue());
         dto.setFriend(userDtoMapper.convertToDto(entity.getFriend()));
-        dto.setMutualFriends(defaultFriendService.getMutualFriends(entity.getUser().getId(), entity.getFriend().getId())
+        dto.setMutualFriends(defaultFriendService.getMutualFriends(entity.getFriend().getId())
                 .stream()
                 .map(fr -> userDtoMapper.convertToDto(fr))
                 .toList());
