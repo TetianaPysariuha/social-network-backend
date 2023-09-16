@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.finalproject.config.AuditorAwareImpl;
+import org.finalproject.dto.post.PostDto;
 import org.finalproject.entity.Notification;
 import org.finalproject.entity.Post;
 import org.finalproject.entity.PostImage;
@@ -59,7 +60,7 @@ public class DefaultPostService extends GeneralService<Post> {
             commentedPost.getComments().add(newCommentPost);
             postRepository.save(newCommentPost);
             postRepository.save(commentedPost);
-            Notification notification = new Notification(NotificationType.newComment, NotificationStatus.pending, loggedUser.getFullName(), "commented your post.", commentedPost.getId(), List.of(commentedPost.getUser()));
+            Notification notification = notificationService.save(new Notification(NotificationType.newComment, NotificationStatus.pending, loggedUser, "commented your post.", commentedPost.getId(), List.of(commentedPost.getUser())));
             commentedPost.getUser().getNotifications().add(notification);
             userService.save(commentedPost.getUser());
             rabbitTemplate.convertAndSend("notification-exchange", "user." + commentedPost.getUser().getId(), notification);
@@ -87,9 +88,9 @@ public class DefaultPostService extends GeneralService<Post> {
             postRepository.save(repostedPost);
             postRepository.save(newPost);
 //            if (!repostedPost.getUser().equals(loggedUser)) {
-                Notification notification = new Notification(NotificationType.newRepost, NotificationStatus.pending, loggedUser.getFullName(), "shared your post.", repostedPost.getId(), List.of(repostedPost.getUser()));
-                repostedPost.getUser().getNotifications().add(notification);
-                userService.save(repostedPost.getUser());
+                Notification notification = notificationService.save(new Notification(NotificationType.newRepost, NotificationStatus.pending, loggedUser, "shared your post.", repostedPost.getId(), List.of(repostedPost.getUser())));
+            repostedPost.getUser().getNotifications().add(notification);
+            userService.save(repostedPost.getUser());
                 rabbitTemplate.convertAndSend("notification-exchange", "user." + repostedPost.getUser().getId(), notification);
 //            }
 
@@ -154,7 +155,9 @@ public class DefaultPostService extends GeneralService<Post> {
 
             if (post.addLike(loggedUser)) {
                 postRepository.save(post);
-                Notification notification = new Notification(NotificationType.newLike, NotificationStatus.pending, loggedUser.getFullName(), "likes your post.", post.getId(), List.of(post.getUser()));
+                Notification notification = notificationService.save(new Notification(NotificationType.newLike, NotificationStatus.pending, loggedUser, "likes your post.", post.getId(), List.of(post.getUser())));
+                post.getUser().getNotifications().add(notification);
+                userService.save(post.getUser());
                 rabbitTemplate.convertAndSend("notification-exchange", "user." + post.getUser().getId(), notification);
                 return true;
             } else {
@@ -174,10 +177,10 @@ public class DefaultPostService extends GeneralService<Post> {
         return postList;
     }
 
-    public boolean create(String content, List<MultipartFile> files) {
+    public Post create(String content, List<MultipartFile> files) {
         User loggedUser = userService.getByEmail(auditorAwareImpl.getCurrentAuditor().get()).orElse(null);
         if (loggedUser == null) {
-            return false;
+            return null;
         }
 
         Post newPost = new Post(loggedUser, "post", content, null);
@@ -199,10 +202,10 @@ public class DefaultPostService extends GeneralService<Post> {
             imgUrlList.forEach(postImage -> postImageService.save(postImage));
 
             newPost.setPostImages(imgUrlList);
-            postRepository.save(newPost);
+            newPost = postRepository.save(newPost);
         }
 
-        return true;
+        return newPost;
     }
 
 

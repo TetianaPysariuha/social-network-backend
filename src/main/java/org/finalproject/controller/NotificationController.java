@@ -7,9 +7,11 @@ import org.finalproject.dto.chat.ChatDto;
 import org.finalproject.entity.Notification;
 import org.finalproject.entity.User;
 import org.finalproject.entity.UserImage;
+import org.finalproject.service.DefaultNotificationService;
 import org.finalproject.service.DefaultUserService;
 import org.finalproject.service.GeneralService;
 import org.finalproject.util.NotificationStatus;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -27,7 +29,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/notifications")
 public class NotificationController {
 
-    private final GeneralService<Notification> notificationService;
+    private final DefaultNotificationService notificationService;
 
     private final NotificationDtoMapper dtoMapper;
 
@@ -76,13 +78,15 @@ public class NotificationController {
     public ResponseEntity<?> getAuthorizedUserNotificationsPageAble(@PathVariable Integer page, @PathVariable Integer size) {
         String auth = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> profile = userService.getByFullName(auth);
-        Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "createdDate"));
+        Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "createdDate"));
         Pageable pageable = PageRequest.of(page, size, sort);
 
         if (profile.isEmpty()) {
             throw new EntityNotFoundException();
         }
-        List<NotificationDto> notificationsDto = profile.get().getNotifications()
+        List<Notification> notifications = notificationService.findAllByUserId(pageable, profile.get()).stream().toList();
+
+        List<NotificationDto> notificationsDto = notifications
                 .stream()
                 .map(dtoMapper::convertToDto)
                 .collect(Collectors.toList());
