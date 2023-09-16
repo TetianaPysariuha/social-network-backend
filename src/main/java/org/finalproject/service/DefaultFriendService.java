@@ -13,6 +13,7 @@ import org.finalproject.service.jwt.UserService;
 import org.hibernate.Session;
 import org.finalproject.repository.UserJpaRepository;
 import org.finalproject.util.FriendStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,8 @@ public class DefaultFriendService extends GeneralService<Friend> {
     private final FriendJpaRepository friendRepository;
     private final UserJpaRepository userJpaRepository;
     private final UserService userService;
-    private final FriendDtoMapper friendDtoMapper;
+    @Autowired
+    private FriendDtoMapper friendDtoMapper;
     @PersistenceContext
     EntityManager entityManager;
 
