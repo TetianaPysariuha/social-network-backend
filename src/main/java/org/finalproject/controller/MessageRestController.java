@@ -6,9 +6,14 @@ import org.finalproject.dto.chat.MessageDto;
 import org.finalproject.dto.chat.MessageDtoMapper;
 import org.finalproject.dto.chat.MessageDtoRequest;
 import org.finalproject.dto.chat.MessageSearchDto;
+import org.finalproject.entity.Chat;
+import org.finalproject.entity.Message;
+import org.finalproject.entity.User;
 import org.finalproject.service.DefaultMessageService;
+import org.finalproject.service.GeneralService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,10 +23,14 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/messages")
+@Transactional
 public class MessageRestController {
 
     private final MessageDtoMapper messageDtoMapper;
     private final DefaultMessageService defaultMessageService;
+    private final GeneralService<Message> messageGeneralService;
+    private final GeneralService<Chat> chatGeneralService;
+    private final GeneralService<User> userGeneralService;
 
     //    @GetMapping
     //    public List<MessageDto> getAll() {
@@ -73,16 +82,25 @@ public class MessageRestController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Long messageId) {
 
-        defaultMessageService.deleteById(messageId);
+        Message message = messageGeneralService.findEntityById(messageId);
+        System.out.println("ID= " + messageId);
+        System.out.println(message);
+        //        List<User> users = message.getUser();
+        //        for (User user : users) {
+        //            user.getReadMessages().removeIf(msg -> msg.getId().equals(messageId));
+        //        }
+        //        message.getChat();
+        messageGeneralService.delete(message);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping
     @MessageMapping("/send")
-    public ResponseEntity<Void> createNewMessage(@RequestBody MessageDtoRequest messageDtoRequest,
-                                                 @RequestBody List<MultipartFile> multipartFiles) throws IOException {
-
-        defaultMessageService.createNewMessage(messageDtoRequest, multipartFiles);
+    public ResponseEntity<Void> createNewMessage(@RequestParam("content") String content,
+                                                 @RequestParam("chatId") Long chatId,
+                                                 @RequestParam(name = "files", required = false) List<MultipartFile> files) throws IOException {
+        MessageDtoRequest messageDtoRequest = new MessageDtoRequest(0L, content, chatId);
+        defaultMessageService.createNewMessage(messageDtoRequest, files);
         return ResponseEntity.ok().build();
     }
 

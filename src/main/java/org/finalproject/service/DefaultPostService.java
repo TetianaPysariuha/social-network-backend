@@ -153,10 +153,10 @@ public class DefaultPostService extends GeneralService<Post> {
         return postList;
     }
 
-    public boolean create(String content, List<MultipartFile> files) {
+    public Post create(String content, List<MultipartFile> files) {
         User loggedUser = userService.getByEmail(auditorAwareImpl.getCurrentAuditor().get()).orElse(null);
         if (loggedUser == null) {
-            return false;
+            return null;
         }
 
         Post newPost = new Post(loggedUser, "post", content, null);
@@ -178,10 +178,10 @@ public class DefaultPostService extends GeneralService<Post> {
             imgUrlList.forEach(postImage -> postImageService.save(postImage));
 
             newPost.setPostImages(imgUrlList);
-            postRepository.save(newPost);
+            newPost = postRepository.save(newPost);
         }
 
-        return true;
+        return newPost;
     }
 
 
