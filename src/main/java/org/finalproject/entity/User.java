@@ -106,7 +106,9 @@ public class User extends BaseEntity {
             inverseJoinColumns = { @JoinColumn(name = "notification_id") })
     List<Notification> notifications;
 
-
+    @OneToMany (fetch = FetchType.EAGER ,mappedBy = "author")
+    @JsonIgnore
+    private List<ImgComment> comments ;
 
     @Override
     public String toString() {
