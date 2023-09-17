@@ -3,6 +3,8 @@ package org.finalproject.dto.chat;
 import lombok.RequiredArgsConstructor;
 import org.finalproject.entity.Message;
 import org.finalproject.facade.GeneralFacade;
+import org.finalproject.service.DefaultMessageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,6 +16,8 @@ public class MessageDtoMapper extends GeneralFacade<Message, MessageDtoRequest, 
 
     private final UserForChatDtoMapper userDtoMapper;
     private final MessageImageDtoMapper messageImageDtoMapper;
+    @Autowired
+    private DefaultMessageService defaultMessageService;
 
 
     public MessageDto decorateDto(Message entity) {
@@ -31,6 +35,7 @@ public class MessageDtoMapper extends GeneralFacade<Message, MessageDtoRequest, 
         dto.setCreatedBy(entity.getCreatedBy());
         dto.setUpdatedBy(entity.getUpdatedBy());
         dto.setUpdatedDate(entity.getUpdatedDate());
+        dto.setStatus(defaultMessageService.findUnReadMessages(entity.getId()));
         return dto;
     }
 

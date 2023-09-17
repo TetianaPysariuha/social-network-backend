@@ -7,6 +7,8 @@ import org.finalproject.dto.chat.MessageSearchDto;
 import org.finalproject.entity.*;
 import org.finalproject.repository.MessageRepository;
 import org.finalproject.service.jwt.UserService;
+import org.finalproject.util.NotificationStatus;
+import org.finalproject.util.NotificationType;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,21 +27,25 @@ import java.util.stream.Collectors;
 public class DefaultMessageService extends GeneralService<Message> {
 
     @Autowired
-    private  MessageRepository messageRepository;
+    private MessageRepository messageRepository;
     @Autowired
-    private  DefaultMessageImageService defaultMessageImageService;
+    private DefaultMessageImageService defaultMessageImageService;
     @Autowired
-    private  UserService userService;
+    private UserService userService;
     @Autowired
     private GeneralService<Chat> chatService;
     @Autowired
     private GeneralService<Message> messageService;
+    @Autowired
+    private GeneralService<User> userGeneralService;
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
     @Autowired
-    private  MessageDtoMapper messageDtoMapper;
+    private MessageDtoMapper messageDtoMapper;
+    @Autowired
+    private GeneralService<Notification> notificationGeneralService;
 
     public List<MessageSearchDto> findByContent(String content) {
 
@@ -56,8 +62,13 @@ public class DefaultMessageService extends GeneralService<Message> {
         String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         User user = userService.getByEmail(auth).get();
         Chat chat = chatService.findEntityById(messageDtoRequest.getChatId());
+        List<User> userList = chat.getUsers();
+        userList.removeIf(u -> u.getId().equals(user.getId()));
         Message message = new Message(messageDtoRequest.getContent(), user, chat, chat.getId());
         Message savedMessage = messageService.save(message);
+        for (User userFromChat : userList) {
+            userFromChat.getReadMessages().add(savedMessage);
+        }
         if (multipartFiles != null) {
             List<String> imageUrl;
             try {
@@ -74,14 +85,16 @@ public class DefaultMessageService extends GeneralService<Message> {
             messageService.save(finalMessage);
         }
         List<User> users = chat.getUsers();
+        users.removeIf(u -> u.getId().equals(user.getId()));
         List<Long> usersId = new ArrayList<>();
         for (int i = 0; i < users.size(); i++) {
             usersId.add(users.get(i).getId());
         }
-        usersId.removeIf(id -> id.equals(user.getId()));
+        Notification notification = new Notification(NotificationType.newMessage, NotificationStatus.pending, user, savedMessage.getContent(), savedMessage.getId(), users);
+        //notification = notificationGeneralService.save(notification);
         for (Long toUserId : usersId) {
             rabbitTemplate.convertAndSend("messages-exchange", "user." + toUserId, messageDtoMapper.decorateDto(savedMessage));
-            rabbitTemplate.convertAndSend("notification-exchange", "user." + toUserId, messageDtoMapper.decorateDto(savedMessage));
+            rabbitTemplate.convertAndSend("notification-exchange", "user." + toUserId, notification);
         }
     }
 
@@ -97,11 +110,11 @@ public class DefaultMessageService extends GeneralService<Message> {
         messageEntity.setCreatedBy(messageService.getOne(messageEntity.getId()).getCreatedBy());
         Message savedMessage = messageService.save(messageEntity);
         List<User> users = chat.getUsers();
+        users.removeIf(u -> u.getId().equals(user.getId()));
         List<Long> usersId = new ArrayList<>();
         for (int i = 0; i < users.size(); i++) {
             usersId.add(users.get(i).getId());
         }
-        usersId.removeIf(id -> id.equals(user.getId()));
         for (Long toUserId : usersId) {
             rabbitTemplate.convertAndSend("messages-exchange", "user." + toUserId, messageDtoMapper.decorateDto(savedMessage));
             rabbitTemplate.convertAndSend("notification-exchange", "user." + toUserId, messageDtoMapper.decorateDto(savedMessage));
@@ -115,14 +128,23 @@ public class DefaultMessageService extends GeneralService<Message> {
 
     public void deleteById(Long messageId) {
 
-        /*Message message = messageService.findEntityById(messageId);*/
-        /*List<User> users = message.getUser();
+        Message message = messageService.findEntityById(messageId);
+        List<User> users = message.getUser();
         for (User user : users) {
             user.getReadMessages().removeIf(msg -> msg.getId().equals(messageId));
-        }*/
-        /*List<Message> messages = message.getSender().getMessages();
-        messages.removeIf(msg -> msg.getId().equals(messageId));*/
+        }
+        messageService.delete(message);
+    }
 
+    public boolean findUnReadMessages(Long messageId) {
+
+        String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        User user = userService.getByEmail(auth).get();
+        List<Long> unReadMessages = messageRepository.findUnReadMessages(user.getId(), messageId);
+        if (unReadMessages.size() == 0) {
+            return true;
+        }
+        return false;
     }
 
 
