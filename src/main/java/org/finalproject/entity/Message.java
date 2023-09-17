@@ -25,31 +25,23 @@ public class Message extends BaseEntity {
 
     @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    // @JsonIgnore
     private User sender;
 
     @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "messageId")
     @LazyCollection(LazyCollectionOption.FALSE)
-    //  @JsonIgnore
     private List<MessageImage> images;
 
     @ManyToOne(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinColumn(name = "chat_id")
-    //  @JsonIgnore
-    // @JsonBackReference
     private Chat chat;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST}/*, fetch = FetchType.EAGER*/)
-    @JoinTable(
-            name = "message_status",
-            joinColumns = {@JoinColumn(name = "message_id")},
-            inverseJoinColumns = {@JoinColumn(name = "user_id")})
+    @ManyToMany(cascade = {CascadeType.PERSIST}, mappedBy = "readMessages", fetch = FetchType.EAGER)
     private List<User> user;
 
-    public Message(String content, User user, Chat chat, Long chatId) {
+    public Message(String content, User sender, Chat chat, Long chatId) {
 
         this.content = content;
-        this.sender = user;
+        this.sender = sender;
         this.chat = chat;
         this.chatId = chatId;
     }
