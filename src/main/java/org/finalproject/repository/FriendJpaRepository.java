@@ -4,6 +4,7 @@ import org.finalproject.entity.Friend;
 import org.finalproject.entity.User;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -12,12 +13,22 @@ public interface FriendJpaRepository extends RepositoryInterface<Friend>, JpaSpe
     @Query("select f from Friend f where :userId in (f.friend.id, f.user.id)")
     List<Friend> friendsOfUser(Long userId);
 
+    @Query("select f from Friend f where :userId in (f.friend.id, f.user.id)")
+    List<Friend> friendsOfUser(Long userId, Pageable pageable);
+
     @Query("select u from User u where u.id not in (" +
-            "select f.user.id from Friend f where :userId = f.friend.id and f.status in ('pending', 'accepted')" +
+            "select f.user.id from Friend f where :userId = f.friend.id and f.status in ('pending', 'accepted', 'removed')" +
             " union" +
-            " select f.friend.id from Friend f where :userId = f.user.id and f.status in ('pending', 'accepted'))" +
+            " select f.friend.id from Friend f where :userId = f.user.id and f.status in ('pending', 'accepted', 'removed'))" +
             " and u.id != :userId")
     List<User> suggestedUsersForFriendship(Long userId);
+
+    @Query("select u from User u where u.id not in (" +
+            "select f.user.id from Friend f where :userId = f.friend.id and f.status in ('pending', 'accepted', 'removed')" +
+            " union" +
+            " select f.friend.id from Friend f where :userId = f.user.id and f.status in ('pending', 'accepted', 'removed'))" +
+            " and u.id != :userId")
+    List<User> suggestedUsersForFriendship(Long userId, Pageable pageable);
 
     @Query("select u from User u where u.id in (" +
                     "select t.friendID from (" +
