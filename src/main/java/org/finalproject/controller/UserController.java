@@ -309,12 +309,5 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{id}/reposts")
-    public ResponseEntity<?> addRepost(@RequestParam Long id, @RequestBody PostRequestDto post) {
 
-        Post postEntity = postService.getOne(post.getId());
-        defaultUserService.addRepost(id, postEntity);
-        return ResponseEntity.ok().build();
-
-    }
 }
