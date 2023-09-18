@@ -3,12 +3,10 @@ package org.finalproject.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.finalproject.entity.Post;
-import org.finalproject.entity.User;
+import org.finalproject.entity.*;
 import org.finalproject.exception.AlreadyExistException;
-import org.finalproject.entity.Chat;
-import org.finalproject.entity.Friend;
 import org.finalproject.repository.FriendJpaRepository;
+import org.finalproject.repository.NotificationRepository;
 import org.finalproject.repository.PostJpaRepository;
 import org.finalproject.repository.UserJpaRepository;
 
@@ -30,6 +28,9 @@ public class DefaultUserService extends GeneralService<User> {
     public final PostJpaRepository postRepository;
 
     public final FriendJpaRepository friendRepository;
+
+    public final NotificationRepository notificationRepository;
+
 
 
 
@@ -177,6 +178,29 @@ public class DefaultUserService extends GeneralService<User> {
             for (Post post : repostedPosts) {
                 post.getReposts().removeIf(el -> el.getId().equals(userId));
             }
+
+        List<Notification> notifications = user.getNotifications();
+        for (Notification  notification : notifications ) {
+
+            notification.getReceiver().removeIf(el -> el.getId().equals(userId));
+
+        }
+
+        List<Notification> sentNotifications = user.getSentNotifications();
+        User deletedUser;
+        for (Notification  notification : sentNotifications ) {
+            if (userRepository.getByFullName("Deleted User").isEmpty()) {
+
+                deletedUser = new User();
+                deletedUser.setFullName("Deleted User");
+                deletedUser.setEmail("deleted@gmail.com");
+
+                userRepository.save(deletedUser);
+            } else {
+               deletedUser = userRepository.getByFullName("Deleted User").get();
+            }
+              notification.setSender(deletedUser);
+        }
             userRepository.deleteById(userId);
         }
 

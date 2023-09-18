@@ -52,15 +52,11 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody ImgCommentDtoRequest comment) {
-        try {
 
             ImgComment commentEntity = dtoMapper.convertToEntity(comment);
             commentService.save(commentEntity);
 
             return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
 
     }
 
@@ -92,23 +88,19 @@ public class CommentController {
     @DeleteMapping
     public ResponseEntity<?> deleteMessageImage(@RequestBody ImgCommentDtoRequest commentDtoRequest) {
 
-        try {
+
            commentService.delete(dtoMapper.convertToEntity(commentDtoRequest));
             return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long commentId) {
 
-        try {
+
             commentService.deleteById(commentId);
             return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+
     }
 
 

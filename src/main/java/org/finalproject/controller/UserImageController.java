@@ -1,5 +1,6 @@
 package org.finalproject.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.finalproject.dto.UserImageDtoMapper;
 import org.finalproject.dto.UserImageDtoRequest;
@@ -48,31 +49,25 @@ public class UserImageController {
 
        UserImage userImage = userImageService.getOne(userImageId);
         if (userImage == null) {
-            return ResponseEntity.badRequest().body("MessageImage not found");
+           throw new EntityNotFoundException();
         }
         return ResponseEntity.ok().body(userImage);
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteMessageImage(@RequestBody UserImage userImage) {
+    public ResponseEntity<?> deleteUserImage(@RequestBody UserImage userImage) {
 
-        try {
             userImageService.delete(userImage);
             return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long userImageId) {
 
-        try {
             userImageService.deleteById(userImageId);
             return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+
     }
 
 
