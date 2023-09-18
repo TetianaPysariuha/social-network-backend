@@ -16,8 +16,7 @@ import java.util.List;
 @Table(name = "chats")
 public class Chat extends BaseEntity {
 
-    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "chat")
-    //@JsonManagedReference
+    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER, mappedBy = "chat", orphanRemoval = true)
     private List<Message> messages;
 
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "chat")

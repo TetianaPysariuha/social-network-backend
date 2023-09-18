@@ -6,10 +6,12 @@ import org.finalproject.entity.Message;
 import org.finalproject.facade.GeneralFacade;
 import org.finalproject.repository.ChatRepository;
 import org.finalproject.repository.MessageRepository;
+import org.finalproject.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +25,8 @@ public class ChatDtoMapper extends GeneralFacade<Chat, ChatDtoRequest, ChatDto> 
     private ChatRepository chatRepository;
     @Autowired
     private MessageRepository messageRepository;
+    @Autowired
+    private DefaultMessageService defaultMessageService;
 
     @Override
     protected void decorateEntity(Chat entity, ChatDtoRequest dto) {
@@ -38,8 +42,9 @@ public class ChatDtoMapper extends GeneralFacade<Chat, ChatDtoRequest, ChatDto> 
 
         ChatDto dto = new ChatDto();
         dto.setId(entity.getId());
-        dto.setMessages(entity.getMessages().stream().map(this::decorateDtoM).collect(Collectors.toList()));
-        //dto.setMessageImages(entity.getMessageImages().stream().map(messageImageDtoMapper::convertToDto).collect(Collectors.toList()));
+        List<MessageDto> messageDtos = entity.getMessages().stream().map(this::decorateDtoM).collect(Collectors.toList());
+        messageDtos.sort(Comparator.comparing(MessageDto::getCreatedDate));
+        dto.setMessages(messageDtos);
         dto.setUsers(entity.getUsers().stream().map(userDtoMapper::convertToDto).collect(Collectors.toList()));
         return dto;
     }
@@ -59,6 +64,7 @@ public class ChatDtoMapper extends GeneralFacade<Chat, ChatDtoRequest, ChatDto> 
         dto.setCreatedBy(entity.getCreatedBy());
         dto.setCreatedDate(entity.getCreatedDate());
         dto.setUpdatedBy(entity.getUpdatedBy());
+        dto.setStatus(defaultMessageService.findUnReadMessages(entity.getId()));
         return dto;
     }
 }

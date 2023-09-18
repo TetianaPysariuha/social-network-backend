@@ -22,4 +22,7 @@ public interface MessageRepository extends RepositoryInterface<Message>, JpaSpec
             "AND uc2.user_id = :userId", nativeQuery = true)
     List<MessageSearchProjection> findByContent(@Param("content") String content, @Param("userId") Long userId);
 
+    @Query(value = "SELECT message_id FROM message_status " +
+            "WHERE user_id = :userId AND message_id = :messageId", nativeQuery = true)
+    List<Long> findUnReadMessages(@Param("userId") Long userId, @Param("messageId") Long messageId);
 }

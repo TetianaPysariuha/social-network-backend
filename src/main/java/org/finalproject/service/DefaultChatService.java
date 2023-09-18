@@ -29,6 +29,10 @@ public class DefaultChatService extends GeneralService<Chat> {
     private GeneralService<Chat> chatService;
     @Autowired
     private GeneralService<User> userGeneralService;
+    @Autowired
+    private GeneralService<Message> messageGeneralService;
+    @Autowired
+    private DefaultMessageService defaultMessageService;
 
     public List<ChatSpecDto> getChatsForUserExceptUserId() {
 
@@ -91,7 +95,9 @@ public class DefaultChatService extends GeneralService<Chat> {
         List<User> users = chat.getUsers();
         for (User user : users) {
             user.getChats().removeIf(userChat -> userChat.getId().equals(chatId));
+            user.getReadMessages().removeIf(m -> m.getChatId().equals(chatId));
         }
+        System.out.println("Users from CHAT: " + users);
         chatService.deleteById(chatId);
     }
 

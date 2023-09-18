@@ -15,6 +15,8 @@ public interface ChatSpecProjection {
 
     String getContent();
 
+    Long getMessageId();
+
     Date getLastMessageDate();
 
     String getProfilePicture();

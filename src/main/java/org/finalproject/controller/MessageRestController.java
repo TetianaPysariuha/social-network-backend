@@ -82,15 +82,7 @@ public class MessageRestController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Long messageId) {
 
-        Message message = messageGeneralService.findEntityById(messageId);
-        System.out.println("ID= " + messageId);
-        System.out.println(message);
-        //        List<User> users = message.getUser();
-        //        for (User user : users) {
-        //            user.getReadMessages().removeIf(msg -> msg.getId().equals(messageId));
-        //        }
-        //        message.getChat();
-        messageGeneralService.delete(message);
+        defaultMessageService.deleteById(messageId);
         return ResponseEntity.ok().build();
     }
 
