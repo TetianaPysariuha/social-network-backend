@@ -24,7 +24,6 @@ public class UserImageController {
     @GetMapping
     public List<UserImage> getAll() {
 
-
         return userImageService.findAll();
 
     }
