@@ -32,9 +32,6 @@ public class DefaultUserService extends GeneralService<User> {
     public final NotificationRepository notificationRepository;
 
 
-
-
-
     public Optional<User> getByEmail(String email) {
         if (userRepository.getByEmail(email).isEmpty()) {
             throw new EntityNotFoundException();
@@ -203,7 +200,6 @@ public class DefaultUserService extends GeneralService<User> {
         }
             userRepository.deleteById(userId);
         }
-
 
 
 }

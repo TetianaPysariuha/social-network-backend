@@ -282,7 +282,6 @@ public class UserController {
         defaultUserService.deleteUserById(id);
         return ResponseEntity.ok().build();
 
-
     }
 
     @DeleteMapping
