@@ -2,6 +2,7 @@ package org.finalproject.controller;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.finalproject.dto.UserImageDto;
 import org.finalproject.dto.UserImageDtoMapper;
 import org.finalproject.dto.UserImageDtoRequest;
 import org.finalproject.entity.UserImage;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -22,9 +24,12 @@ public class UserImageController {
     private final UserImageDtoMapper dtoMapper;
 
     @GetMapping
-    public List<UserImage> getAll() {
+    public List<UserImageDto> getAll() {
 
-        return userImageService.findAll();
+        return userImageService.findAll()
+                .stream()
+                .map(dtoMapper::convertToDto)
+                .collect(Collectors.toList());
 
     }
 
@@ -54,9 +59,9 @@ public class UserImageController {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> deleteUserImage(@RequestBody UserImage userImage) {
+    public ResponseEntity<?> deleteUserImage(@RequestBody UserImageDtoRequest userImage) {
 
-            userImageService.delete(userImage);
+            userImageService.delete(dtoMapper.convertToEntity(userImage));
             return ResponseEntity.ok().build();
 
     }

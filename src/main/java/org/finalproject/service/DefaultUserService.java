@@ -29,8 +29,6 @@ public class DefaultUserService extends GeneralService<User> {
 
     public final FriendJpaRepository friendRepository;
 
-    public final NotificationRepository notificationRepository;
-
 
     public Optional<User> getByEmail(String email) {
         if (userRepository.getByEmail(email).isEmpty()) {
