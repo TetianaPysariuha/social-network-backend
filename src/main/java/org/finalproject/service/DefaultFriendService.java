@@ -12,6 +12,9 @@ import org.finalproject.repository.UserJpaRepository;
 import org.finalproject.utilites.FriendStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,8 +41,40 @@ public class DefaultFriendService extends GeneralService<Friend> {
         }).toList();
     }
 
+    //friendRepository.suggestedUsersForFriendship(userId); -> oll
+    //friendRepository.FriendsForFriendship(userId); -> Friends
+    //friendRepository.searchFriendsForCity(userId); -> City
+
     public List<User> suggestedUsersForFriendship(Long userId) {
-        return friendRepository.suggestedUsersForFriendship(userId);
+        List<User> CitiAndAll = new ArrayList<>();
+        List<User> FriendAndCiti = new ArrayList<>();
+        List<User> FriendAndCitiAndAll = new ArrayList<>();
+        HashSet<User> searchFriends = new HashSet<>();
+        List<User> searchFriendsLi = new ArrayList<>();
+        List<Friend> SizeFrend = friendRepository.findFriends(userId);
+        if (SizeFrend.isEmpty()) {
+            HashSet<User> searchFriendsForCity = friendRepository.searchFriendsForCity(userId);
+            if (searchFriendsForCity.isEmpty()) {
+                return friendRepository.suggestedUsersForFriendship(userId);
+            } else
+                searchFriendsLi = friendRepository.suggestedUsersForFriendship(userId);
+            searchFriendsForCity.addAll(searchFriendsLi);
+            CitiAndAll.addAll(searchFriendsForCity);
+            return CitiAndAll;
+        }else{
+            searchFriends = friendRepository.FriendsForFriendship(userId);
+            HashSet<User> searchFriendsForCity = friendRepository.searchFriendsForCity(userId);
+            searchFriends.addAll(searchFriendsForCity);
+            if (searchFriends.size() > 99){
+                FriendAndCiti.addAll(searchFriends);
+                return FriendAndCiti;
+            }else {
+                searchFriendsLi = friendRepository.suggestedUsersForFriendship(userId);
+                searchFriends.addAll(searchFriendsLi);
+                FriendAndCitiAndAll.addAll(searchFriends);
+                return FriendAndCitiAndAll;
+            }
+        }
     }
 
     public List<Friend> friendshipRequests(Long userId) {
