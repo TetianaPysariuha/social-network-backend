@@ -27,7 +27,7 @@ public class UserImage extends BaseEntity {
     @JoinColumn(name = "image_user_id")
     User user;
 
-    @OneToMany (fetch = FetchType.EAGER ,mappedBy = "image")
+    @OneToMany (cascade = CascadeType.REMOVE,fetch = FetchType.EAGER ,mappedBy = "image")
     @JsonIgnore
     private List<ImgComment> comments ;
 
