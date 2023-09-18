@@ -44,7 +44,7 @@ public class UserImageController {
 
     }
 
-    @GetMapping("/id")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable("id") Long userImageId) {
 
        UserImage userImage = userImageService.getOne(userImageId);
