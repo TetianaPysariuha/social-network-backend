@@ -22,6 +22,7 @@ public class DefaultChatService extends GeneralService<Chat> {
 
     @Autowired
     private ChatRepository chatRepository;
+    @Autowired
     private MessageRepository messageRepository;
     @Autowired
     private UserService userService;
@@ -116,13 +117,13 @@ public class DefaultChatService extends GeneralService<Chat> {
     }
 
     public Chat getById(Long chatId) {
+
         String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         User loggedUser = userService.getByEmail(auth).get();
+        List<Message> unReadMessages = loggedUser.getReadMessages();
+        unReadMessages.removeIf(msg -> msg.getChat().getId().equals(chatId));
+        userGeneralService.save(loggedUser);
         Chat chat = chatService.findEntityById(chatId);
-        for (Message message : chat.getMessages()) {
-            System.out.println("Message id: " + message.getId());
-            messageRepository.deleteFromMessageStatus(loggedUser.getId(), message.getId());
-        }
         return chat;
     }
 

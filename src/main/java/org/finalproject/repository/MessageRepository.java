@@ -26,6 +26,4 @@ public interface MessageRepository extends RepositoryInterface<Message>, JpaSpec
             "WHERE user_id = :userId AND message_id = :messageId", nativeQuery = true)
     List<Long> findUnReadMessages(@Param("userId") Long userId, @Param("messageId") Long messageId);
 
-    @Query(value = "DELETE FROM message_status WHERE user_id = :userId  AND message_id = :messageId", nativeQuery = true)
-    void deleteFromMessageStatus(@Param("userId") Long userId, @Param("messageId") Long messageId);
 }
