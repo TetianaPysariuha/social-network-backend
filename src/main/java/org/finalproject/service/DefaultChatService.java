@@ -115,7 +115,12 @@ public class DefaultChatService extends GeneralService<Chat> {
 
     public Chat getById(Long chatId) {
 
-        return chatService.findEntityById(chatId);
+        Chat chat = chatService.findEntityById(chatId);
+        for (User user : chat.getUsers()) {
+            user.getReadMessages().removeIf(m -> m.getChatId().equals(chatId));
+        }
+        chatService.save(chat);
+        return chat;
     }
 
 }
