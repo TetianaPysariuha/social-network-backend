@@ -13,14 +13,26 @@ public class UserDtoMapper extends GeneralFacade<User, UserRequestDto,UserDto> {
 
     UserImageDtoMapper userImageDtoMapper;
 
-    @Override
-    protected void decorateDto(UserDto dto, User entity) {
+
+    protected UserDto decorateDto( User entity) {
+        UserDto userDto = new UserDto();
+        userDto.setId(entity.getId());
+        userDto.setFullName(entity.getFullName());
+        userDto.setEmail(entity.getEmail());
+        userDto.setCity(entity.getCity());
+        userDto.setCountry(entity.getCountry());
+        userDto.setAbout(entity.getAbout());
+        userDto.setProfilePicture(entity.getProfilePicture());
+        userDto.setProfileBackgroundPicture(entity.getProfileBackgroundPicture());
+        userDto.setBirthDate(entity.getBirthDate());
+        userDto.setGender(entity.getGender());
 
         List<UserImageDto> userImageDto  = entity.getUserImages()
                 .stream().map(userImageDtoMapper::convertToDto)
                 .collect(Collectors.toList());
 
-        dto.setUserImages(userImageDto);
+        userDto.setUserImages(userImageDto);
+        return userDto;
 
 
     }
