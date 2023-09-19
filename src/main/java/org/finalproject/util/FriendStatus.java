@@ -9,7 +9,8 @@ public enum FriendStatus {
     accepted("accepted"),
     rejected("rejected"),
     canceled("canceled"),
-    unfriended("unfriended");
+    unfriended("unfriended"),
+    removed("removed");
 
     private final String val;
 

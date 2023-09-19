@@ -89,7 +89,11 @@ public class User extends BaseEntity {
     @JsonIgnore
     private List<UserImage> userImages;
 
-    @ManyToMany(fetch = FetchType.EAGER,mappedBy = "user")
+    @ManyToMany(cascade = {CascadeType.REMOVE,CascadeType.PERSIST},fetch = FetchType.EAGER )
+    @JoinTable(
+            name = "message_status",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "message_id")})
     private List<Message> readMessages;
 
     @OneToMany (fetch = FetchType.EAGER ,mappedBy = "sender")
@@ -106,7 +110,9 @@ public class User extends BaseEntity {
             inverseJoinColumns = { @JoinColumn(name = "notification_id") })
     List<Notification> notifications;
 
-
+    @OneToMany (fetch = FetchType.EAGER ,mappedBy = "author")
+    @JsonIgnore
+    private List<ImgComment> comments ;
 
     @Override
     public String toString() {
