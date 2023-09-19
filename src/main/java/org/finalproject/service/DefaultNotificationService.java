@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.finalproject.entity.Notification;
 import org.finalproject.entity.User;
 import org.finalproject.repository.NotificationRepository;
+import org.finalproject.repository.UserJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,10 @@ public class DefaultNotificationService extends GeneralService<Notification> {
 
     private final NotificationRepository notificationRepository;
 
+    private final UserJpaRepository userJpaRepository;
+
     public Page<Notification> findAuthUserNotifications(Long id, Pageable pageable) {
 
-       return  notificationRepository.findAuthUserNotifications(id,pageable);
+       return  notificationRepository.findAllByReceiverContains(userJpaRepository.findEntityById(id),pageable);
     }
 }
