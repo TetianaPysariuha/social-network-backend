@@ -6,10 +6,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserImageDtoMapper extends GeneralFacade<UserImage, UserImageDtoRequest, UserImageDto> {
-    @Override
-    protected void decorateDto(UserImageDto dto, UserImage entity) {
 
-        dto.setImgUrl(entity.getImageUrl());
+    protected UserImageDto decorateDto( UserImage entity) {
+
+        UserImageDto dto = new UserImageDto();
+
+        dto.setUserId(entity.getUserId());
+
+        dto.setImageUrl(entity.getImageUrl());
+
+        dto.setId(entity.getId());
+
+        return dto;
 
 
     }
