@@ -31,6 +31,7 @@ public class ChatSpecDto {
                 projection.getId(), projection.getUserId(),
                 projection.getFullName(), projection.getContent(), projection.getMessageId(),
                 projection.getLastMessageDate(), projection.getProfilePicture(), projection.getMessageCount(), projection.getChatParticipant()
+
         );
     }
 

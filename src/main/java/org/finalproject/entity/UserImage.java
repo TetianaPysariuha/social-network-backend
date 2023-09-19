@@ -1,8 +1,11 @@
 package org.finalproject.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,5 +26,9 @@ public class UserImage extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER )
     @JoinColumn(name = "image_user_id")
     User user;
+
+    @OneToMany (cascade = CascadeType.REMOVE,fetch = FetchType.EAGER ,mappedBy = "image")
+    @JsonIgnore
+    private List<ImgComment> comments ;
 
 }
