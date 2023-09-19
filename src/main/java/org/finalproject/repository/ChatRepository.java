@@ -61,4 +61,9 @@ public interface ChatRepository extends RepositoryInterface<Chat>, JpaSpecificat
             "WHERE uc.chat_id = :id", nativeQuery = true)
     List<UserSpecProjection> findUsersFromChat(@Param("id") Long chatId);
 
+    @Query(value = "SELECT count(*) FROM messages msg " +
+            "  JOIN message_status ms ON msg.id = ms.message_id" +
+            "  WHERE ms.user_id = :userId", nativeQuery = true)
+    Long findUnreadMessagesForUser(@Param("userId") Long userId);
+
 }
