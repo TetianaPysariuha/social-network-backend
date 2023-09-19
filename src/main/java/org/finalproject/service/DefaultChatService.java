@@ -4,6 +4,7 @@ import org.finalproject.dto.chat.ChatSpecDto;
 import org.finalproject.dto.chat.UserForChatDto;
 import org.finalproject.entity.*;
 import org.finalproject.repository.ChatRepository;
+import org.finalproject.repository.MessageRepository;
 import org.finalproject.service.jwt.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +23,8 @@ public class DefaultChatService extends GeneralService<Chat> {
     @Autowired
     private ChatRepository chatRepository;
     @Autowired
+    private MessageRepository messageRepository;
+    @Autowired
     private UserService userService;
     @Autowired
     private GeneralService<User> generalUserService;
@@ -29,6 +32,10 @@ public class DefaultChatService extends GeneralService<Chat> {
     private GeneralService<Chat> chatService;
     @Autowired
     private GeneralService<User> userGeneralService;
+    @Autowired
+    private GeneralService<Message> messageGeneralService;
+    @Autowired
+    private DefaultMessageService defaultMessageService;
 
     public List<ChatSpecDto> getChatsForUserExceptUserId() {
 
@@ -91,7 +98,9 @@ public class DefaultChatService extends GeneralService<Chat> {
         List<User> users = chat.getUsers();
         for (User user : users) {
             user.getChats().removeIf(userChat -> userChat.getId().equals(chatId));
+            user.getReadMessages().removeIf(m -> m.getChatId().equals(chatId));
         }
+        System.out.println("Users from CHAT: " + users);
         chatService.deleteById(chatId);
     }
 
@@ -109,7 +118,13 @@ public class DefaultChatService extends GeneralService<Chat> {
 
     public Chat getById(Long chatId) {
 
-        return chatService.findEntityById(chatId);
+        String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        User loggedUser = userService.getByEmail(auth).get();
+        List<Message> unReadMessages = loggedUser.getReadMessages();
+        unReadMessages.removeIf(msg -> msg.getChat().getId().equals(chatId));
+        userGeneralService.save(loggedUser);
+        Chat chat = chatService.findEntityById(chatId);
+        return chat;
     }
 
 }

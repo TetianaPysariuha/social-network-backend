@@ -116,17 +116,13 @@ public class NotificationController {
 
     @PutMapping
     public ResponseEntity<?> update(@RequestBody NotificationRequestDto notification) {
-        try {
 
             Notification notificationEntity = dtoMapper.convertToEntity(notification);
             notificationEntity.setCreatedDate(notificationService.getOne(notification.getId()).getCreatedDate());
             notificationService.save(notificationEntity);
 
-
             return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+
 
     }
 
@@ -145,12 +141,12 @@ public class NotificationController {
 
     }
 
-    @GetMapping("/id")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable("id") Long notificationId) {
 
         Notification notification = notificationService.getOne(notificationId);
         if (notification == null) {
-            return ResponseEntity.badRequest().body("MessageImage not found");
+            throw new EntityNotFoundException();
         }
         return ResponseEntity.ok().body(notification);
     }
@@ -158,23 +154,17 @@ public class NotificationController {
     @DeleteMapping
     public ResponseEntity<?> deleteNotification(@RequestBody NotificationRequestDto notification) {
 
-        try {
             notificationService.delete(dtoMapper.convertToEntity(notification));
             return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long notificationId) {
 
-        try {
             notificationService.deleteById(notificationId);
             return ResponseEntity.ok().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+
     }
 
 

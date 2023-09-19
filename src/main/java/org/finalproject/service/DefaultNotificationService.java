@@ -7,6 +7,7 @@ import org.finalproject.entity.Post;
 import org.finalproject.entity.User;
 import org.finalproject.repository.NotificationRepository;
 import org.finalproject.util.NotificationStatus;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -26,12 +27,11 @@ public class DefaultNotificationService extends GeneralService<Notification> {
 
 
     public Page<Notification> findAuthUserNotifications(User user, String status, Pageable pageable) {
-        if(status.equals("all")) {
+        if (status.equals("all")) {
             return notificationRepository.findAllByReceiverContains(user, pageable);
         } else if (status.equals("pending")) {
             return notificationRepository.findAllByReceiverAndStatus(user, NotificationStatus.pending , pageable);
         }
         throw new IllegalArgumentException();
-//        return null;
     }
 }

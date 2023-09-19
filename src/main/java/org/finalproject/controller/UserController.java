@@ -123,7 +123,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/friends")
-    public ResponseEntity<?> getFriends(@PathVariable("userId") Long userId) {
+    public ResponseEntity<List<FriendDto>> getFriends(@PathVariable("userId") Long userId) {
 
         List<FriendDto> friendDtoList = defaultService.friendsOfUser(userId)
                 .stream()
@@ -133,7 +133,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/chats")
-    public ResponseEntity<?> getChats(@PathVariable("id") Long userId) {
+    public ResponseEntity<List<ChatDto>> getChats(@PathVariable("id") Long userId) {
         User user = userService.getOne(userId);
 
         if (user == null) {
@@ -147,7 +147,7 @@ public class UserController {
     }
 
     @GetMapping("/chats")
-    public ResponseEntity<?> getAuthorizedUserChats() {
+    public ResponseEntity<List<ChatDto>> getAuthorizedUserChats() {
         String auth = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> profile = defaultUserService.getByFullName(auth);
 
@@ -281,7 +281,6 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable("id") Long id) {
 
-
         defaultUserService.deleteUserById(id);
         return ResponseEntity.ok().build();
 
@@ -312,12 +311,5 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{id}/reposts")
-    public ResponseEntity<?> addRepost(@RequestParam Long id, @RequestBody PostRequestDto post) {
 
-        Post postEntity = postService.getOne(post.getId());
-        defaultUserService.addRepost(id, postEntity);
-        return ResponseEntity.ok().build();
-
-    }
 }

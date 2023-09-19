@@ -61,7 +61,12 @@ public class DefaultPostService extends GeneralService<Post> {
             postRepository.save(newCommentPost);
             postRepository.save(commentedPost);
             if (!commentedPost.getUser().equals(loggedUser)) {
-                Notification notification = notificationService.save(new Notification(NotificationType.newComment, NotificationStatus.pending, loggedUser, "commented your post.", commentedPost.getId(), List.of(commentedPost.getUser())));
+                Notification notification = notificationService.save(
+                        new Notification(NotificationType.newComment,
+                        NotificationStatus.pending, loggedUser,
+                "commented your post.",
+                        commentedPost.getId(),
+                        List.of(commentedPost.getUser())));
                 commentedPost.getUser().getNotifications().add(notification);
                 userService.save(commentedPost.getUser());
                 rabbitTemplate.convertAndSend("notification-exchange", "user." + commentedPost.getUser().getId(), notification);

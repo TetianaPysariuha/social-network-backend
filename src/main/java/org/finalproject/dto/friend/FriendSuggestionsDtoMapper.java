@@ -8,6 +8,8 @@ import org.finalproject.service.DefaultFriendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.stream.Collectors;
+
 @Service
 public class FriendSuggestionsDtoMapper extends GeneralFacade<User, FriendRequestDto, FriendSuggestionsDto> {
     @Autowired
@@ -20,7 +22,9 @@ public class FriendSuggestionsDtoMapper extends GeneralFacade<User, FriendReques
     @Override
     protected void decorateDto(FriendSuggestionsDto dto, User entity) {
         dto.setFriend(userDtoMapper.convertToDto(entity));
-        dto.setMutualFriends(null);
+        dto.setMutualFriends(defaultFriendService.getMutualFriends(entity.getId())
+                .stream()
+                .map(userDtoMapper::convertToDto)
+                .collect(Collectors.toList()));
     }
-
 }

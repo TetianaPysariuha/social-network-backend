@@ -19,16 +19,19 @@ public class ChatSpecDto {
     private Long userId;
     private String fullName;
     private String content;
+    private Long messageId;
     private Date lastMessageDate;
     private String profilePicture;
-    private List<UserForChatDto> chatParticipant; //del autorized user and create new DTO
+    private Long messageCount;
+    private List<UserForChatDto> chatParticipant;
 
     public static ChatSpecDto fromProjection(ChatSpecProjection projection) {
 
         return new ChatSpecDto(
                 projection.getId(), projection.getUserId(),
-                projection.getFullName(), projection.getContent(),
-                projection.getLastMessageDate(), projection.getProfilePicture(), projection.getChatParticipant()
+                projection.getFullName(), projection.getContent(), projection.getMessageId(),
+                projection.getLastMessageDate(), projection.getProfilePicture(), projection.getMessageCount(), projection.getChatParticipant()
+
         );
     }
 

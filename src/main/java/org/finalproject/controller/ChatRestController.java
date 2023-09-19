@@ -74,7 +74,7 @@ public class ChatRestController {
     @GetMapping("/{id}")
     public ResponseEntity<ChatDto> getById(@PathVariable("id") Long id) {
 
-        ChatDto chat = chatDtoMapper.decorateDto(defaultChatService.findEntityById(id));
+        ChatDto chat = chatDtoMapper.decorateDto(defaultChatService.getById(id));
         if (chat == null) {
             throw new EntityNotFoundException();
         }
