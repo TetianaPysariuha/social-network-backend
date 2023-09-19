@@ -4,6 +4,7 @@ import org.finalproject.dto.chat.ChatSpecDto;
 import org.finalproject.dto.chat.UserForChatDto;
 import org.finalproject.entity.*;
 import org.finalproject.repository.ChatRepository;
+import org.finalproject.repository.MessageRepository;
 import org.finalproject.service.jwt.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +22,7 @@ public class DefaultChatService extends GeneralService<Chat> {
 
     @Autowired
     private ChatRepository chatRepository;
+    private MessageRepository messageRepository;
     @Autowired
     private UserService userService;
     @Autowired
@@ -114,12 +116,13 @@ public class DefaultChatService extends GeneralService<Chat> {
     }
 
     public Chat getById(Long chatId) {
-
+        String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        User loggedUser = userService.getByEmail(auth).get();
         Chat chat = chatService.findEntityById(chatId);
-        for (User user : chat.getUsers()) {
-            user.getReadMessages().removeIf(m -> m.getChatId().equals(chatId));
+        for (Message message : chat.getMessages()) {
+            System.out.println("Message id: " + message.getId());
+            messageRepository.deleteFromMessageStatus(loggedUser.getId(), message.getId());
         }
-        chatService.save(chat);
         return chat;
     }
 
