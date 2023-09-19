@@ -22,6 +22,7 @@ public class ChatSpecDto {
     private Long messageId;
     private Date lastMessageDate;
     private String profilePicture;
+    private Long messageCount;
     private List<UserForChatDto> chatParticipant;
 
     public static ChatSpecDto fromProjection(ChatSpecProjection projection) {
@@ -29,7 +30,8 @@ public class ChatSpecDto {
         return new ChatSpecDto(
                 projection.getId(), projection.getUserId(),
                 projection.getFullName(), projection.getContent(), projection.getMessageId(),
-                projection.getLastMessageDate(), projection.getProfilePicture(), projection.getChatParticipant()
+                projection.getLastMessageDate(), projection.getProfilePicture(), projection.getMessageCount(), projection.getChatParticipant()
+
         );
     }
 
