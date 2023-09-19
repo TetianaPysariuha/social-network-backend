@@ -60,10 +60,12 @@ public class DefaultPostService extends GeneralService<Post> {
             commentedPost.getComments().add(newCommentPost);
             postRepository.save(newCommentPost);
             postRepository.save(commentedPost);
-            Notification notification = notificationService.save(new Notification(NotificationType.newComment, NotificationStatus.pending, loggedUser, "commented your post.", commentedPost.getId(), List.of(commentedPost.getUser())));
-            commentedPost.getUser().getNotifications().add(notification);
-            userService.save(commentedPost.getUser());
-            rabbitTemplate.convertAndSend("notification-exchange", "user." + commentedPost.getUser().getId(), notification);
+            if (!commentedPost.getUser().equals(loggedUser)) {
+                Notification notification = notificationService.save(new Notification(NotificationType.newComment, NotificationStatus.pending, loggedUser, "commented your post.", commentedPost.getId(), List.of(commentedPost.getUser())));
+                commentedPost.getUser().getNotifications().add(notification);
+                userService.save(commentedPost.getUser());
+                rabbitTemplate.convertAndSend("notification-exchange", "user." + commentedPost.getUser().getId(), notification);
+            }
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -87,12 +89,12 @@ public class DefaultPostService extends GeneralService<Post> {
             repostedPost.getReposts().add(newPost);
             postRepository.save(repostedPost);
             postRepository.save(newPost);
-//            if (!repostedPost.getUser().equals(loggedUser)) {
+            if (!repostedPost.getUser().equals(loggedUser)) {
                 Notification notification = notificationService.save(new Notification(NotificationType.newRepost, NotificationStatus.pending, loggedUser, "shared your post.", repostedPost.getId(), List.of(repostedPost.getUser())));
-            repostedPost.getUser().getNotifications().add(notification);
-            userService.save(repostedPost.getUser());
+                repostedPost.getUser().getNotifications().add(notification);
+                userService.save(repostedPost.getUser());
                 rabbitTemplate.convertAndSend("notification-exchange", "user." + repostedPost.getUser().getId(), notification);
-//            }
+            }
 
             return true;
         } catch (Exception e) {
@@ -155,10 +157,12 @@ public class DefaultPostService extends GeneralService<Post> {
 
             if (post.addLike(loggedUser)) {
                 postRepository.save(post);
-                Notification notification = notificationService.save(new Notification(NotificationType.newLike, NotificationStatus.pending, loggedUser, "likes your post.", post.getId(), List.of(post.getUser())));
-                post.getUser().getNotifications().add(notification);
-                userService.save(post.getUser());
-                rabbitTemplate.convertAndSend("notification-exchange", "user." + post.getUser().getId(), notification);
+                if (!post.getUser().equals(loggedUser)) {
+                    Notification notification = notificationService.save(new Notification(NotificationType.newLike, NotificationStatus.pending, loggedUser, "likes your post.", post.getId(), List.of(post.getUser())));
+                    post.getUser().getNotifications().add(notification);
+                    userService.save(post.getUser());
+                    rabbitTemplate.convertAndSend("notification-exchange", "user." + post.getUser().getId(), notification);
+                }
                 return true;
             } else {
                 return false;

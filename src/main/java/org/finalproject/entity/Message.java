@@ -39,7 +39,7 @@ public class Message extends BaseEntity {
     // @JsonBackReference
     private Chat chat;
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @ManyToMany(cascade = {CascadeType.PERSIST}/*, fetch = FetchType.EAGER*/)
     @JoinTable(
             name = "message_status",
             joinColumns = {@JoinColumn(name = "message_id")},

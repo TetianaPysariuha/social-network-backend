@@ -72,12 +72,12 @@ public class PostRestController {
         if (post == null) {
             return ResponseEntity.badRequest().body("Post not found");
         }
-        return ResponseEntity.ok().body(postDtoMapper.convertToDto(post) );
+        return ResponseEntity.ok().body(postDtoMapper.decorateDto(post) );
     }
 
     @PostMapping
     public ResponseEntity<PostDto> create(@RequestParam("content") String content, @RequestParam(name = "files", required = false) List<MultipartFile> files) {
-        return ResponseEntity.ok().body(postDtoMapper.convertToDto(postService.create(content, files)));
+        return ResponseEntity.ok().body(postDtoMapper.decorateDto(postService.create(content, files)));
     }
 
 

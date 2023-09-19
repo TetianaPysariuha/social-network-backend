@@ -13,7 +13,6 @@ public class MessageImageDto {
     //@JsonProperty("message_image_id")
     private Long id;
     private String imgUrl;
-    private MessageDto messageId;
-
+    //private MessageDto messageId;
 
 }

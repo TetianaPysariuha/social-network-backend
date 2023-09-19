@@ -209,15 +209,21 @@ public class UserController {
         userService.save(dtoMapper.convertToEntity(user));
     }
 
-    @PostMapping("/{id}/image")
-    public void uploadImage(@PathVariable Long id, @RequestParam("multipartFiles") List<MultipartFile> multipartFiles) {
+    @PostMapping("/image")
+    public void uploadImage( @RequestParam("multipartFiles") List<MultipartFile> multipartFiles) {
+        String auth  = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        Optional<User> profile = defaultUserService.getByEmail(auth);
+        if (profile.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
+
         List<String> imgStringList;
         try {
-            imgStringList  = fileUpload.uploadUseListOfrFiles(multipartFiles, id);
+            imgStringList  = fileUpload.uploadUseListOfrFiles(multipartFiles, profile.get().getId());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        User user = userService.getOne(id);
+        User user = userService.getOne(profile.get().getId());
         List<UserImage> userImages = user.getUserImages();
         List<UserImage> userImgList = new ArrayList<>();
         imgStringList.forEach(el-> {
@@ -236,28 +242,38 @@ public class UserController {
 
     }
 
-    @PostMapping("/{id}/avatar")
-    public void uploadAvatar(@PathVariable Long id, @RequestBody MultipartFile multipartFile) {
+    @PostMapping("/avatar")
+    public void uploadAvatar( @RequestBody MultipartFile multipartFile) {
+        String auth  = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        Optional<User> profile = defaultUserService.getByEmail(auth);
+        if (profile.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
         String imgUrl = null;
         try {
-            imgUrl = fileUpload.uploadUserFile(multipartFile, id);
+            imgUrl = fileUpload.uploadUserFile(multipartFile, profile.get().getId());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        User user = userService.getOne(id);
+        User user = userService.getOne(profile.get().getId());
         user.setProfilePicture(imgUrl);
         userService.save(user);
     }
 
-    @PostMapping("/{id}/header")
-    public void uploadHeader(@PathVariable Long id, @RequestBody MultipartFile multipartFile) {
+    @PostMapping("/header")
+    public void uploadHeader( @RequestBody MultipartFile multipartFile) {
+        String auth  = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        Optional<User> profile = defaultUserService.getByEmail(auth);
+        if (profile.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
         String imgUrl = null;
         try {
-            imgUrl = fileUpload.uploadUserFile(multipartFile, id);
+            imgUrl = fileUpload.uploadUserFile(multipartFile, profile.get().getId());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        User user = userService.getOne(id);
+        User user = userService.getOne(profile.get().getId());
         user.setProfileBackgroundPicture(imgUrl);
         userService.save(user);
     }
