@@ -66,7 +66,7 @@ public class CommentController {
         UserImage image = imageService.getOne(imageId);
 
         if (image == null) {
-            throw new EntityNotFoundException();
+           return ResponseEntity.badRequest().body("Image not found");
         }
         List<ImgCommentDto> commentsDto = image.getComments()
                 .stream()

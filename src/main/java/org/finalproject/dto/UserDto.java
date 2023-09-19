@@ -35,6 +35,7 @@ public class UserDto {
 
     private String profileBackgroundPicture;
 
-    private List<UserImage> userImages;
+    private List<UserImageDto> userImages;
+
 
 }

@@ -22,7 +22,7 @@ public class ImgCommentDto  {
     private String content;
 
 
-    private UserImage image;
+    private UserImageDto image;
 
 
     private Date createdDate;

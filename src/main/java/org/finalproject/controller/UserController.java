@@ -109,19 +109,19 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<UserDto> getProfile() {
+    public ResponseEntity<?> getProfile() {
 
         String auth  = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         Optional<User> profile = defaultUserService.getByEmail(auth);
 
         if (profile.isEmpty()) {
-            throw new EntityNotFoundException();
+           return ResponseEntity.badRequest().body("User not found");
         }
         return ResponseEntity.ok().body(dtoMapper.convertToDto(profile.get()));
     }
 
     @GetMapping("/{userId}/friends")
-    public ResponseEntity<List<FriendDto>> getFriends(@PathVariable("userId") Long userId) {
+    public ResponseEntity<?> getFriends(@PathVariable("userId") Long userId) {
 
         List<FriendDto> friendDtoList = defaultService.friendsOfUser(userId)
                 .stream()
@@ -131,11 +131,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}/chats")
-    public ResponseEntity<List<ChatDto>> getChats(@PathVariable("id") Long userId) {
+    public ResponseEntity<?> getChats(@PathVariable("id") Long userId) {
         User user = userService.getOne(userId);
 
         if (user == null) {
-            throw new EntityNotFoundException();
+          return ResponseEntity.badRequest().body("User not found");
+
         }
         List<ChatDto> userChatsDto = user.getChats()
                 .stream()
@@ -145,12 +146,12 @@ public class UserController {
     }
 
     @GetMapping("/chats")
-    public ResponseEntity<List<ChatDto>> getAuthorizedUserChats() {
+    public ResponseEntity<?> getAuthorizedUserChats() {
         String auth = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> profile = defaultUserService.getByFullName(auth);
 
         if (profile.isEmpty()) {
-            throw new EntityNotFoundException();
+          return ResponseEntity.badRequest().body("User not found");
         }
         List<ChatDto> userChatsDto = profile.get().getChats()
                 .stream()
@@ -166,7 +167,7 @@ public class UserController {
         Optional<User> profile = defaultUserService.getByFullName(auth);
 
         if (profile.isEmpty()) {
-            throw new EntityNotFoundException();
+           return ResponseEntity.badRequest().body("User not found");
         }
         List<UserImageDto> userImageDto = profile.get().getUserImages()
                 .stream()
@@ -194,7 +195,7 @@ public class UserController {
         User user = userService.getOne(userId );
 
         if (user   == null) {
-           throw new EntityNotFoundException();
+          return ResponseEntity.badRequest().body("User not found");
         }
 
         List<Post> userPosts = user.getPosts();
@@ -294,10 +295,13 @@ public class UserController {
 
     @PutMapping
     public ResponseEntity<?> update(@RequestBody @Valid UserRequestDto user) {
-
+        try {
         User userEntity = dtoMapper.convertToEntity(user);
         defaultUserService.update(userEntity);
         return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
 
     }
 
