@@ -14,7 +14,7 @@ import org.finalproject.util.NotificationType;
 @EqualsAndHashCode
 @ToString
 public class NotificationDto {
-
+    private Long id;
 
     private String type;
 

@@ -52,6 +52,8 @@ public class UserController {
 
     private final UserDtoMapper dtoMapper;
 
+    private final NotificationDtoMapper notificationDtoMapper;
+
     private final PostDtoMapper postMapper;
 
     private final ChatDtoMapper chatMapper;
