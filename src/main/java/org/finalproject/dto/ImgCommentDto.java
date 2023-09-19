@@ -14,7 +14,7 @@ import java.util.Date;
 @ToString(of = "id")
 public class ImgCommentDto  {
 
-   private Long id;
+    private Long id;
 
     private UserDto author;
 
@@ -22,7 +22,7 @@ public class ImgCommentDto  {
     private String content;
 
 
-    private UserImage image;
+    private UserImageDto image;
 
 
     private Date createdDate;
