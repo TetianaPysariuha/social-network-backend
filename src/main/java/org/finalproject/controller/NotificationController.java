@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/notifications")
 public class NotificationController {
 
-    private final GeneralService<Notification> notificationService;
+    private final DefaultNotificationService notificationService;
 
     private final DefaultNotificationService defaultNotificationService;
 
@@ -76,21 +77,39 @@ public class NotificationController {
         return ResponseEntity.ok().body(notificationsDto);
     }
 
-    @GetMapping("/user/{page}/{size}")
-    public ResponseEntity<?> getAuthorizedUserNotificationPageable(@PathVariable Integer page, @PathVariable Integer size) {
+    @GetMapping("/user/size")
+    public ResponseEntity<?> getAuthorizedUserNotificationsSize() {
         String auth = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<User> profile = userService.getByFullName(auth);
+
+        if (profile.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
+        List<Notification> newNotifications = profile.get().getNotifications()
+                .stream()
+                .filter(notification -> NotificationStatus.pending.equals(notification.getStatus()))
+                .collect(Collectors.toList());
+        System.out.println(newNotifications);
+        return ResponseEntity.ok().body(newNotifications.size());
+    }
+
+    @GetMapping("/user/{page}/{size}")
+    public ResponseEntity<?> getAuthorizedUserNotificationPageable(@PathVariable Integer page, @PathVariable Integer size, @RequestParam("status") String status) {
+        System.out.println(status);
+        String auth = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> profile = userService.getByFullName(auth);
+
         Sort sort = Sort.by(new Sort.Order(Sort.Direction.DESC, "id"));
         Pageable pageable = PageRequest.of(page, size, sort);
         if (profile.isEmpty()) {
             throw new EntityNotFoundException();
         }
-Page<Notification> notifications  = defaultNotificationService.findAuthUserNotifications(profile.get().getId(),pageable);
+
+        Page<Notification> notifications  = defaultNotificationService.findAuthUserNotifications(profile.get(), status, pageable);
         List<NotificationDto> notificationsDto = notifications
                 .stream()
                 .map(dtoMapper::convertToDto)
                 .collect(Collectors.toList());
-
 
         return ResponseEntity.ok().body(notificationsDto);
     }
