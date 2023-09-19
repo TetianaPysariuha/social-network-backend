@@ -90,6 +90,7 @@ public class User extends BaseEntity {
     private List<UserImage> userImages;
 
     @ManyToMany(cascade = {CascadeType.REMOVE,CascadeType.PERSIST},fetch = FetchType.EAGER )
+    @JsonIgnore
     @JoinTable(
             name = "message_status",
             joinColumns = {@JoinColumn(name = "user_id")},
