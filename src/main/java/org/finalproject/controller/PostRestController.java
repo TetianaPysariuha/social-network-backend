@@ -7,7 +7,9 @@ import org.finalproject.dto.post.PostDtoMapper;
 import org.finalproject.dto.post.PostRequestDto;
 import org.finalproject.entity.Post;
 import org.finalproject.service.DefaultPostService;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
@@ -25,12 +27,14 @@ public class PostRestController {
 
 
     @PostMapping("/comment/{id}")
+    @MessageMapping("/comment")
     public Boolean commentPost(@PathVariable("id") Long postId, @RequestBody Map<String, String> requestBody) {
         String content = requestBody.get("content");
         return postService.commentPost(postId, content);
     }
 
     @PostMapping("/repost/{id}")
+    @MessageMapping("/repost")
     public Boolean repostPost(@PathVariable("id") Long postId, @RequestBody Map<String, String> requestBody) {
         String content = requestBody.get("content");
         return postService.repostPost(postId, content);
@@ -42,6 +46,7 @@ public class PostRestController {
     }
 
     @PutMapping("/like-post/{id}")
+    @MessageMapping("/add-like")
     public Boolean likePost(@PathVariable("id") Long postId) {
         return postService.likePost(postId);
     }
@@ -67,12 +72,12 @@ public class PostRestController {
         if (post == null) {
             return ResponseEntity.badRequest().body("Post not found");
         }
-        return ResponseEntity.ok().body(postDtoMapper.convertToDto(post) );
+        return ResponseEntity.ok().body(postDtoMapper.decorateDto(post) );
     }
 
     @PostMapping
     public ResponseEntity<PostDto> create(@RequestParam("content") String content, @RequestParam(name = "files", required = false) List<MultipartFile> files) {
-        return ResponseEntity.ok().body(postDtoMapper.convertToDto(postService.create(content, files)));
+        return ResponseEntity.ok().body(postDtoMapper.decorateDto(postService.create(content, files)));
     }
 
 
