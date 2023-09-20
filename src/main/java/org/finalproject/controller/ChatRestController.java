@@ -74,7 +74,7 @@ public class ChatRestController {
     @GetMapping("/{id}")
     public ResponseEntity<ChatDto> getById(@PathVariable("id") Long id) {
 
-        ChatDto chat = chatDtoMapper.decorateDto(defaultChatService.findEntityById(id));
+        ChatDto chat = chatDtoMapper.decorateDto(defaultChatService.getById(id));
         if (chat == null) {
             throw new EntityNotFoundException();
         }
@@ -152,5 +152,11 @@ public class ChatRestController {
 
         Chat chat = defaultChatService.createNewChat(userId);
         return ResponseEntity.ok().body(chatDtoMapper.decorateDto(chat));
+    }
+
+    @GetMapping("/unreadExist")
+    public ResponseEntity<Boolean> findUnreadMessagesForUser() {
+
+        return ResponseEntity.ok().body(defaultChatService.findUnreadMessagesForUser());
     }
 }

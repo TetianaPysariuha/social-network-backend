@@ -13,7 +13,7 @@ public class UserImageDto {
 
 
     private Long id;
-    private String imgUrl;
+    private String imageUrl;
     private Long userId;
 
 }
