@@ -13,7 +13,6 @@ import java.util.Date;
 @EqualsAndHashCode(of = "id")
 @ToString(of = "id")
 public class ImgCommentDto  {
-
     private Long id;
 
     private UserDto author;
@@ -21,8 +20,8 @@ public class ImgCommentDto  {
 
     private String content;
 
-
     private UserImageDto image;
+
 
 
     private Date createdDate;

@@ -63,11 +63,12 @@ public class FriendRestController {
         return ResponseEntity.ok().body(usersFriends);
     }
 
-    @PostMapping("/search")
-    public ResponseEntity<List<FriendDto>> getFriendsByName(@RequestBody Map<String, String> requestMap) {
-        System.out.println(requestMap);
+    @PostMapping("/search/{page}/{size}")
+    public ResponseEntity<List<FriendDto>> getFriendsByName(@PathVariable("page") Integer page, @PathVariable("size") Integer size,  @RequestBody Map<String, String> requestMap) {
+        Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC,"id"));
+        Pageable pageable = PageRequest.of(page,size,sort);
         String friendName = requestMap.get("friendName");
-        List<FriendDto> usersFriends = defaultFriendService.getFriendByName(friendName)
+        List<FriendDto> usersFriends = defaultFriendService.getFriendByName(friendName, pageable)
                 .stream()
                 .map(dtoMapper::convertToDto)
                 .collect(Collectors.toList());

@@ -10,11 +10,17 @@ import java.util.List;
 
 public interface FriendJpaRepository extends RepositoryInterface<Friend>, JpaSpecificationExecutor<Friend> {
 
-    @Query("select f from Friend f where :userId in (f.friend.id, f.user.id)")
+    @Query("select f from Friend f where :userId in (f.friend.id, f.user.id) and f.status = 'accepted'")
     List<Friend> friendsOfUser(Long userId);
 
-    @Query("select f from Friend f where :userId in (f.friend.id, f.user.id)")
+    @Query("select f from Friend f where :userId in (f.friend.id, f.user.id) and f.status = 'accepted'")
     List<Friend> friendsOfUser(Long userId, Pageable pageable);
+
+    @Query("select f from Friend f where :userId in (f.friend.id, f.user.id) and f.status = 'pending'")
+    List<Friend> friendRequests(Long userId);
+
+    @Query("select f from Friend f where :userId in (f.friend.id, f.user.id) and f.status = 'pending'")
+    List<Friend> friendRequests(Long userId, Pageable pageable);
 
     @Query("select u from User u where u.id not in (" +
             "select f.user.id from Friend f where :userId = f.friend.id and f.status in ('pending', 'accepted', 'removed')" +
@@ -50,5 +56,5 @@ public interface FriendJpaRepository extends RepositoryInterface<Friend>, JpaSpe
             "and :userId in (f.friend.id, f.user.id) " +
             "and ((upper(f.friend.fullName) like upper(concat('%', :namePart, '%')) and f.friend.id <> :userId) " +
             "or (upper(f.user.fullName) like upper(concat('%', :namePart, '%')) and f.user.id <> :userId))")
-    List<Friend> getFriendByUserIdFriendName(Long userId, String namePart);
+    List<Friend> getFriendByUserIdFriendName(Long userId, String namePart, Pageable pageable);
 }

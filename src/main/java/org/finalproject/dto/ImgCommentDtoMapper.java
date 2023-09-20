@@ -26,7 +26,9 @@ public class ImgCommentDtoMapper extends GeneralFacade<ImgComment, ImgCommentDto
     public void decorateDto(ImgCommentDto dto, ImgComment entity) {
 
         dto.setAuthor(dtoMapper.convertToDto(entity.getAuthor()));
+
         dto.setImage(imageMapper.convertToDto(entity.getImage()));
+
 
     }
 
@@ -38,3 +40,4 @@ public class ImgCommentDtoMapper extends GeneralFacade<ImgComment, ImgCommentDto
 
     }
 }
+
