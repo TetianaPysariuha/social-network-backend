@@ -94,11 +94,13 @@ public class DefaultMessageService extends GeneralService<Message> {
             usersId.add(users.get(i).getId());
         }
         ObjectMapper objectMapper = new ObjectMapper();
-        Object newMessage = new Object() {public String status = "new"; public MessageDto message =messageDtoMapper.decorateDto(savedMessage);};
+        Object newMessage = new Object() {
+            public String status = "new";
+            public MessageDto message = messageDtoMapper.decorateDto(savedMessage);
+        };
         String jsonMessage = objectMapper.writeValueAsString(newMessage);
         for (Long toUserId : usersId) {
-            rabbitTemplate.convertAndSend("messages-exchange", "user." + toUserId, jsonMessage );
-        }
+            rabbitTemplate.convertAndSend("messages-exchange", "user." + toUserId, jsonMessage);
     }
 
     public void editMessage(MessageDtoRequest messageDtoRequest) throws JsonProcessingException {
@@ -119,7 +121,10 @@ public class DefaultMessageService extends GeneralService<Message> {
             usersId.add(users.get(i).getId());
         }
         ObjectMapper objectMapper = new ObjectMapper();
-        Object editedMessage = new Object() {public String status = "edited"; public MessageDto message =messageDtoMapper.decorateDto(savedMessage);};
+        Object editedMessage = new Object() {
+            public String status = "edited";
+            public MessageDto message = messageDtoMapper.decorateDto(savedMessage);
+        };
         String jsonMessage = objectMapper.writeValueAsString(editedMessage);
         for (Long toUserId : usersId) {
             rabbitTemplate.convertAndSend("messages-exchange", "user." + toUserId, jsonMessage);
@@ -139,9 +144,12 @@ public class DefaultMessageService extends GeneralService<Message> {
             user.getReadMessages().removeIf(msg -> msg.getId().equals(messageId));
         }
         ObjectMapper objectMapper = new ObjectMapper();
-        Object deletedMessage = new Object() {public String status = "deleted"; public MessageDto message =messageDtoMapper.decorateDto(messageForDel);};
+        Object deletedMessage = new Object() {
+            public String status = "deleted";
+            public MessageDto message = messageDtoMapper.decorateDto(messageForDel);
+        };
         String jsonMessage = null;
-        try{
+        try {
             jsonMessage = objectMapper.writeValueAsString(deletedMessage);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
