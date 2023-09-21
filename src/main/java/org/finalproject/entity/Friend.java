@@ -27,5 +27,5 @@ public class Friend extends BaseEntity {
     @ManyToOne(fetch = FetchType.EAGER )
     @JoinColumn(name = "friend_id")
     private  User friend;
-    /*cascade = {CascadeType.MERGE } */
+
 }
