@@ -101,7 +101,6 @@ public class DefaultMessageService extends GeneralService<Message> {
         String jsonMessage = objectMapper.writeValueAsString(newMessage);
         for (Long toUserId : usersId) {
             rabbitTemplate.convertAndSend("messages-exchange", "user." + toUserId, jsonMessage);
-        }
     }
 
     public void editMessage(MessageDtoRequest messageDtoRequest) throws JsonProcessingException {

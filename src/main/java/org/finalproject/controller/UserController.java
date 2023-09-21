@@ -295,7 +295,7 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody @Valid UserRequestDto user) {
+    public ResponseEntity<?> update(@RequestBody  UserRequestDto user) {
 
         User userEntity = dtoMapper.convertToEntity(user);
         defaultUserService.update(userEntity);
