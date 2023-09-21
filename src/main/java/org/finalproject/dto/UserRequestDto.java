@@ -19,14 +19,14 @@ public class UserRequestDto {
     @NotNull
     @Size(min = 4, message = "user name should have at least 4 characters")
     private String fullName;
-   @Email
+    @Email
     private String email;
     private String password;
 
     private Date birthDate;
 
     private String country;
-    @NotNull
+
     @Size(min = 2, message = "city name should have at least 2 characters")
     private String  city;
     private String  gender;
@@ -34,7 +34,7 @@ public class UserRequestDto {
     private String workPlace;
 
     private String profilePicture;
-    @NotNull
+
     @Size(min = 2,max = 350,message = "user description should have at least 2 characters and not more than 350 characters")
     private String about;
 
