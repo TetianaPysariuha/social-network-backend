@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
-//@RequiredArgsConstructor
 public class DefaultChatService extends GeneralService<Chat> {
 
     @Autowired
@@ -100,7 +99,6 @@ public class DefaultChatService extends GeneralService<Chat> {
             user.getChats().removeIf(userChat -> userChat.getId().equals(chatId));
             user.getReadMessages().removeIf(m -> m.getChatId().equals(chatId));
         }
-        System.out.println("Users from CHAT: " + users);
         chatService.deleteById(chatId);
     }
 

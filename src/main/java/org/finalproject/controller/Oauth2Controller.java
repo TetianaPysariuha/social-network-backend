@@ -38,7 +38,7 @@ class Oauth2Controller {
 
     @GetMapping("oauth2/search")
     Optional<User> search(@RequestParam String email, OAuth2Authentication authentication) {
-        //String auth = (String) authentication.;
+
         String role = authentication.getAuthorities().iterator().next().getAuthority();
 
         return repository.getByEmail(email);

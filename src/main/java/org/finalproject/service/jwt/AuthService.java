@@ -120,12 +120,7 @@ public class AuthService {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             final String email = claims.getSubject();
-
-            System.out.println(email);
             final String saveRefreshToken = refreshStorage.get(email);
-
-            System.out.println(saveRefreshToken);
-            System.out.println(saveRefreshToken.equals(refreshToken));
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
                 final User user = userService.getByEmail(email)
                         .orElseThrow(() -> new AuthException("User not found"));

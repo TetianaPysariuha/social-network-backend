@@ -32,29 +32,6 @@ public class MessageRestController {
     private final GeneralService<Chat> chatGeneralService;
     private final GeneralService<User> userGeneralService;
 
-    //    @GetMapping
-    //    public List<MessageDto> getAll() {
-    //
-    //        List<Message> messageList = messageService.findAll();
-    //        return messageList.stream()
-    //                .map(messageDtoMapper::decorateDto)
-    //                .collect(Collectors.toList());
-    //
-    //    }
-    //
-    //    @GetMapping("/{page}/{size}")
-    //    public ResponseEntity<?> findAll(@PathVariable Integer page, @PathVariable Integer size) {
-    //
-    //        Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "updatedDate"));
-    //        Pageable pageable = PageRequest.of(page, size, sort);
-    //        Page messages = messageService.findAll(pageable);
-    //        List<Message> messageList = messages.toList();
-    //        List<MessageDto> messageDtoList = messageList.stream()
-    //                .map(messageDtoMapper::decorateDto)
-    //                .collect(Collectors.toList());
-    //        return ResponseEntity.ok(messageDtoList);
-    //    }
-
     @GetMapping("/{id}")
     public ResponseEntity<MessageDto> getById(@PathVariable("id") Long messageId) {
 
@@ -64,20 +41,6 @@ public class MessageRestController {
         }
         return ResponseEntity.ok().body(messageDto);
     }
-
-    //    @DeleteMapping
-    //    public ResponseEntity<?> deleteMessage(@RequestBody MessageDtoRequest messageDtoRequest) {
-    //
-    //        String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-    //        try {
-    //            User user = userService.getByEmail(auth).get();
-    //            messageDtoRequest.setId(user.getId());
-    //            messageService.delete(messageDtoMapper.convertToEntity(messageDtoRequest));
-    //            return ResponseEntity.ok().build();
-    //        } catch (RuntimeException e) {
-    //            return ResponseEntity.badRequest().body(e.getMessage());
-    //        }
-    //    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable("id") Long messageId) {
@@ -91,6 +54,7 @@ public class MessageRestController {
     public ResponseEntity<Void> createNewMessage(@RequestParam("content") String content,
                                                  @RequestParam("chatId") Long chatId,
                                                  @RequestParam(name = "files", required = false) List<MultipartFile> files) throws IOException {
+
         MessageDtoRequest messageDtoRequest = new MessageDtoRequest(0L, content, chatId);
         defaultMessageService.createNewMessage(messageDtoRequest, files);
         return ResponseEntity.ok().build();
@@ -109,8 +73,4 @@ public class MessageRestController {
 
         return ResponseEntity.ok().body(defaultMessageService.findByContent(messageDtoRequest.getContent()));
     }
-
-//    @PostMapping
-//    readmessages(List newreadmessages)
-
 }

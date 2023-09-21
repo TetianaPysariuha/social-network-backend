@@ -4,7 +4,6 @@ package org.finalproject;
 import org.finalproject.config.AuditorAwareImpl;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.config.Configuration;
-
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -21,20 +20,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SocialNetworkApplication implements ApplicationRunner {
 
 
+    @Autowired
+    AuditorAwareImpl auditorAware;
+
     public static void main(String[] args) {
+
         SpringApplication.run(SocialNetworkApplication.class, args);
     }
-
-
-     @Autowired
-    AuditorAwareImpl auditorAware;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        System.out.println("http://localhost:9000/swagger-ui/index.html \n");
-
-        System.out.println("http://localhost:9000/h2-console");
     }
 
     @Bean
@@ -43,8 +39,9 @@ public class SocialNetworkApplication implements ApplicationRunner {
         return new BCryptPasswordEncoder();
     }
 
-   @Bean
+    @Bean
     public ModelMapper modelMapper() {
+
         ModelMapper mapper = new ModelMapper();
         mapper.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.STRICT)

@@ -14,7 +14,6 @@ import java.util.List;
 @ToString(of = "id")
 public class ChatSpecDto {
 
-    //@JsonProperty("chat_id")
     private Long id;
     private Long userId;
     private String fullName;

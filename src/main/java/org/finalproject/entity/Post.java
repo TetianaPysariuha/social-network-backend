@@ -20,8 +20,8 @@ import java.util.Set;
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "posts")
-//@Where(clause = "post_type = 'post'")
-public class Post extends BaseEntity{
+public class Post extends BaseEntity {
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -33,13 +33,13 @@ public class Post extends BaseEntity{
     @JsonIgnore
     private Post parentId;
 
-    @OneToMany(cascade = {CascadeType.REMOVE },fetch = FetchType.EAGER,mappedBy = "parentId")
+    @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER, mappedBy = "parentId")
     @Where(clause = "post_type = 'comment'")
     private List<Post> comments = new ArrayList<>();
-    @ManyToMany(fetch = FetchType.EAGER,mappedBy = "likedPosts")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "likedPosts")
     private List<User> likes = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.EAGER,mappedBy = "reposts")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "reposts")
     @JsonIgnore
 
     private Set<User> repostsUsers = new HashSet<>();
@@ -47,12 +47,13 @@ public class Post extends BaseEntity{
     @JoinColumn(name = "post_id")
     private List<PostImage> postImages;
 
-    @OneToMany(cascade = {CascadeType.REMOVE },fetch = FetchType.EAGER,mappedBy = "parentId")
+    @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER, mappedBy = "parentId")
     @Where(clause = "post_type = 'post'")
     private List<Post> reposts = new ArrayList<>();
 
 
     public Post(User user, String postType, String content, Post parentId) {
+
         this.user = user;
         this.postType = postType;
         this.content = content;
@@ -60,6 +61,7 @@ public class Post extends BaseEntity{
     }
 
     public boolean addLike(User user) {
+
         if (user == null) {
             return false;
         }
@@ -73,6 +75,7 @@ public class Post extends BaseEntity{
     }
 
     public boolean removeLike(User user) {
+
         if (user == null) {
             return false;
         }
@@ -85,17 +88,4 @@ public class Post extends BaseEntity{
         }
     }
 
-//    public boolean addRepost(User user, Post parentPost) {
-//        if (user == null) {
-//            return false;
-//        }
-//        try {
-//            parentPost.repostsUsers.add(user);
-//            parentPost.reposts.add(this);
-//            user.getReposts().add(parentPost);
-//            return true;
-//        } catch (RuntimeException e) {
-//            return false;
-//        }
-//    }
 }
