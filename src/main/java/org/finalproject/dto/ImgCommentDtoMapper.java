@@ -28,8 +28,6 @@ public class ImgCommentDtoMapper extends GeneralFacade<ImgComment, ImgCommentDto
         dto.setAuthor(dtoMapper.convertToDto(entity.getAuthor()));
         dto.setImage(imageMapper.convertToDto(entity.getImage()));
 
-        dto.setImage(imageMapper.convertToDto(entity.getImage()));
-
 
     }
 
