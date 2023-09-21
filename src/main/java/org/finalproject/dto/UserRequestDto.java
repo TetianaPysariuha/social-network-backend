@@ -28,6 +28,7 @@ public class UserRequestDto {
     private String country;
 
     @Size(min = 2, message = "city name should have at least 2 characters")
+    @NotNull
     private String  city;
     private String  gender;
 
@@ -36,6 +37,7 @@ public class UserRequestDto {
     private String profilePicture;
 
     @Size(min = 2,max = 350,message = "user description should have at least 2 characters and not more than 350 characters")
+    @NotNull
     private String about;
 
 
