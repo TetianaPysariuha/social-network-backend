@@ -74,6 +74,12 @@ public class AuthService {
         String fullName = authRequest.getName() + " " + authRequest.getSurname();
         newUser.setFullName(fullName);
         newUser.setGender(authRequest.getGender());
+        newUser.setAbout("");
+        newUser.setWorkPlace("");
+        newUser.setCity("");
+        newUser.setCountry("");
+        newUser.setProfilePicture("");
+        newUser.setProfileBackgroundPicture("");
         LocalDate birthDate =  LocalDate.of(Integer.parseInt(authRequest.getYear()),Integer.parseInt(authRequest.getMonth()),Integer.parseInt(authRequest.getDay()));
         ZoneId defaultZoneId = ZoneId.systemDefault();
         Instant instant = birthDate.atStartOfDay(defaultZoneId).toInstant();

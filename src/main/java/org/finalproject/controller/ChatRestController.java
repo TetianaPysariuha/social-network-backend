@@ -153,4 +153,10 @@ public class ChatRestController {
         Chat chat = defaultChatService.createNewChat(userId);
         return ResponseEntity.ok().body(chatDtoMapper.decorateDto(chat));
     }
+
+    @GetMapping("/unreadExist")
+    public ResponseEntity<Boolean> findUnreadMessagesForUser() {
+
+        return ResponseEntity.ok().body(defaultChatService.findUnreadMessagesForUser());
+    }
 }
