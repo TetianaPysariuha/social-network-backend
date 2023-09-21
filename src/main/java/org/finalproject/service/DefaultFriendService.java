@@ -101,7 +101,19 @@ public class DefaultFriendService extends GeneralService<Friend> {
         String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         Optional<User> user = userService.getByEmail(auth);
         if (user.isPresent()) {
-            return friendRepository.friendsOfUser(user.get().getId()).stream()
+            return friendRepository.friendRequests(user.get().getId()).stream()
+                    .filter(el -> Objects.equals(el.getStatus(), FriendStatus.pending))
+                    .toList();
+        } else {
+            throw new AuthException("User is not authorised");
+        }
+    }
+
+    public List<Friend> friendshipRequests(Pageable pageable) {
+        String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        Optional<User> user = userService.getByEmail(auth);
+        if (user.isPresent()) {
+            return friendRepository.friendRequests(user.get().getId(), pageable).stream()
                     .filter(el -> Objects.equals(el.getStatus(), FriendStatus.pending))
                     .toList();
         } else {
@@ -176,11 +188,11 @@ public class DefaultFriendService extends GeneralService<Friend> {
         }
     }
 
-    public List<Friend> getFriendByName(String name) {
+    public List<Friend> getFriendByName(String name, Pageable pageable) {
         String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         Optional<User> user = userService.getByEmail(auth);
         if (user.isPresent()) {
-            List<Friend> friends = friendRepository.getFriendByUserIdFriendName(user.get().getId(), name);
+            List<Friend> friends = friendRepository.getFriendByUserIdFriendName(user.get().getId(), name, pageable);
             org.hibernate.Session session = (Session) entityManager.getDelegate();
             return friends.stream().map((el) -> {
                 session.evict(el);

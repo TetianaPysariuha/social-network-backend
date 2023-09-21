@@ -127,4 +127,11 @@ public class DefaultChatService extends GeneralService<Chat> {
         return chat;
     }
 
+    public boolean findUnreadMessagesForUser() {
+
+        String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        User loggedUser = userService.getByEmail(auth).get();
+        return chatRepository.findUnreadMessagesForUser(loggedUser.getId()) != 0;
+    }
+
 }
