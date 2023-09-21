@@ -1,6 +1,9 @@
 package org.finalproject.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.finalproject.dto.chat.MessageDto;
 import org.finalproject.dto.chat.MessageDtoMapper;
 import org.finalproject.dto.chat.MessageDtoRequest;
 import org.finalproject.dto.chat.MessageSearchDto;
@@ -57,7 +60,7 @@ public class DefaultMessageService extends GeneralService<Message> {
                 .collect(Collectors.toList());
     }
 
-    public void createNewMessage(MessageDtoRequest messageDtoRequest, List<MultipartFile> multipartFiles) {
+    public void createNewMessage(MessageDtoRequest messageDtoRequest, List<MultipartFile> multipartFiles) throws JsonProcessingException {
 
         String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         User user = userService.getByEmail(auth).get();
@@ -90,15 +93,15 @@ public class DefaultMessageService extends GeneralService<Message> {
         for (int i = 0; i < users.size(); i++) {
             usersId.add(users.get(i).getId());
         }
-        Notification notification = new Notification(NotificationType.newMessage, NotificationStatus.pending, user, savedMessage.getContent(), savedMessage.getId(), users);
-        //notification = notificationGeneralService.save(notification);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Object newMessage = new Object() {public String status = "new"; public MessageDto message =messageDtoMapper.decorateDto(savedMessage);};
+        String jsonMessage = objectMapper.writeValueAsString(newMessage);
         for (Long toUserId : usersId) {
-            rabbitTemplate.convertAndSend("messages-exchange", "user." + toUserId, messageDtoMapper.decorateDto(savedMessage));
-            rabbitTemplate.convertAndSend("notification-exchange", "user." + toUserId, notification);
+            rabbitTemplate.convertAndSend("messages-exchange", "user." + toUserId, jsonMessage );
         }
     }
 
-    public void editMessage(MessageDtoRequest messageDtoRequest) {
+    public void editMessage(MessageDtoRequest messageDtoRequest) throws JsonProcessingException {
 
         String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         User user = userService.getByEmail(auth).get();
@@ -115,9 +118,11 @@ public class DefaultMessageService extends GeneralService<Message> {
         for (int i = 0; i < users.size(); i++) {
             usersId.add(users.get(i).getId());
         }
+        ObjectMapper objectMapper = new ObjectMapper();
+        Object editedMessage = new Object() {public String status = "edited"; public MessageDto message =messageDtoMapper.decorateDto(savedMessage);};
+        String jsonMessage = objectMapper.writeValueAsString(editedMessage);
         for (Long toUserId : usersId) {
-            rabbitTemplate.convertAndSend("messages-exchange", "user." + toUserId, messageDtoMapper.decorateDto(savedMessage));
-            rabbitTemplate.convertAndSend("notification-exchange", "user." + toUserId, messageDtoMapper.decorateDto(savedMessage));
+            rabbitTemplate.convertAndSend("messages-exchange", "user." + toUserId, jsonMessage);
         }
     }
 
@@ -128,12 +133,32 @@ public class DefaultMessageService extends GeneralService<Message> {
 
     public void deleteById(Long messageId) {
 
-        Message message = messageService.findEntityById(messageId);
-        List<User> users = message.getUser();
+        Message messageForDel = messageService.findEntityById(messageId);
+        List<User> users = messageForDel.getChat().getUsers();
         for (User user : users) {
             user.getReadMessages().removeIf(msg -> msg.getId().equals(messageId));
         }
-        messageService.delete(message);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Object deletedMessage = new Object() {public String status = "deleted"; public MessageDto message =messageDtoMapper.decorateDto(messageForDel);};
+        String jsonMessage = null;
+        try{
+            jsonMessage = objectMapper.writeValueAsString(deletedMessage);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        Chat chat = chatService.findEntityById(messageForDel.getChat().getId());
+        String auth = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        User user = userService.getByEmail(auth).get();
+        users.removeIf(u -> u.getId().equals(user.getId()));
+        List<Long> usersId = new ArrayList<>();
+        for (int i = 0; i < users.size(); i++) {
+            usersId.add(users.get(i).getId());
+        }
+        for (Long toUserId : usersId) {
+            rabbitTemplate.convertAndSend("messages-exchange", "user." + toUserId, jsonMessage);
+        }
+        messageService.delete(messageForDel);
     }
 
     public boolean findUnReadMessages(Long messageId) {
