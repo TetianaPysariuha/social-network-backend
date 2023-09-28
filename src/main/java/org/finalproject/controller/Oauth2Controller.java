@@ -57,9 +57,10 @@ class Oauth2Controller {
         }
         String refresh = jwtProvider.generateOauthRefreshToken(email);
         authService.loginAuth2(email,refresh);
+        JwtResponse resp = new JwtResponse(access,refresh);
+         
 
-
-        return ResponseEntity.ok(new JwtResponse(access,refresh));
+        return ResponseEntity.ok(resp);
 
 
     }
