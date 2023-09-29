@@ -17,7 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.Map;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -49,18 +49,32 @@ class Oauth2Controller {
 
         String access = authService.getRefreshStorage().get("token");
 
+        if ( access == null ) {
+            return ResponseEntity.badRequest().body("User not authorized");
+        } else {
+
         final Claims claims = jwtProvider.getAccessClaims(access);
         final String email = claims.getSubject();
         if (authService.getRefreshStorage().containsKey(email)) {
-            return ResponseEntity.ok(new JwtResponse(access,authService.getRefreshStorage().get(email)));
+            JwtResponse response = new JwtResponse(access,authService.getRefreshStorage().get(email));
+         Map<String, String> nRefreshStorage = authService.getRefreshStorage();
+                        nRefreshStorage.remove("token");
+
+                        authService.setRefreshStorage(nRefreshStorage);  
+            
+            return ResponseEntity.ok(response);
 
         }
         String refresh = jwtProvider.generateOauthRefreshToken(email);
         authService.loginAuth2(email,refresh);
+        JwtResponse resp = new JwtResponse(access,refresh);
+         Map<String, String> newRefreshStorage = authService.getRefreshStorage();
+                        newRefreshStorage.remove("token");
 
-
-        return ResponseEntity.ok(new JwtResponse(access,refresh));
-
+                        authService.setRefreshStorage(newRefreshStorage);         
+        
+        return ResponseEntity.ok(resp);
+        }
 
     }
 
